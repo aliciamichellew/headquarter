@@ -17,7 +17,7 @@ export default function App() {
     <ThemeProvider theme={theme}>
       <BrowserRouter>
         <div className="App">
-          <SignUpPage />
+          <Home />
         </div>
       </BrowserRouter>
     </ThemeProvider>
