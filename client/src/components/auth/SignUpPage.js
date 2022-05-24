@@ -31,6 +31,7 @@ function Copyright(props) {
       variant="body2"
       color="text.secondary"
       align="center"
+      fontFamily={"Berlin Sans FB"}
       {...props}
     >
       {"Copyright © "}
@@ -226,7 +227,9 @@ export default function SignUpSide() {
                           backgroundColor: "#FFCE26",
                         }}
                       >
-                        Log In
+                        <Typography fontFamily={"Berlin Sans FB"}>
+                          Log In
+                        </Typography>
                       </Button>
                       <Button
                         type="submit"
@@ -239,17 +242,23 @@ export default function SignUpSide() {
                           backgroundColor: "#FFCE26",
                         }}
                       >
-                        Continue with Google
+                        <Typography fontFamily={"Berlin Sans FB"}>
+                          Continue with Google
+                        </Typography>
                       </Button>
                       <Grid container>
                         <Grid item xs>
                           <Link href="#" variant="body2">
-                            Forgot password?
+                            <Typography fontFamily={"Berlin Sans FB"}>
+                              Forgot password?
+                            </Typography>
                           </Link>
                         </Grid>
                         <Grid item>
                           <Link href="#" variant="body2">
-                            {"Don't have an account? Sign Up"}
+                            <Typography fontFamily={"Berlin Sans FB"}>
+                              {"Don't have an account? Sign Up"}
+                            </Typography>
                           </Link>
                         </Grid>
                       </Grid>

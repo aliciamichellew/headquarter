@@ -5,7 +5,10 @@ import Typography from "@mui/material/Typography";
 import TopDrawer from "../../components/drawer/TopNav";
 import SideDrawer from "../../components/drawer/SideNav";
 import Grid from "@mui/material/Grid";
-import logo from "../../img/logo.png";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import Button from "@mui/material/Button";
+import { Avatar } from "@mui/material";
 
 const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
@@ -28,6 +31,16 @@ export default function Home() {
     setOpen(false);
   };
 
+  const [spacing, setSpacing] = React.useState(2);
+
+  const handleChange = (event) => {
+    setSpacing(Number(event.target.value));
+  };
+
+  const jsx = `
+<Grid container spacing={${spacing}}>
+`;
+
   return (
     <Box sx={{ display: "flex" }}>
       <TopDrawer open={open} handleDrawerOpen={handleDrawerOpen} />
@@ -36,7 +49,6 @@ export default function Home() {
         handleDrawerClose={handleDrawerClose}
         theme={theme}
       />
-      {/* <Box component="main" sx={{ flexGrow: 1, p: 3 }}> */}
       <Box component="main" sx={{ flexGrow: 1, pt: 6 }}>
         <Grid
           container
@@ -50,26 +62,353 @@ export default function Home() {
               mx: 4,
               display: "flex",
               flexDirection: "column",
-              // alignItems: "center",
-              // justifyContent: "center",
+              width: "100%",
             }}
           >
-            <Typography
-              fontFamily={"Berlin Sans FB"}
-              fontSize={35}
-              sx={{ mx: 1 }}
-              align={"left"}
+            <Box
+              sx={{ justifyContent: "flex-start", alignItems: "flex-start" }}
             >
-              Welcome Back,
-            </Typography>
-            <Typography
-              fontFamily={"Berlin Sans FB"}
-              fontSize={50}
-              sx={{ mx: 1, mt: 0 }}
-              align={"left"}
+              <Typography
+                fontFamily={"Berlin Sans FB"}
+                fontSize={30}
+                sx={{ mx: 5 }}
+                align={"left"}
+              >
+                Welcome Back,
+              </Typography>
+              <Typography
+                fontFamily={"Berlin Sans FB"}
+                fontSize={50}
+                sx={{ mx: 5, mt: 0 }}
+                align={"left"}
+              >
+                Alicia Michelle
+              </Typography>
+            </Box>
+
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "flex-start",
+                justifyContent: "center",
+              }}
             >
-              Alicia Michelle
-            </Typography>
+              <Box
+                sx={{ display: "flex", flexDirection: "column", width: "33%" }}
+              >
+                <Typography
+                  fontFamily={"Berlin Sans FB"}
+                  fontSize={30}
+                  sx={{ my: 3 }}
+                >
+                  My Modules
+                </Typography>
+                <Card sx={{ mx: 5 }}>
+                  <CardContent>
+                    <Box component="form" noValidate sx={{ mt: 0 }}>
+                      <Box sx={{ display: "flex", flexDirection: "column" }}>
+                        <Button
+                          size="large"
+                          sx={{
+                            color: "#000000",
+                            ":hover": {
+                              bgcolor: "#FFCE26",
+                            },
+                            textAlign: "left",
+                          }}
+                          style={{ justifyContent: "flex-start" }}
+                        >
+                          <Typography fontFamily={"Berlin Sans FB"}>
+                            CP2106 Independent Software Development Project
+                            (Orbital)
+                          </Typography>
+                        </Button>
+                        <Button
+                          size="large"
+                          sx={{
+                            color: "#000000",
+                            ":hover": {
+                              bgcolor: "#FFCE26",
+                            },
+                            textAlign: "left",
+                          }}
+                          style={{ justifyContent: "flex-start" }}
+                        >
+                          <Typography fontFamily={"Berlin Sans FB"}>
+                            CS1010S Programming Methodology
+                          </Typography>
+                        </Button>
+                        <Button
+                          size="large"
+                          sx={{
+                            color: "#000000",
+                            ":hover": {
+                              bgcolor: "#FFCE26",
+                            },
+                            textAlign: "left",
+                          }}
+                          style={{ justifyContent: "flex-start" }}
+                        >
+                          <Typography fontFamily={"Berlin Sans FB"}>
+                            CS2030 Programming Methodology II
+                          </Typography>
+                        </Button>
+                        <Button
+                          size="large"
+                          sx={{
+                            color: "#000000",
+                            ":hover": {
+                              bgcolor: "#FFCE26",
+                            },
+                            textAlign: "left",
+                          }}
+                          style={{
+                            justifyContent: "flex-start",
+                          }}
+                        >
+                          <Typography fontFamily={"Berlin Sans FB"}>
+                            CS2040 Data Structures and Algorithms
+                          </Typography>
+                        </Button>
+                        <Button
+                          type="submit"
+                          fullWidth
+                          variant="contained"
+                          sx={{
+                            mt: 2,
+                            mb: 0,
+                            color: "#000000",
+                            backgroundColor: "#FFCE26",
+                          }}
+                        >
+                          <Typography fontFamily={"Berlin Sans FB"}>
+                            View All My Modules
+                          </Typography>
+                        </Button>
+                      </Box>
+                    </Box>
+                  </CardContent>
+                </Card>
+              </Box>
+
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  width: "33%",
+                }}
+              >
+                <Typography
+                  fontFamily={"Berlin Sans FB"}
+                  fontSize={30}
+                  sx={{ my: 3 }}
+                >
+                  My Internships
+                </Typography>
+                <Card sx={{ mx: 5 }}>
+                  <CardContent>
+                    <Box component="form" noValidate sx={{ mt: 0 }}>
+                      <Box sx={{ display: "flex", flexDirection: "column" }}>
+                        <Button
+                          size="large"
+                          sx={{
+                            color: "#000000",
+                            ":hover": {
+                              bgcolor: "#FFCE26",
+                            },
+                            textAlign: "left",
+                          }}
+                          style={{ justifyContent: "flex-start" }}
+                        >
+                          <Typography fontFamily={"Berlin Sans FB"}>
+                            Software Engineer
+                          </Typography>
+                        </Button>
+                        <Button
+                          size="large"
+                          sx={{
+                            color: "#000000",
+                            ":hover": {
+                              bgcolor: "#FFCE26",
+                            },
+                            textAlign: "left",
+                          }}
+                          style={{ justifyContent: "flex-start" }}
+                        >
+                          <Typography fontFamily={"Berlin Sans FB"}>
+                            Data Analyst
+                          </Typography>
+                        </Button>
+                        <Button
+                          size="large"
+                          sx={{
+                            color: "#000000",
+                            ":hover": {
+                              bgcolor: "#FFCE26",
+                            },
+                            textAlign: "left",
+                          }}
+                          style={{ justifyContent: "flex-start" }}
+                        >
+                          <Typography fontFamily={"Berlin Sans FB"}>
+                            Product Manager
+                          </Typography>
+                        </Button>
+                        <Button
+                          type="submit"
+                          fullWidth
+                          variant="contained"
+                          sx={{
+                            mt: 2,
+                            mb: 0,
+                            color: "#000000",
+                            backgroundColor: "#FFCE26",
+                          }}
+                        >
+                          <Typography fontFamily={"Berlin Sans FB"}>
+                            View All My Internships
+                          </Typography>
+                        </Button>
+                      </Box>
+                    </Box>
+                  </CardContent>
+                </Card>
+              </Box>
+              <Box
+                sx={{ display: "flex", flexDirection: "column", width: "33%" }}
+              >
+                <Typography
+                  fontFamily={"Berlin Sans FB"}
+                  fontSize={30}
+                  sx={{ my: 3 }}
+                >
+                  My Friends
+                </Typography>
+                <Card sx={{ mx: 5 }}>
+                  <CardContent>
+                    <Box component="form" noValidate sx={{ mt: 0 }}>
+                      <Box sx={{ display: "flex", flexDirection: "column" }}>
+                        <Button
+                          size="large"
+                          sx={{
+                            color: "#000000",
+                            ":hover": {
+                              bgcolor: "#FFCE26",
+                            },
+                          }}
+                          style={{ justifyContent: "flex-start" }}
+                        >
+                          <Box
+                            sx={{
+                              display: "flex",
+                              flexDirection: "row",
+                              alignItems: "center",
+                            }}
+                          >
+                            <Avatar
+                              alt="Remy Sharp"
+                              src="/static/images/avatar/1.jpg"
+                              sx={{ mr: 2 }}
+                            />
+                            <Typography
+                              sx={{
+                                alignContent: "center",
+                                justifyContent: "center",
+                              }}
+                              fontFamily={"Berlin Sans FB"}
+                            >
+                              User 1
+                            </Typography>
+                          </Box>
+                        </Button>
+                        <Button
+                          size="large"
+                          sx={{
+                            color: "#000000",
+                            ":hover": {
+                              bgcolor: "#FFCE26",
+                            },
+                          }}
+                          style={{ justifyContent: "flex-start" }}
+                        >
+                          <Box
+                            sx={{
+                              display: "flex",
+                              flexDirection: "row",
+                              alignItems: "center",
+                            }}
+                          >
+                            <Avatar
+                              alt="Bemy Sharp"
+                              src="/static/images/avatar/1.jpg"
+                              sx={{ mr: 2 }}
+                            />
+                            <Typography
+                              sx={{
+                                alignContent: "center",
+                                justifyContent: "center",
+                              }}
+                              fontFamily={"Berlin Sans FB"}
+                            >
+                              User 2
+                            </Typography>
+                          </Box>
+                        </Button>
+                        <Button
+                          size="large"
+                          sx={{
+                            color: "#000000",
+                            ":hover": {
+                              bgcolor: "#FFCE26",
+                            },
+                          }}
+                          style={{ justifyContent: "flex-start" }}
+                        >
+                          <Box
+                            sx={{
+                              display: "flex",
+                              flexDirection: "row",
+                              alignItems: "center",
+                            }}
+                          >
+                            <Avatar
+                              alt="Aemy Sharp"
+                              src="/static/images/avatar/1.jpg"
+                              sx={{ mr: 2 }}
+                            />
+                            <Typography
+                              sx={{
+                                alignContent: "center",
+                                justifyContent: "center",
+                              }}
+                              fontFamily={"Berlin Sans FB"}
+                            >
+                              User 3
+                            </Typography>
+                          </Box>
+                        </Button>
+                        <Button
+                          type="submit"
+                          fullWidth
+                          variant="contained"
+                          sx={{
+                            mt: 2,
+                            mb: 0,
+                            color: "#000000",
+                            backgroundColor: "#FFCE26",
+                          }}
+                        >
+                          <Typography fontFamily={"Berlin Sans FB"}>
+                            View All My Friends
+                          </Typography>
+                        </Button>
+                      </Box>
+                    </Box>
+                  </CardContent>
+                </Card>
+              </Box>
+            </Box>
           </Box>
         </Grid>
       </Box>
