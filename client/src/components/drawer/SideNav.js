@@ -71,7 +71,11 @@ export default function SideDrawer({ open, handleDrawerClose, theme }) {
   return (
     <Drawer variant="permanent" open={open}>
       <DrawerHeader>
-        <IconButton onClick={() => navigate("/")}>
+        <IconButton
+          onClick={() => {
+            handleDrawerClose();
+          }}
+        >
           {theme.direction === "rtl" ? (
             <ChevronRightIcon />
           ) : (
