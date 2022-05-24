@@ -5,6 +5,7 @@ import Typography from "@mui/material/Typography";
 import TopDrawer from "../../components/drawer/TopNav";
 import SideDrawer from "../../components/drawer/SideNav";
 import Grid from "@mui/material/Grid";
+import logo from "../../img/logo.png";
 
 const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
@@ -36,28 +37,40 @@ export default function Home() {
         theme={theme}
       />
       {/* <Box component="main" sx={{ flexGrow: 1, p: 3 }}> */}
-      <Box component="main" sx={{ flexGrow: 1, p: 0 }}>
+      <Box component="main" sx={{ flexGrow: 1, pt: 6 }}>
         <Grid
           container
           component="main"
           sx={{ height: "100vh", backgroundColor: "#FFCE26" }}
         >
           <DrawerHeader />
-          <Typography paragraph>
-            Consequat mauris nunc congue nisi vitae suscipit. Fringilla est
-            ullamcorper eget nulla facilisi etiam dignissim diam. Pulvinar
-            elementum integer enim neque volutpat ac tincidunt. Ornare
-            suspendisse sed nisi lacus sed viverra tellus. Purus sit amet
-            volutpat consequat mauris. Elementum eu facilisis sed odio morbi.
-            Euismod lacinia at quis risus sed vulputate odio. Morbi tincidunt
-            ornare massa eget egestas purus viverra accumsan in. In hendrerit
-            gravida rutrum quisque non tellus orci ac. Pellentesque nec nam
-            aliquam sem et tortor. Habitant morbi tristique senectus et.
-            Adipiscing elit duis tristique sollicitudin nibh sit. Ornare aenean
-            euismod elementum nisi quis eleifend. Commodo viverra maecenas
-            accumsan lacus vel facilisis. Nulla posuere sollicitudin aliquam
-            ultrices sagittis orci a.
-          </Typography>
+          <Box
+            sx={{
+              my: 6,
+              mx: 4,
+              display: "flex",
+              flexDirection: "column",
+              // alignItems: "center",
+              // justifyContent: "center",
+            }}
+          >
+            <Typography
+              fontFamily={"Berlin Sans FB"}
+              fontSize={35}
+              sx={{ mx: 1 }}
+              align={"left"}
+            >
+              Welcome Back,
+            </Typography>
+            <Typography
+              fontFamily={"Berlin Sans FB"}
+              fontSize={50}
+              sx={{ mx: 1, mt: 0 }}
+              align={"left"}
+            >
+              Alicia Michelle
+            </Typography>
+          </Box>
         </Grid>
       </Box>
     </Box>
