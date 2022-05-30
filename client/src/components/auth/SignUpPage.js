@@ -15,6 +15,13 @@ import CardContent from "@mui/material/CardContent";
 import logo from "../../img/logo.png";
 import TopDrawer from "../../components/drawer/TopNav";
 import { styled } from "@mui/material/styles";
+// import { Link, Redirect } from "react-router-dom";
+
+import {
+  BrowserRouter as BrowserRouter,
+  Link as RouterLink,
+  Router,
+} from "react-router-dom";
 
 const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
@@ -226,6 +233,8 @@ export default function SignUpSide() {
                           color: "#000000",
                           backgroundColor: "#FFCE26",
                         }}
+                        component={RouterLink}
+                        to="/home"
                       >
                         <Typography fontFamily={"Berlin Sans FB"}>
                           Log In
@@ -255,9 +264,13 @@ export default function SignUpSide() {
                           </Link>
                         </Grid>
                         <Grid item>
-                          <Link href="#" variant="body2">
+                          <Link
+                            component={RouterLink}
+                            to="/login"
+                            variant="body2"
+                          >
                             <Typography fontFamily={"Berlin Sans FB"}>
-                              {"Don't have an account? Sign Up"}
+                              {"Have an account? Log in"}
                             </Typography>
                           </Link>
                         </Grid>

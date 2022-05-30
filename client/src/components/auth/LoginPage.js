@@ -16,6 +16,17 @@ import logo from "../../img/logo.png";
 import TopDrawer from "../../components/drawer/TopNav";
 import { styled } from "@mui/material/styles";
 
+import Home from "../home/Home";
+import Login from "../auth/LoginPage";
+import SignUp from "../auth/SignUpPage";
+
+import Routing from "../routing/Routes";
+import {
+  BrowserRouter as BrowserRouter,
+  Link as RouterLink,
+  Router,
+} from "react-router-dom";
+
 const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
   alignItems: "center",
@@ -45,8 +56,6 @@ function Copyright(props) {
 }
 
 const theme = createTheme();
-
-// const cardStyle
 
 export default function LoginSide() {
   const handleSubmit = (event) => {
@@ -186,6 +195,7 @@ export default function LoginSide() {
                         control={<Checkbox value="remember" color="primary" />}
                         label="Remember me"
                       />
+                      {/* <Router> */}
                       <Button
                         type="submit"
                         fullWidth
@@ -196,11 +206,17 @@ export default function LoginSide() {
                           color: "#000000",
                           backgroundColor: "#FFCE26",
                         }}
+                        component={RouterLink}
+                        to="/home"
+                        // component={Routing}
                       >
+                        {/* <RouterLink to="/home"> */}
                         <Typography fontFamily={"Berlin Sans FB"}>
                           Log In
                         </Typography>
+                        {/* </RouterLink> */}
                       </Button>
+                      {/* </Router> */}
                       <Button
                         type="submit"
                         fullWidth
@@ -225,7 +241,11 @@ export default function LoginSide() {
                           </Link>
                         </Grid>
                         <Grid item>
-                          <Link href="#" variant="body2">
+                          <Link
+                            component={RouterLink}
+                            to="/signup"
+                            variant="body2"
+                          >
                             <Typography fontFamily={"Berlin Sans FB"}>
                               {"Don't have an account? Sign Up"}
                             </Typography>
