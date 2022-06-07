@@ -3,5 +3,12 @@
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
     "@mui/material": "^5.8.0"
+  },
+  "scripts": {
+    "dev": "concurrently \"cd server && npm run dev\" \"cd client && npm start\" "
+  },
+  "devDependencies": {
+    "concurrently": "^7.2.1",
+    "nodemon": "^2.0.16"
   }
 }

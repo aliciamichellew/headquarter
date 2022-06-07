@@ -25,4 +25,10 @@ app.use(
     extended: true,
   })
 );
-app.listen(4000, () => console.log("server is up and running"));
+// app.listen(4000, () => console.log("server is up and running"));
+
+const port = 4000;
+
+app.listen(port, () => {
+  console.log(`Example app listening on port ${port}`);
+});

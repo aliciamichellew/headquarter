@@ -63,17 +63,6 @@ export default function SignUpSide() {
     });
   };
 
-  // constructor(){
-  //   super()
-  //   this.state = {
-  //     firstName: '',
-  //     lastName: '',
-  //     username: '',
-  //     email: '',
-  //     password: ''
-  //   }
-  // };
-
   const [open, setOpen] = React.useState(false);
 
   const handleDrawerOpen = () => {

@@ -1,9 +1,8 @@
-import * as React from "react";
+// import * as React from "react";
+import React, { useState } from "react";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
 import Link from "@mui/material/Link";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
@@ -15,17 +14,14 @@ import CardContent from "@mui/material/CardContent";
 import logo from "../../img/logo.png";
 import TopDrawer from "../../components/drawer/TopNav";
 import { styled } from "@mui/material/styles";
+import axios from "axios";
 
-import Home from "../home/Home";
-import Login from "../auth/LoginPage";
-import SignUp from "../auth/SignUpPage";
-
-import Routing from "../routing/Routes";
 import {
   BrowserRouter as BrowserRouter,
   Link as RouterLink,
   Router,
 } from "react-router-dom";
+import { stepClasses } from "@mui/material";
 
 const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
@@ -58,15 +54,6 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function LoginSide() {
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
-  };
-
   const [open, setOpen] = React.useState(false);
 
   const handleDrawerOpen = () => {
@@ -75,6 +62,37 @@ export default function LoginSide() {
 
   const handleDrawerClose = () => {
     setOpen(false);
+  };
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log(email, password);
+    try {
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+        },
+      };
+
+      setLoading(true);
+
+      const { data } = await axios.post(
+        "/api/users/login",
+        { email, password },
+        config
+      );
+
+      console.log(data);
+      localStorage.setItem("userInfo", JSON.stringify(data));
+      setLoading(false);
+    } catch (error) {
+      setError(error.response.data.message);
+    }
   };
 
   return (
@@ -171,6 +189,8 @@ export default function LoginSide() {
                         name="email"
                         autoComplete="email"
                         autoFocus
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
                       />
                       <TextField
                         margin="normal"
@@ -181,6 +201,8 @@ export default function LoginSide() {
                         type="password"
                         id="password"
                         autoComplete="current-password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
                       />
                     </Box>
                   </CardContent>
@@ -191,10 +213,10 @@ export default function LoginSide() {
                       onSubmit={handleSubmit}
                       sx={{ mt: 1 }}
                     >
-                      <FormControlLabel
+                      {/* <FormControlLabel
                         control={<Checkbox value="remember" color="primary" />}
                         label="Remember me"
-                      />
+                      /> */}
                       {/* <Router> */}
                       <Button
                         type="submit"
@@ -206,17 +228,13 @@ export default function LoginSide() {
                           color: "#000000",
                           backgroundColor: "#FFCE26",
                         }}
-                        component={RouterLink}
-                        to="/home"
-                        // component={Routing}
+                        // component={RouterLink}
+                        // to="/home"
                       >
-                        {/* <RouterLink to="/home"> */}
                         <Typography fontFamily={"Berlin Sans FB"}>
                           Log In
                         </Typography>
-                        {/* </RouterLink> */}
                       </Button>
-                      {/* </Router> */}
                       <Button
                         type="submit"
                         fullWidth
