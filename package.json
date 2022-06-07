@@ -5,7 +5,9 @@
     "@mui/material": "^5.8.0"
   },
   "scripts": {
-    "dev": "concurrently \"cd server && npm run dev\" \"cd client && npm start\" "
+    "start": "nodemon server/server.js",
+    "client": "npm start --prefix client",
+    "dev": "concurrently \"npm start\" \"npm run client\""
   },
   "devDependencies": {
     "concurrently": "^7.2.1",
