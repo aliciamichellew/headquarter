@@ -53,8 +53,6 @@ function Copyright(props) {
 
 const theme = createTheme();
 
-// const cardStyle
-
 export default function SignUpSide() {
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -64,6 +62,17 @@ export default function SignUpSide() {
       password: data.get("password"),
     });
   };
+
+  // constructor(){
+  //   super()
+  //   this.state = {
+  //     firstName: '',
+  //     lastName: '',
+  //     username: '',
+  //     email: '',
+  //     password: ''
+  //   }
+  // };
 
   const [open, setOpen] = React.useState(false);
 
