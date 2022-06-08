@@ -9,6 +9,8 @@ import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Pagination from "@mui/material/Pagination";
+import SearchIcon from "@mui/icons-material/Search";
+import TextField from "@mui/material/TextField";
 
 import TopDrawer from "../../components/drawer/TopNav";
 import SideDrawer from "../../components/drawer/SideNav";
@@ -78,14 +80,56 @@ export default function Home() {
               gap: 2,
             }}
           >
-            <Typography
-              fontFamily={"Berlin Sans FB"}
-              fontSize={50}
-              sx={{ mx: 0, mt: 0 }}
-              align={"left"}
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+              }}
             >
-              View All Modules
-            </Typography>
+              <Typography
+                fontFamily={"Berlin Sans FB"}
+                fontSize={50}
+                sx={{ mx: 0, mt: 0 }}
+                align={"left"}
+              >
+                View All Modules
+              </Typography>
+              <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyItems: "center",
+                    width: 250,
+                  }}
+                >
+                  <SearchIcon sx={{ color: "action.active", mr: 1, my: 0.5 }} />
+                  <TextField
+                    id="searchByModuleCode"
+                    label="Search by Module Code"
+                    variant="standard"
+                    sx={{ width: 200 }}
+                  />
+                </Box>
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  sx={{
+                    mt: 2,
+                    mb: 0,
+                    color: "#FFCE26",
+                    backgroundColor: "#1E2328",
+                    width: 150,
+                    height: 40,
+                  }}
+                >
+                  <Typography fontFamily={"Berlin Sans FB"}>Search</Typography>
+                </Button>
+              </Box>
+            </Box>
+
             <Box
               sx={{
                 display: "flex",
