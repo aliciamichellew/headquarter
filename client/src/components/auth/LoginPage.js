@@ -142,10 +142,7 @@ export default function LoginSide() {
                   fontSize={20}
                   sx={{ mx: 10 }}
                 >
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. In
-                  turpis massa, rhoncus ac risus eget, vehicula finibus orci.
-                  Proin feugiat, nunc vel molestie aliquam, libero dui fermentum
-                  metus, vel congue nisi sapien rutrum augue.
+                  headquarter students to their dreams.
                 </Typography>
               </Box>
             </Grid>
@@ -222,11 +219,6 @@ export default function LoginSide() {
                       onSubmit={handleSubmit}
                       sx={{ mt: 1 }}
                     >
-                      {/* <FormControlLabel
-                        control={<Checkbox value="remember" color="primary" />}
-                        label="Remember me"
-                      /> */}
-                      {/* <Router> */}
                       <Button
                         type="submit"
                         fullWidth
@@ -237,8 +229,6 @@ export default function LoginSide() {
                           color: "#000000",
                           backgroundColor: "#FFCE26",
                         }}
-                        // component={RouterLink}
-                        // to="/home"
                       >
                         <Typography fontFamily={"Berlin Sans FB"}>
                           Log In

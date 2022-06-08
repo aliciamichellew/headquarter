@@ -146,10 +146,7 @@ export default function SignUpSide() {
                   fontSize={20}
                   sx={{ mx: 10 }}
                 >
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. In
-                  turpis massa, rhoncus ac risus eget, vehicula finibus orci.
-                  Proin feugiat, nunc vel molestie aliquam, libero dui fermentum
-                  metus, vel congue nisi sapien rutrum augue.
+                  headquarter students to their dreams.
                 </Typography>
               </Box>
             </Grid>
@@ -285,8 +282,6 @@ export default function SignUpSide() {
                           color: "#000000",
                           backgroundColor: "#FFCE26",
                         }}
-                        // component={RouterLink}
-                        // to="/home"
                       >
                         <Typography fontFamily={"Berlin Sans FB"}>
                           Sign Up
@@ -308,13 +303,6 @@ export default function SignUpSide() {
                         </Typography>
                       </Button>
                       <Grid container>
-                        <Grid item xs>
-                          <Link href="#" variant="body2">
-                            {/* <Typography fontFamily={"Berlin Sans FB"}>
-                              Forgot password?
-                            </Typography> */}
-                          </Link>
-                        </Grid>
                         <Grid item>
                           <Link
                             component={RouterLink}
