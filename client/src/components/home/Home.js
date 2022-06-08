@@ -25,6 +25,8 @@ export default function Home() {
   useEffect(() => {
     const userInfo = localStorage.getItem("userInfo");
 
+    // console.log(JSON.parse(userInfo).firstName);
+
     if (!userInfo) {
       navigate("/");
     }
@@ -51,6 +53,9 @@ export default function Home() {
 <Grid container spacing={${spacing}}>
 `;
 
+  // console.log("print" localStorage.getItem("userInfo").firstName);
+  const userInfo = localStorage.getItem("userInfo");
+
   return (
     <Box sx={{ display: "flex" }}>
       <TopDrawer open={open} handleDrawerOpen={handleDrawerOpen} />
@@ -59,7 +64,7 @@ export default function Home() {
         handleDrawerClose={handleDrawerClose}
         theme={theme}
       />
-      <Box component="main" sx={{ flexGrow: 1, pt: 6 }}>
+      <Box component="main" sx={{ flexGrow: 1, pt: 0 }}>
         <Grid
           container
           component="main"
@@ -68,7 +73,7 @@ export default function Home() {
           <DrawerHeader />
           <Box
             sx={{
-              my: 6,
+              mb: 4,
               mx: 4,
               display: "flex",
               flexDirection: "column",
@@ -81,7 +86,7 @@ export default function Home() {
               <Typography
                 fontFamily={"Berlin Sans FB"}
                 fontSize={30}
-                sx={{ mx: 5 }}
+                sx={{ mx: 0 }}
                 align={"left"}
               >
                 Welcome Back,
@@ -89,10 +94,10 @@ export default function Home() {
               <Typography
                 fontFamily={"Berlin Sans FB"}
                 fontSize={50}
-                sx={{ mx: 5, mt: 0 }}
+                sx={{ mx: 0, mt: 0 }}
                 align={"left"}
               >
-                Alicia Michelle
+                {JSON.parse(userInfo).firstName}
               </Typography>
             </Box>
 
@@ -110,7 +115,7 @@ export default function Home() {
                 <Typography
                   fontFamily={"Berlin Sans FB"}
                   fontSize={30}
-                  sx={{ my: 3 }}
+                  sx={{ my: 3, display: "flex", justifyContent: "center" }}
                 >
                   My Modules
                 </Typography>
@@ -212,7 +217,7 @@ export default function Home() {
                 <Typography
                   fontFamily={"Berlin Sans FB"}
                   fontSize={30}
-                  sx={{ my: 3 }}
+                  sx={{ my: 3, display: "flex", justifyContent: "center" }}
                 >
                   My Internships
                 </Typography>
@@ -291,7 +296,7 @@ export default function Home() {
                 <Typography
                   fontFamily={"Berlin Sans FB"}
                   fontSize={30}
-                  sx={{ my: 3 }}
+                  sx={{ my: 3, display: "flex", justifyContent: "center" }}
                 >
                   My Friends
                 </Typography>

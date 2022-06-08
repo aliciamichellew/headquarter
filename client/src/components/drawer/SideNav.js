@@ -119,7 +119,11 @@ export default function SideDrawer({ open, handleDrawerClose, theme }) {
                 color: "#FFCE26",
               }}
             >
-              <HomeIcon />
+              <HomeIcon
+                onClick={() => {
+                  navigate("/");
+                }}
+              />
             </ListItemIcon>
             <ListItemText
               primary={"Home"}
@@ -149,7 +153,11 @@ export default function SideDrawer({ open, handleDrawerClose, theme }) {
                 color: "#FFCE26",
               }}
             >
-              <ViewModuleIcon />
+              <ViewModuleIcon
+                onClick={() => {
+                  navigate("/allmodules");
+                }}
+              />
             </ListItemIcon>
             <ListItemText
               primary={"Modules"}
@@ -209,7 +217,11 @@ export default function SideDrawer({ open, handleDrawerClose, theme }) {
                 color: "#FFCE26",
               }}
             >
-              <AccountBoxIcon />
+              <AccountBoxIcon
+                onClick={() => {
+                  navigate("/profile");
+                }}
+              />
             </ListItemIcon>
             <ListItemText
               primary={"Profile"}
