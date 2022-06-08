@@ -1,4 +1,3 @@
-// import * as React from "react";
 import React, { useEffect, useState } from "react";
 import { styled, useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
@@ -22,14 +21,14 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 }));
 
 export default function Home() {
-  // let navigate = useNavigate();
-  // useEffect(() => {
-  //   const userInfo = localStorage.getItem("userInfo");
+  let navigate = useNavigate();
+  useEffect(() => {
+    const userInfo = localStorage.getItem("userInfo");
 
-  //   if (userInfo) {
-  //     navigate("/home");
-  //   }
-  // });
+    if (!userInfo) {
+      navigate("/");
+    }
+  });
 
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
