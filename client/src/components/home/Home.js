@@ -1,4 +1,5 @@
-import * as React from "react";
+// import * as React from "react";
+import React, { useEffect, useState } from "react";
 import { styled, useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -9,6 +10,7 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import { Avatar } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
@@ -20,6 +22,15 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 }));
 
 export default function Home() {
+  // let navigate = useNavigate();
+  // useEffect(() => {
+  //   const userInfo = localStorage.getItem("userInfo");
+
+  //   if (userInfo) {
+  //     navigate("/home");
+  //   }
+  // });
+
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
 

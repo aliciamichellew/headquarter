@@ -1,5 +1,5 @@
 // import * as React from "react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
@@ -14,6 +14,7 @@ import CardContent from "@mui/material/CardContent";
 import logo from "../../img/logo.png";
 import TopDrawer from "../../components/drawer/TopNav";
 import { styled } from "@mui/material/styles";
+import CircularProgress from "@mui/material/CircularProgress";
 import axios from "axios";
 
 import {
@@ -22,6 +23,8 @@ import {
   Router,
 } from "react-router-dom";
 import { stepClasses } from "@mui/material";
+import ErrorMessage from "../ErrorMessage";
+import { useNavigate } from "react-router-dom";
 
 const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
@@ -69,6 +72,15 @@ export default function LoginSide() {
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  let navigate = useNavigate();
+  useEffect(() => {
+    const userInfo = localStorage.getItem("userInfo");
+
+    if (userInfo) {
+      navigate("/home");
+    }
+  });
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log(email, password);
@@ -92,6 +104,7 @@ export default function LoginSide() {
       setLoading(false);
     } catch (error) {
       setError(error.response.data.message);
+      setLoading(false);
     }
   };
 
@@ -174,6 +187,8 @@ export default function LoginSide() {
                 </Typography>
                 <Card sx={{ mx: 5 }}>
                   <CardContent>
+                    {error && <ErrorMessage> {error} </ErrorMessage>}
+                    {loading && <CircularProgress />}
                     <Box
                       component="form"
                       noValidate

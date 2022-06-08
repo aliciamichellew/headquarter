@@ -1,4 +1,5 @@
-import * as React from "react";
+// import * as React from "react";
+import React, { useEffect, useState } from "react";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
@@ -15,6 +16,7 @@ import CardContent from "@mui/material/CardContent";
 import logo from "../../img/logo.png";
 import TopDrawer from "../../components/drawer/TopNav";
 import { styled } from "@mui/material/styles";
+import CircularProgress from "@mui/material/CircularProgress";
 // import { Link, Redirect } from "react-router-dom";
 
 import {
@@ -22,6 +24,9 @@ import {
   Link as RouterLink,
   Router,
 } from "react-router-dom";
+import ErrorMessage from "../ErrorMessage";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
@@ -54,13 +59,49 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function SignUpSide() {
-  const handleSubmit = (event) => {
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [message, setMessage] = useState(null);
+  const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  let navigate = useNavigate();
+  useEffect(() => {
+    const userInfo = localStorage.getItem("userInfo");
+
+    if (userInfo) {
+      navigate("/home");
+    }
+  });
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+    if (password !== confirmPassword) {
+      setMessage("Passwords Do not Match");
+    } else {
+      setMessage(null);
+      try {
+        const config = {
+          headers: {
+            "Content-type": "application/json",
+          },
+        };
+
+        setLoading(true);
+        const { data } = await axios.post(
+          "/api/users",
+          { firstName, lastName, username, email, password },
+          config
+        );
+
+        setLoading(false);
+        localStorage.setItem("userInfo", JSON.stringify(data));
+      } catch (error) {}
+    }
   };
 
   const [open, setOpen] = React.useState(false);
@@ -152,6 +193,9 @@ export default function SignUpSide() {
                 </Typography>
                 <Card sx={{ mx: 5 }}>
                   <CardContent>
+                    {error && <ErrorMessage> {error} </ErrorMessage>}
+                    {message && <ErrorMessage> {message} </ErrorMessage>}
+                    {loading && <CircularProgress />}
                     <Box
                       component="form"
                       noValidate
@@ -167,6 +211,8 @@ export default function SignUpSide() {
                         name="firstName"
                         autoComplete="firstName"
                         autoFocus
+                        value={firstName}
+                        onChange={(e) => setFirstName(e.target.value)}
                       />
                       <TextField
                         margin="normal"
@@ -177,6 +223,8 @@ export default function SignUpSide() {
                         name="lastName"
                         autoComplete="lastName"
                         autoFocus
+                        value={lastName}
+                        onChange={(e) => setLastName(e.target.value)}
                       />
                       <TextField
                         margin="normal"
@@ -187,6 +235,8 @@ export default function SignUpSide() {
                         name="username"
                         autoComplete="username"
                         autoFocus
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
                       />
                       <TextField
                         margin="normal"
@@ -197,6 +247,8 @@ export default function SignUpSide() {
                         name="email"
                         autoComplete="email"
                         autoFocus
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
                       />
                       <TextField
                         margin="normal"
@@ -207,6 +259,20 @@ export default function SignUpSide() {
                         type="password"
                         id="password"
                         autoComplete="current-password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                      />
+                      <TextField
+                        margin="normal"
+                        required
+                        fullWidth
+                        name="confirmPassword"
+                        label="Confirm Password"
+                        type="password"
+                        id="confirmPassword"
+                        autoComplete="current-password"
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
                       />
                     </Box>
                   </CardContent>
@@ -217,10 +283,6 @@ export default function SignUpSide() {
                       onSubmit={handleSubmit}
                       sx={{ mt: 1 }}
                     >
-                      <FormControlLabel
-                        control={<Checkbox value="remember" color="primary" />}
-                        label="Remember me"
-                      />
                       <Button
                         type="submit"
                         fullWidth
@@ -231,11 +293,11 @@ export default function SignUpSide() {
                           color: "#000000",
                           backgroundColor: "#FFCE26",
                         }}
-                        component={RouterLink}
-                        to="/home"
+                        // component={RouterLink}
+                        // to="/home"
                       >
                         <Typography fontFamily={"Berlin Sans FB"}>
-                          Log In
+                          Sign Up
                         </Typography>
                       </Button>
                       <Button
@@ -256,9 +318,9 @@ export default function SignUpSide() {
                       <Grid container>
                         <Grid item xs>
                           <Link href="#" variant="body2">
-                            <Typography fontFamily={"Berlin Sans FB"}>
+                            {/* <Typography fontFamily={"Berlin Sans FB"}>
                               Forgot password?
-                            </Typography>
+                            </Typography> */}
                           </Link>
                         </Grid>
                         <Grid item>

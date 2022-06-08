@@ -15,6 +15,7 @@ import ListItemText from "@mui/material/ListItemText";
 import WorkIcon from "@mui/icons-material/Work";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import { useNavigate } from "react-router-dom";
+import LogoutIcon from "@mui/icons-material/Logout";
 
 const drawerWidth = 240;
 
@@ -212,6 +213,41 @@ export default function SideDrawer({ open, handleDrawerClose, theme }) {
             </ListItemIcon>
             <ListItemText
               primary={"Profile"}
+              sx={{ opacity: open ? 1 : 0, color: "#FFCE26" }}
+              primaryTypographyProps={{ fontFamily: "Berlin Sans FB" }}
+            />
+          </ListItemButton>
+        </ListItem>
+        <ListItem
+          key={"Logout"}
+          disablePadding
+          sx={{ display: "block", color: "#FFCE26" }}
+        >
+          <ListItemButton
+            sx={{
+              minHeight: 48,
+              justifyContent: open ? "initial" : "center",
+              px: 2.5,
+              color: "#FFCE26",
+            }}
+          >
+            <ListItemIcon
+              sx={{
+                minWidth: 0,
+                mr: open ? 3 : "auto",
+                justifyContent: "center",
+                color: "#FFCE26",
+              }}
+            >
+              <LogoutIcon
+                onClick={() => {
+                  localStorage.removeItem("userInfo");
+                  navigate("/");
+                }}
+              />
+            </ListItemIcon>
+            <ListItemText
+              primary={"Logout"}
               sx={{ opacity: open ? 1 : 0, color: "#FFCE26" }}
               primaryTypographyProps={{ fontFamily: "Berlin Sans FB" }}
             />
