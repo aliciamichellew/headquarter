@@ -77,7 +77,6 @@ export default function LoginSide() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(email, password);
     try {
       const config = {
         headers: {
@@ -93,7 +92,6 @@ export default function LoginSide() {
         config
       );
 
-      console.log(data);
       localStorage.setItem("userInfo", JSON.stringify(data));
       setLoading(false);
     } catch (error) {

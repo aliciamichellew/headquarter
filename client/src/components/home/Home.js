@@ -25,8 +25,6 @@ export default function Home() {
   useEffect(() => {
     const userInfo = localStorage.getItem("userInfo");
 
-    // console.log(JSON.parse(userInfo).firstName);
-
     if (!userInfo) {
       navigate("/");
     }
@@ -52,8 +50,6 @@ export default function Home() {
   const jsx = `
 <Grid container spacing={${spacing}}>
 `;
-
-  // console.log("print" localStorage.getItem("userInfo").firstName);
   const userInfo = localStorage.getItem("userInfo");
 
   return (
