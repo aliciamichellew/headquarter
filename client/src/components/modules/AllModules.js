@@ -60,17 +60,46 @@ export default function AllModules() {
         },
       };
       setLoading(true);
-      const res = await axios.get("/api/modules/getmodulelistnusmods", config);
+      const res = await axios.get("/api/modules", config);
       setModuleList(res.data);
       setLoading(false);
     };
     fetchModules();
   }, []);
 
-  console.log(moduleList);
+  // console.log(moduleList);
+
+  const [searchQuery, setSearchQuery] = useState("");
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+        },
+      };
+
+      setLoading(true);
+      console.log(searchQuery);
+      const { data } = await axios.get(
+        `/api/modules/${searchQuery}`,
+        { searchQuery },
+        config
+      );
+
+      console.log(data);
+      setModuleList(data);
+      setLoading(false);
+      // console.log("finish");
+    } catch (error) {
+      // setError(error.response.data.message);
+      throw error.message;
+      setLoading(false);
+    }
+  };
 
   let [page, setPage] = useState(1);
-  const PER_PAGE = 20;
+  const PER_PAGE = 36;
 
   const count = Math.ceil(moduleList.length / PER_PAGE);
   const _DATA = usePagination(moduleList, PER_PAGE);
@@ -127,6 +156,9 @@ export default function AllModules() {
               </Typography>
               {loading && <CircularProgress />}
               <Box
+                component="form"
+                noValidate
+                onSubmit={handleSubmit}
                 sx={{
                   display: "flex",
                   justifyContent: "flex-end",
@@ -142,10 +174,12 @@ export default function AllModules() {
                 >
                   <SearchIcon sx={{ color: "action.active", mr: 1, my: 0.5 }} />
                   <TextField
-                    id="searchByModuleCode"
+                    id="searchQuery"
                     label="Search by Module Code"
                     variant="standard"
                     sx={{ width: 200 }}
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
                   />
                 </Box>
                 <Button

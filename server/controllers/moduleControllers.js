@@ -3,6 +3,7 @@ const asyncHandler = require("express-async-handler");
 const Module = require("../models/moduleModel");
 
 const axios = require("axios");
+const { search } = require("../routes/moduleRoutes");
 
 const registerModule = asyncHandler(async (request, response) => {
   const { moduleCode, moduleTitle } = request.body;
@@ -32,20 +33,18 @@ const registerModule = asyncHandler(async (request, response) => {
 });
 
 const findModule = asyncHandler(async (request, response) => {
-  const { moduleCode } = request.body;
+  const url = "https://api.nusmods.com/v2/2021-2022/moduleList.json";
+  const data = await axios.get(url);
+  const { searchQuery } = request.params;
 
-  const module = await Module.findOne({ moduleCode });
-
-  if (module) {
-    response.json({
-      _id: module._id,
-      moduleCode: module.moduleCode,
-      moduleTitle: module.moduleTitle,
-    });
-  } else {
+  if (!data.data) {
     response.status(400);
-    throw new Error("Module not Found!");
+    throw new Error("Fetch Failed!");
   }
+
+  const module = data.data.filter((x) => x.moduleCode.includes(searchQuery));
+
+  response.json(module);
 });
 
 const getModuleList = async (req, res) => {
