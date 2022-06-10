@@ -67,8 +67,6 @@ export default function AllModules() {
     fetchModules();
   }, []);
 
-  // console.log(moduleList);
-
   const [searchQuery, setSearchQuery] = useState("");
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -90,9 +88,7 @@ export default function AllModules() {
       console.log(data);
       setModuleList(data);
       setLoading(false);
-      // console.log("finish");
     } catch (error) {
-      // setError(error.response.data.message);
       throw error.message;
       setLoading(false);
     }

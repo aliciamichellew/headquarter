@@ -41,15 +41,6 @@ export default function Home() {
     setOpen(false);
   };
 
-  // const [spacing, setSpacing] = React.useState(2);
-
-  // const handleChange = (event) => {
-  //   setSpacing(Number(event.target.value));
-  // };
-
-  //   const jsx = `
-  // <Grid container spacing={${spacing}}>
-  // `;
   const userInfo = localStorage.getItem("userInfo");
 
   return (
