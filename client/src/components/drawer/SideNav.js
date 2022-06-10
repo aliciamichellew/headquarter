@@ -101,6 +101,9 @@ export default function SideDrawer({ open, handleDrawerClose, theme }) {
           disablePadding
           sx={{ display: "block" }}
           fontFamily={"Berlin Sans FB"}
+          onClick={() => {
+            navigate("/");
+          }}
         >
           <ListItemButton
             sx={{
@@ -119,11 +122,7 @@ export default function SideDrawer({ open, handleDrawerClose, theme }) {
                 color: "#FFCE26",
               }}
             >
-              <HomeIcon
-                onClick={() => {
-                  navigate("/");
-                }}
-              />
+              <HomeIcon />
             </ListItemIcon>
             <ListItemText
               primary={"Home"}
@@ -136,6 +135,9 @@ export default function SideDrawer({ open, handleDrawerClose, theme }) {
           key={"Modules"}
           disablePadding
           sx={{ display: "block", color: "#FFCE26" }}
+          onClick={() => {
+            navigate("/allmodules");
+          }}
         >
           <ListItemButton
             sx={{
@@ -153,11 +155,7 @@ export default function SideDrawer({ open, handleDrawerClose, theme }) {
                 color: "#FFCE26",
               }}
             >
-              <ViewModuleIcon
-                onClick={() => {
-                  navigate("/allmodules");
-                }}
-              />
+              <ViewModuleIcon />
             </ListItemIcon>
             <ListItemText
               primary={"Modules"}
@@ -200,6 +198,9 @@ export default function SideDrawer({ open, handleDrawerClose, theme }) {
           key={"Profile"}
           disablePadding
           sx={{ display: "block", color: "#FFCE26" }}
+          onClick={() => {
+            navigate("/profilepage");
+          }}
         >
           <ListItemButton
             sx={{
@@ -217,11 +218,7 @@ export default function SideDrawer({ open, handleDrawerClose, theme }) {
                 color: "#FFCE26",
               }}
             >
-              <AccountBoxIcon
-                onClick={() => {
-                  navigate("/profile");
-                }}
-              />
+              <AccountBoxIcon />
             </ListItemIcon>
             <ListItemText
               primary={"Profile"}
@@ -234,6 +231,10 @@ export default function SideDrawer({ open, handleDrawerClose, theme }) {
           key={"Logout"}
           disablePadding
           sx={{ display: "block", color: "#FFCE26" }}
+          onClick={() => {
+            localStorage.removeItem("userInfo");
+            navigate("/");
+          }}
         >
           <ListItemButton
             sx={{
@@ -251,12 +252,7 @@ export default function SideDrawer({ open, handleDrawerClose, theme }) {
                 color: "#FFCE26",
               }}
             >
-              <LogoutIcon
-                onClick={() => {
-                  localStorage.removeItem("userInfo");
-                  navigate("/");
-                }}
-              />
+              <LogoutIcon />
             </ListItemIcon>
             <ListItemText
               primary={"Logout"}
