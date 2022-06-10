@@ -10,11 +10,14 @@ import Typography from "@mui/material/Typography";
 import Pagination from "@mui/material/Pagination";
 import SearchIcon from "@mui/icons-material/Search";
 import TextField from "@mui/material/TextField";
+import CircularProgress from "@mui/material/CircularProgress";
 
 import TopDrawer from "../../components/drawer/TopNav";
 import SideDrawer from "../../components/drawer/SideNav";
 import ModuleCard from "./ModuleCard";
 import usePagination from "../utils/Pagination";
+
+import axios from "axios";
 
 const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
@@ -46,70 +49,24 @@ export default function AllModules() {
     setOpen(false);
   };
 
-  const [spacing, setSpacing] = React.useState(2);
+  const [moduleList, setModuleList] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  const handleChange = (event) => {
-    setSpacing(Number(event.target.value));
-  };
-
-  const jsx = `
-  <Grid container spacing={${spacing}}>
-  `;
-
-  let modules = [
-    { moduleCode: "AC5001", moduleTitle: "Architectural History of Singapore" },
-    {
-      moduleCode: "AC5002",
-      moduleTitle: "Conservation Approaches and Philosophies",
-    },
-    {
-      moduleCode: "AC5003",
-      moduleTitle: "Urban Conservation and Regeneration",
-    },
-    { moduleCode: "AC5004", moduleTitle: "Architectural Heritage Management" },
-    {
-      moduleCode: "AC5005",
-      moduleTitle:
-        "Conservation Policy Methodology for Sustainable Development",
-    },
-    {
-      moduleCode: "AC5006",
-      moduleTitle: "Disaster Risk Management of Cultural Heritage",
-    },
-    { moduleCode: "AC5007", moduleTitle: "Dissertation" },
-    { moduleCode: "AC5008", moduleTitle: "Design for Conservation" },
-    { moduleCode: "AC5009", moduleTitle: "Design for Adaptive Reuse" },
-    {
-      moduleCode: "AC5010",
-      moduleTitle: "Historic Buildings Survey and Recording",
-    },
-    { moduleCode: "AC5011", moduleTitle: "Conservation of C20th Buildings" },
-    {
-      moduleCode: "AC5012",
-      moduleTitle: "Practical Building Conservation Skills I",
-    },
-    { moduleCode: "AC5014", moduleTitle: "Internship" },
-    { moduleCode: "ACC1701", moduleTitle: "Accounting for Decision Makers" },
-    { moduleCode: "ACC1701X", moduleTitle: "Accounting for Decision Makers" },
-    { moduleCode: "ACC2706", moduleTitle: "Managerial Accounting" },
-    {
-      moduleCode: "ACC2707",
-      moduleTitle: "Corporate Accounting & Reporting I",
-    },
-    {
-      moduleCode: "ACC2708",
-      moduleTitle: "Corporate Accounting & Reporting II",
-    },
-    { moduleCode: "ACC2709", moduleTitle: "Accounting Information Systems" },
-    { moduleCode: "ACC3701", moduleTitle: "Assurance and Attestation" },
-    { moduleCode: "ACC3702", moduleTitle: "Corporate and Securities Law" },
-  ];
+  useEffect(() => {
+    const fetchModules = async () => {
+      setLoading(true);
+      const res = await axios.get("/api/modules/getmodulelist");
+      setModuleList(res.data.moduleList);
+      setLoading(false);
+    };
+    fetchModules();
+  }, []);
 
   let [page, setPage] = useState(1);
   const PER_PAGE = 20;
 
-  const count = Math.ceil(modules.length / PER_PAGE);
-  const _DATA = usePagination(modules, PER_PAGE);
+  const count = Math.ceil(moduleList.length / PER_PAGE);
+  const _DATA = usePagination(moduleList, PER_PAGE);
 
   const handlePaginationChange = (e, p) => {
     setPage(p);
@@ -161,6 +118,7 @@ export default function AllModules() {
               >
                 View All Modules
               </Typography>
+              {loading && <CircularProgress />}
               <Box
                 sx={{
                   display: "flex",

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { styled, useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -41,15 +41,15 @@ export default function Home() {
     setOpen(false);
   };
 
-  const [spacing, setSpacing] = React.useState(2);
+  // const [spacing, setSpacing] = React.useState(2);
 
-  const handleChange = (event) => {
-    setSpacing(Number(event.target.value));
-  };
+  // const handleChange = (event) => {
+  //   setSpacing(Number(event.target.value));
+  // };
 
-  const jsx = `
-<Grid container spacing={${spacing}}>
-`;
+  //   const jsx = `
+  // <Grid container spacing={${spacing}}>
+  // `;
   const userInfo = localStorage.getItem("userInfo");
 
   return (
@@ -93,7 +93,7 @@ export default function Home() {
                 sx={{ mx: 0, mt: 0 }}
                 align={"left"}
               >
-                {JSON.parse(userInfo).firstName}
+                {JSON.parse(userInfo).firstName.toUpperCase()}
               </Typography>
             </Box>
 

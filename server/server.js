@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const userRoutes = require("./routes/userRoutes");
+const moduleRoutes = require("./routes/moduleRoutes");
 const cors = require("cors");
 var bodyParser = require("body-parser");
 const { notFound, errorHandler } = require("./middlewares/errorMiddleware");
@@ -17,6 +18,7 @@ mongoose.connect(process.env.DATABASE_ACCESS, () =>
 app.use(express.json());
 app.use(cors());
 app.use("/api/users", userRoutes);
+app.use("/api/modules", moduleRoutes);
 app.use(notFound);
 app.use(errorHandler);
 app.use(
