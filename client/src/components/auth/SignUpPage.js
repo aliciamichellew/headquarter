@@ -265,7 +265,14 @@ export default function SignUpSide() {
                       />
                     </Box>
                   </CardContent>
-                  <CardActions>
+                  <CardActions
+                    sx={{
+                      display: "flex",
+                      alignContent: "center",
+                      flexDirection: "column",
+                      justifyContent: "center",
+                    }}
+                  >
                     <Box
                       component="form"
                       noValidate

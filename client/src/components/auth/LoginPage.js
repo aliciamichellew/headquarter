@@ -174,7 +174,15 @@ export default function LoginSide() {
                 >
                   Log In
                 </Typography>
-                <Card sx={{ mx: 5 }}>
+                <Card
+                  sx={{
+                    mx: 5,
+                    display: "flex",
+                    alignContent: "center",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                  }}
+                >
                   <CardContent>
                     {error && <ErrorMessage> {error} </ErrorMessage>}
                     {loading && <CircularProgress />}
@@ -210,12 +218,24 @@ export default function LoginSide() {
                       />
                     </Box>
                   </CardContent>
-                  <CardActions>
+                  <CardActions
+                    sx={{
+                      display: "flex",
+                      alignContent: "center",
+                      flexDirection: "column",
+                      justifyContent: "center",
+                    }}
+                  >
                     <Box
                       component="form"
                       noValidate
                       onSubmit={handleSubmit}
-                      sx={{ mt: 1 }}
+                      sx={{
+                        mt: 1,
+                        display: "flex",
+                        alignContent: "center",
+                        flexDirection: "column",
+                      }}
                     >
                       <Button
                         type="submit"
