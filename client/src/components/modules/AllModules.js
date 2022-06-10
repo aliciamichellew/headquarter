@@ -54,13 +54,20 @@ export default function AllModules() {
 
   useEffect(() => {
     const fetchModules = async () => {
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+        },
+      };
       setLoading(true);
-      const res = await axios.get("/api/modules/getmodulelist");
-      setModuleList(res.data.moduleList);
+      const res = await axios.get("/api/modules/getmodulelistnusmods", config);
+      setModuleList(res.data);
       setLoading(false);
     };
     fetchModules();
   }, []);
+
+  console.log(moduleList);
 
   let [page, setPage] = useState(1);
   const PER_PAGE = 20;

@@ -2,6 +2,8 @@ const { response } = require("express");
 const asyncHandler = require("express-async-handler");
 const Module = require("../models/moduleModel");
 
+const axios = require("axios");
+
 const registerModule = asyncHandler(async (request, response) => {
   const { moduleCode, moduleTitle } = request.body;
 
@@ -58,4 +60,21 @@ const getModuleList = async (req, res) => {
     throw new Error("Fetch All Modules Failed");
   }
 };
-module.exports = { registerModule, findModule, getModuleList };
+
+const getModulefromNUSMODS = async (req, res) => {
+  const url = "https://api.nusmods.com/v2/2021-2022/moduleList.json";
+  const response = await axios.get(url);
+  if (response) {
+    res.json(response.data);
+  } else {
+    res.status(422);
+    throw new Error("Fetch All Modules Failed");
+  }
+};
+
+module.exports = {
+  registerModule,
+  findModule,
+  getModuleList,
+  getModulefromNUSMODS,
+};

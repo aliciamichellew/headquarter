@@ -30,7 +30,7 @@ const ModuleCard = ({ modules, loading }) => {
               {modules.moduleCode}
             </Typography>
             <Typography variant="h5" component="div">
-              {modules.moduleTitle}
+              {modules.title}
             </Typography>
           </CardContent>
           <CardActions sx={{ flexDirection: "column" }}>
