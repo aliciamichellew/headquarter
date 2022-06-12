@@ -118,9 +118,10 @@ export default function AllModules() {
           container
           component="main"
           sx={{
-            height: "100",
+            minHeight: "100vh",
             backgroundColor: "#FFCE26",
             display: "flex",
+            alignContent: "flex-start",
           }}
         >
           <DrawerHeader />

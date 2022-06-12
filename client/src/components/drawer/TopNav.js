@@ -55,11 +55,11 @@ export default function TopDrawer({ open, handleDrawerOpen }) {
   return (
     <AppBar position="fixed" open={open}>
       <Toolbar
-        PaperProps={{
-          sx: {
-            backgroundColor: "pink",
-            color: "red",
-          },
+        sx={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+          // width: "95%",
         }}
       >
         <Box
@@ -67,13 +67,14 @@ export default function TopDrawer({ open, handleDrawerOpen }) {
             display: "flex",
             flexDirection: "row",
             justifyContent: "space-between",
+            width: "100%",
           }}
         >
           <Box
             sx={{
               display: "flex",
               flexDirection: "row",
-              justifyContent: "flex-start",
+              justifyContent: "center",
             }}
           >
             <IconButton
@@ -104,8 +105,7 @@ export default function TopDrawer({ open, handleDrawerOpen }) {
           </Box>
           <Box
             sx={{
-              // display: "flex",
-              order: 1,
+              display: "flex",
               justifyContent: "flex-end",
             }}
           >

@@ -10,6 +10,7 @@ import SignUp from "./components/auth/SignUpPage";
 import Profile from "./components/Profile";
 import AllModules from "./components/modules/AllModules";
 import ProfilePage from "./components/profile/ProfilePage";
+import ModulePage from "./components/modules/ModulePage";
 
 const theme = createTheme({
   typography: {
@@ -29,6 +30,7 @@ export default function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/allmodules" element={<AllModules />} />
           <Route path="/profilepage" element={<ProfilePage />} />
+          <Route path="/modulepage" element={<ModulePage />} />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>

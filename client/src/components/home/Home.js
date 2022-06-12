@@ -55,13 +55,19 @@ export default function Home() {
         <Grid
           container
           component="main"
-          sx={{ height: "100vh", backgroundColor: "#FFCE26" }}
+          sx={{
+            minHeight: "100vh",
+            backgroundColor: "#FFCE26",
+            display: "flex",
+            alignContent: "flex-start",
+          }}
         >
           <DrawerHeader />
           <Box
             sx={{
               mb: 4,
               mx: 4,
+              mt: 3,
               display: "flex",
               flexDirection: "column",
               width: "100%",

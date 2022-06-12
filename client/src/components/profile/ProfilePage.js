@@ -126,7 +126,12 @@ export default function ProfilePage() {
         <Grid
           container
           component="main"
-          sx={{ height: "100", backgroundColor: "#FFCE26" }}
+          sx={{
+            minHeight: "100vh",
+            backgroundColor: "#FFCE26",
+            display: "flex",
+            alignContent: "flex-start",
+          }}
         >
           <DrawerHeader />
           <Box
