@@ -9,6 +9,7 @@ const QuestionSchema = new mongoose.Schema({
   isAnonymous: {
     type: Boolean,
     default: false,
+    required: true,
   },
   text: {
     type: String,
@@ -35,24 +36,27 @@ const QuestionSchema = new mongoose.Schema({
       author: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "users",
+        required: true,
       },
       text: String,
       date: {
         type: Date,
+        required: true,
       },
       isAnonymous: {
         type: Boolean,
         default: false,
+        required: true,
       },
     },
   ],
   module: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "modules",
+    type: String,
     required: true,
   },
   date: {
     type: Date,
+    required: true,
   },
 });
 

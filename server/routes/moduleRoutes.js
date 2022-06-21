@@ -4,12 +4,13 @@ const {
   findModule,
   getModuleList,
   getModulefromNUSMODS,
+  findModulebyModuleCode,
 } = require("../controllers/moduleControllers");
 const router = express.Router();
 
 router.route("/registermodule").post(registerModule);
-router.route("/:searchQuery").get(findModule);
-// router.route("/getmodulelist").get(getModuleList);
 router.route("/").get(getModulefromNUSMODS);
+router.route("/:searchQuery").get(findModule);
+router.route("/searchModules/:moduleCode").get(findModulebyModuleCode);
 
 module.exports = router;

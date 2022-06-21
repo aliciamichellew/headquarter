@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const userModel = require("./userModel");
 
 const ProfileSchema = new mongoose.Schema({
   user: {
@@ -8,9 +9,11 @@ const ProfileSchema = new mongoose.Schema({
   },
   firstName: {
     type: String,
+    required: true,
   },
   lastName: {
     type: String,
+    required: true,
   },
   profilePic: {
     type: String,
@@ -41,9 +44,14 @@ const ProfileSchema = new mongoose.Schema({
   moduleTaken: [
     {
       module: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "modules",
-        required: true,
+        moduleCode: {
+          type: "String",
+          required: true,
+        },
+        title: {
+          type: "String",
+          required: true,
+        },
       },
       acadYear: {
         type: String,
@@ -59,7 +67,7 @@ const ProfileSchema = new mongoose.Schema({
     {
       internship: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Internship",
+        ref: "internships",
         required: true,
       },
       startDate: {
@@ -75,8 +83,40 @@ const ProfileSchema = new mongoose.Schema({
       },
     },
   ],
+  myModules: [
+    {
+      moduleCode: {
+        type: "String",
+        required: true,
+      },
+      title: {
+        type: "String",
+        required: true,
+      },
+    },
+  ],
+  myInternships: [
+    {
+      companyName: {
+        type: "String",
+        required: true,
+      },
+      jobTitle: {
+        type: "String",
+        required: true,
+      },
+    },
+  ],
+  myPosts: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "posts",
+      required: true,
+    },
+  ],
 });
 
 const Profile = mongoose.model("profile", ProfileSchema);
+// const users = mongoose.model("users", userModel);
 
 module.exports = Profile;

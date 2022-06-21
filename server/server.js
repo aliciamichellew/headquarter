@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const userRoutes = require("./routes/userRoutes");
 const moduleRoutes = require("./routes/moduleRoutes");
+const profileRoutes = require("./routes/profileRoutes");
 const cors = require("cors");
 var bodyParser = require("body-parser");
 const { notFound, errorHandler } = require("./middlewares/errorMiddleware");
@@ -19,6 +20,7 @@ app.use(express.json());
 app.use(cors());
 app.use("/api/users", userRoutes);
 app.use("/api/modules", moduleRoutes);
+app.use("/api/profile", profileRoutes);
 app.use(notFound);
 app.use(errorHandler);
 app.use(

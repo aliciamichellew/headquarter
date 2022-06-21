@@ -32,21 +32,6 @@ const registerModule = asyncHandler(async (request, response) => {
   }
 });
 
-const findModule = asyncHandler(async (request, response) => {
-  const url = "https://api.nusmods.com/v2/2021-2022/moduleList.json";
-  const data = await axios.get(url);
-  const { searchQuery } = request.params;
-
-  if (!data.data) {
-    response.status(400);
-    throw new Error("Fetch Failed!");
-  }
-
-  const module = data.data.filter((x) => x.moduleCode.includes(searchQuery));
-
-  response.json(module);
-});
-
 const getModuleList = async (req, res) => {
   const moduleList = await Module.find().lean();
 
@@ -71,9 +56,46 @@ const getModulefromNUSMODS = async (req, res) => {
   }
 };
 
+const findModule = asyncHandler(async (request, response) => {
+  const url = "https://api.nusmods.com/v2/2021-2022/moduleList.json";
+  const data = await axios.get(url);
+  const { searchQuery } = request.params;
+  console.log(searchQuery);
+
+  if (!data.data) {
+    response.status(400);
+    throw new Error("Fetch Failed!");
+  }
+
+  const module = data.data.filter((x) => x.moduleCode.includes(searchQuery));
+
+  response.json(module);
+});
+
+const findModulebyModuleCode = asyncHandler(async (request, res) => {
+  console.log(request);
+  const { moduleCode } = request.params;
+  const url = `https://api.nusmods.com/v2/2021-2022/modules/${moduleCode}.json`;
+  console.log(url);
+  const response = await axios.get(url);
+
+  console.log(response);
+
+  if (response) {
+    res.json({
+      moduleCode: response.data.moduleCode,
+      title: response.data.title,
+    });
+  } else {
+    res.status(422);
+    throw new Error("Module Not Found");
+  }
+});
+
 module.exports = {
   registerModule,
   findModule,
   getModuleList,
   getModulefromNUSMODS,
+  findModulebyModuleCode,
 };

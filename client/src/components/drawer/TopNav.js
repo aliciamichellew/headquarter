@@ -17,6 +17,8 @@ import PersonAdd from "@mui/icons-material/PersonAdd";
 import Settings from "@mui/icons-material/Settings";
 import Logout from "@mui/icons-material/Logout";
 
+import { useNavigate } from "react-router-dom";
+
 import logo from "../../img/logo.png";
 
 const drawerWidth = 240;
@@ -41,6 +43,8 @@ const AppBar = styled(MuiAppBar, {
 }));
 
 export default function TopDrawer({ open, handleDrawerOpen }) {
+  let navigate = useNavigate();
+
   const [anchorEl, setAnchorEl] = React.useState(null);
   const openProfile = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -165,26 +169,20 @@ export default function TopDrawer({ open, handleDrawerOpen }) {
                 transformOrigin={{ horizontal: "right", vertical: "top" }}
                 anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
               >
-                <MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    navigate("/profilepage");
+                  }}
+                >
                   <Avatar /> Profile
                 </MenuItem>
-                <MenuItem>
-                  <Avatar /> My account
-                </MenuItem>
                 <Divider />
-                <MenuItem>
-                  <ListItemIcon>
-                    <PersonAdd fontSize="small" />
-                  </ListItemIcon>
-                  Add another account
-                </MenuItem>
-                <MenuItem>
-                  <ListItemIcon>
-                    <Settings fontSize="small" />
-                  </ListItemIcon>
-                  Settings
-                </MenuItem>
-                <MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    localStorage.removeItem("userInfo");
+                    navigate("/");
+                  }}
+                >
                   <ListItemIcon>
                     <Logout fontSize="small" />
                   </ListItemIcon>
