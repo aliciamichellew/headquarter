@@ -40,13 +40,14 @@ const ProfileSchema = new mongoose.Schema({
     github: {
       type: String,
     },
+    default: {},
   },
   moduleTaken: [
     {
       module: {
         moduleCode: {
           type: "String",
-          required: true,
+          // required: true,
         },
         title: {
           type: "String",
