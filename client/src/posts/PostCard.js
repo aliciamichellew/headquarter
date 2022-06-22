@@ -11,6 +11,8 @@ import BookmarkBorderOutlinedIcon from "@mui/icons-material/BookmarkBorderOutlin
 import ThumbUpOutlinedIcon from "@mui/icons-material/ThumbUpOutlined";
 import ThumbDownAltOutlinedIcon from "@mui/icons-material/ThumbDownAltOutlined";
 
+import ReplyPostModal from "./ReplyPostModal";
+
 const PostCard = ({ posts, loading }) => {
   if (loading) {
   }
@@ -43,11 +45,31 @@ const PostCard = ({ posts, loading }) => {
               <BookmarkBorderOutlinedIcon />
             </Box>
             <Typography>{posts.content}</Typography>
+            {posts.comments.slice(0, 3).map((comment) => (
+              <Card sx={{ my: 1 }}>
+                <CardContent>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      width: "100%",
+                      justifyContent: "space-between",
+                      flexDirection: "row",
+                      mb: 2,
+                    }}
+                  >
+                    <UserCard users={comment.user} content={"Today 4:00"} />
+                  </Box>
+                  <Typography>{comment.content}</Typography>
+                </CardContent>
+              </Card>
+            ))}
           </CardContent>
           <CardActions sx={{ flexDirection: "row", ml: 1 }}>
             <ThumbUpOutlinedIcon />
             <ThumbDownAltOutlinedIcon />
-            <Button size="small">Reply</Button>
+            <Box sx={{ mx: 1 }}>
+              <ReplyPostModal />
+            </Box>
           </CardActions>
         </Card>
       ))}

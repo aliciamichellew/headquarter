@@ -22,6 +22,7 @@ import TopDrawer from "../../components/drawer/TopNav";
 import SideDrawer from "../../components/drawer/SideNav";
 import UserCard from "../users/UserCard";
 import PostCard from "../../posts/PostCard";
+import AddPostModal from "../../posts/AddPostModal";
 import profile from "../../img/profile.png";
 import usePagination from "../utils/Pagination";
 
@@ -116,31 +117,43 @@ export default function ModulePage(module) {
       user: [{ name: "User 1" }],
       content:
         "Exciting news! I’m hiring mid-level and senior Product Designers to join my team at Acme, where we’re building the future of eCommerce.",
+      comments: [
+        { user: [{ name: "User 2" }], content: "Test reply" },
+        { user: [{ name: "User 2" }], content: "Test reply" },
+        { user: [{ name: "User 2" }], content: "Test reply" },
+        { user: [{ name: "User 2" }], content: "Test reply" },
+        { user: [{ name: "User 2" }], content: "Test reply" },
+      ],
     },
     {
       user: [{ name: "User 2" }],
       content:
         "Exciting news! I’m hiring mid-level and senior Product Designers to join my team at Acme, where we’re building the future of eCommerce.",
+      comments: [{ user: [{ name: "User 2" }], content: "Test reply" }],
     },
     {
       user: [{ name: "User 3" }],
       content:
         "Exciting news! I’m hiring mid-level and senior Product Designers to join my team at Acme, where we’re building the future of eCommerce.",
+      comments: [],
     },
     {
       user: [{ name: "User 4" }],
       content:
         "Exciting news! I’m hiring mid-level and senior Product Designers to join my team at Acme, where we’re building the future of eCommerce.",
+      comments: [],
     },
     {
       user: [{ name: "User 5" }],
       content:
         "Exciting news! I’m hiring mid-level and senior Product Designers to join my team at Acme, where we’re building the future of eCommerce.",
+      comments: [],
     },
     {
       user: [{ name: "User 6" }],
       content:
         "Exciting news! I’m hiring mid-level and senior Product Designers to join my team at Acme, where we’re building the future of eCommerce.",
+      comments: [],
     },
   ];
 
@@ -395,7 +408,7 @@ export default function ModulePage(module) {
                         borderRadius: "50%",
                       }}
                     />
-                    <Button
+                    {/* <Button
                       variant="contained"
                       sx={{
                         backgroundColor: "#D4D4D4",
@@ -405,7 +418,8 @@ export default function ModulePage(module) {
                       }}
                     >
                       Add a new post
-                    </Button>
+                    </Button> */}
+                    <AddPostModal sx={{ width: "100%" }} />
                   </Box>
                 </Card>
                 <PostCard posts={_DATA.currentData()} />
