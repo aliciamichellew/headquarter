@@ -1,6 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const User = require("../models/userModel");
 const Profile = require("../models/profileModel");
+const Modules = require("../models/moduleModel");
 const Post = require("../models/questionModel");
 
 const findUserById = async (request, response) => {
@@ -30,14 +31,47 @@ const findUserById = async (request, response) => {
 
 const createPosts = async (req, res) => {
   try {
+    console.log(req.body.moduleCode);
     const post = await Post.create({
       user: req.body._id,
       isAnonymous: req.body.isAnonymous,
       text: req.body.text,
       title: req.body.title,
-      module: req.body.module,
+      moduleCode: req.body.moduleCode,
       date: Date.now(),
     });
+
+    const moduleCode = req.body.moduleCode;
+
+    const moduleExists = await Modules.findOne({ moduleCode });
+
+    const postId = post._id;
+
+    if (!moduleExists) {
+      const newModule = await Modules.create({
+        moduleCode: moduleCode,
+      });
+      const moduleUpdated = await Modules.updateOne(
+        {
+          _id: newModule._id,
+        },
+        {
+          $push: { posts: postId },
+        }
+      );
+
+      console.log("newModule", newModule);
+    } else {
+      const moduleUpdated = await Modules.updateOne(
+        {
+          _id: moduleExists._id,
+        },
+        {
+          $push: { posts: postId },
+        }
+      );
+      console.log("moduleUpdated", moduleUpdated);
+    }
 
     if (post) {
       res.status(201).json({
@@ -45,7 +79,7 @@ const createPosts = async (req, res) => {
         isAnonymous: post.isAnonymous,
         text: post.text,
         title: post.title,
-        module: post.module,
+        moduleCode: post.moduleCode,
         date: post.date,
       });
     } else {
@@ -53,6 +87,7 @@ const createPosts = async (req, res) => {
       return;
     }
   } catch (error) {
+    console.log(error);
     res.status(400).send({ message: "Error occured when creating new post" });
   }
 };
@@ -71,7 +106,10 @@ const editPost = async (req, res) => {
       return;
     }
 
-    if (newPost.hasOwnProperty("user") || newPost.hasOwnProperty("module")) {
+    if (
+      newPost.hasOwnProperty("user") ||
+      newPost.hasOwnProperty("moduleCode")
+    ) {
       res.status(400).send({ message: "Cannot update user or module" });
       return;
     }
@@ -108,6 +146,25 @@ const deletePost = async (req, res) => {
     const post = await Post.findOneAndDelete({
       _id: deletePost._id,
     });
+
+    console.log(deletePost._id);
+    const postModuleExist = await Modules.findOne({
+      posts: deletePost._id,
+    });
+    console.log(postModuleExist);
+
+    if (postModuleExist) {
+      console.log("post Module exist");
+      const postModuleRemove = await Modules.updateOne(
+        {
+          _id: postModuleExist._id,
+        },
+        {
+          $pull: { posts: deletePost._id },
+        }
+      );
+      console.log(postModuleRemove);
+    }
 
     console.log("post", post);
     res.status(200).send({ message: "Delete post success" });

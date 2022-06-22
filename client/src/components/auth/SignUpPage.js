@@ -90,12 +90,6 @@ export default function SignUpSide() {
           config
         );
 
-        // const { profile_data } = await axios.post(
-        //   "/api/users/createprofile",
-        //   { _id, firstName, lastName, username, email, password },
-        //   config
-        // );
-
         setLoading(false);
         localStorage.setItem("userInfo", JSON.stringify(data));
       } catch (error) {}

@@ -73,13 +73,16 @@ const findModule = asyncHandler(async (request, response) => {
 });
 
 const findModulebyModuleCode = asyncHandler(async (request, res) => {
-  console.log(request);
+  // console.log(request);
   const { moduleCode } = request.params;
-  const url = `https://api.nusmods.com/v2/2021-2022/modules/${moduleCode}.json`;
-  console.log(url);
+  // console.log(moduleCode.toUpperCase());
+
+  // const moduleCode = toUpperCase(moduleCodeTemp);
+  const url = `https://api.nusmods.com/v2/2021-2022/modules/${moduleCode.toUpperCase()}.json`;
+  // console.log(url);
   const response = await axios.get(url);
 
-  console.log(response);
+  // console.log(response);
 
   if (response) {
     res.json({

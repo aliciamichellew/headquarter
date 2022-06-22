@@ -7,7 +7,6 @@ import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
-import FormHelperText from "@mui/material/FormHelperText";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import SearchIcon from "@mui/icons-material/Search";
@@ -15,7 +14,7 @@ import TextField from "@mui/material/TextField";
 import Card from "@mui/material/Card";
 import Pagination from "@mui/material/Pagination";
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 
 import TopDrawer from "../../components/drawer/TopNav";
@@ -36,6 +35,11 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 }));
 
 export default function ModulePage(module) {
+  const { moduleCode } = useParams();
+
+  // const [moduleCode, setModuleCode] = useState("");
+  const [title, setTitle] = useState("");
+
   let navigate = useNavigate();
 
   useEffect(() => {
@@ -45,6 +49,29 @@ export default function ModulePage(module) {
       navigate("/");
     }
   });
+
+  useEffect(() => {
+    const getModulesInfo = async () => {
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+        },
+      };
+
+      console.log(`/api/modules/searchModules/${moduleCode}`);
+
+      const { data } = await axios.get(
+        `/api/modules/searchModules/${moduleCode}`,
+        { moduleCode },
+        config
+      );
+
+      console.log("moduleInfo", data.title);
+      // setModuleCode(data.moduleCode);
+      setTitle(data.title);
+    };
+    getModulesInfo();
+  }, []);
 
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
@@ -209,10 +236,10 @@ export default function ModulePage(module) {
               >
                 <Box sx={{ display: "flex", flexDirection: "column" }}>
                   <Typography sx={{ fontSize: 40, color: "#FFCE26" }}>
-                    CS1010S
+                    {moduleCode.toUpperCase()}
                   </Typography>
                   <Typography sx={{ fontSize: 40, color: "#FFCE26" }}>
-                    Programming Methodology
+                    {title}
                   </Typography>
                 </Box>
                 <Box
@@ -408,18 +435,7 @@ export default function ModulePage(module) {
                         borderRadius: "50%",
                       }}
                     />
-                    {/* <Button
-                      variant="contained"
-                      sx={{
-                        backgroundColor: "#D4D4D4",
-                        color: "#909090",
-                        height: 40,
-                        width: "100%",
-                      }}
-                    >
-                      Add a new post
-                    </Button> */}
-                    <AddPostModal sx={{ width: "100%" }} />
+                    <AddPostModal moduleCode={moduleCode} />
                   </Box>
                 </Card>
                 <PostCard posts={_DATA.currentData()} />

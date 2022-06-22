@@ -51,7 +51,7 @@ const QuestionSchema = new mongoose.Schema({
       },
     },
   ],
-  module: {
+  moduleCode: {
     type: String,
     required: true,
   },

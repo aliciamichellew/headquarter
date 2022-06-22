@@ -25,8 +25,6 @@ const PostCard = ({ posts, loading }) => {
         alignItems: "flex-start",
         padding: 0,
         gap: 3,
-        // overflow: "auto",
-        // flexFlow: "wrap",
       }}
     >
       {posts.map((posts) => (

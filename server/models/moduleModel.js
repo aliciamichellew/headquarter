@@ -8,10 +8,10 @@ const moduleTemplate = new mongoose.Schema({
     required: true,
     unique: true,
   },
-  moduleTitle: {
-    type: String,
-    required: true,
-  },
+  // moduleTitle: {
+  //   type: String,
+  //   required: true,
+  // },
   experiencedUser: [
     {
       user: {
@@ -39,8 +39,5 @@ const moduleTemplate = new mongoose.Schema({
 });
 
 const Module = mongoose.model("modules", moduleTemplate);
-
-// const posts = mongoose.model("posts", questionModel);
-// const users = mongoose.model("users", profileModel);
 
 module.exports = Module;

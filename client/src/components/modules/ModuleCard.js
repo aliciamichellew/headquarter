@@ -7,7 +7,11 @@ import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 
+import { useNavigate } from "react-router-dom";
+
 const ModuleCard = ({ modules, loading }) => {
+  let navigate = useNavigate();
+
   if (loading) {
   }
 
@@ -34,7 +38,14 @@ const ModuleCard = ({ modules, loading }) => {
             </Typography>
           </CardContent>
           <CardActions sx={{ flexDirection: "column" }}>
-            <Button size="small">Learn More</Button>
+            <Button
+              size="small"
+              onClick={() => {
+                navigate(`/modules/${modules.moduleCode}`);
+              }}
+            >
+              Learn More
+            </Button>
           </CardActions>
         </Card>
       ))}

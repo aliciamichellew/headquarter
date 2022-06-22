@@ -30,7 +30,7 @@ export default function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/allmodules" element={<AllModules />} />
           <Route path="/profilepage" element={<ProfilePage />} />
-          <Route path="/modulepage" element={<ModulePage />} />
+          <Route path="/modules/:moduleCode" element={<ModulePage />} />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>
