@@ -233,10 +233,87 @@ const downvote = async (req, res) => {
   }
 };
 
+const comment = async (req, res) => {
+  try {
+    const newComment = req.body.comment;
+    console.log(newComment);
+    const postDetails = req.body.post;
+    console.log(postDetails);
+
+    const postExist = await Post.findOne({
+      _id: postDetails._id,
+    });
+
+    if (!postExist) {
+      res.status(400).send({ message: "Post does not exist" });
+      return;
+    }
+
+    const updatedPost = await Post.updateOne(
+      {
+        _id: postDetails._id,
+      },
+      {
+        $push: { answers: newComment },
+      }
+    );
+
+    console.log("updatedPost", updatedPost);
+    res.status(200).send({ message: "Post comment success" });
+  } catch (error) {
+    console.log(error);
+    res.status(400).send({ message: "Error occured when commenting post" });
+  }
+};
+
+const deleteComment = async (req, res) => {
+  try {
+    const commentDetails = req.body.comment;
+    const postDetails = req.body.post;
+
+    const postExist = await Post.findOne({
+      _id: postDetails._id,
+    });
+
+    if (!postExist) {
+      res.status(400).send({ message: "Post does not exist" });
+      return;
+    }
+
+    const commentExist = await Post.find({
+      _id: postDetails._id,
+      answers: { _id: commentDetails._id },
+    });
+
+    console.log(commentExist);
+
+    if (commentExist.length == 0) {
+      res.status(400).send({ message: "Comment does not exist" });
+      return;
+    }
+
+    const updatedPost = await Post.updateOne(
+      {
+        _id: postDetails._id,
+      },
+      {
+        $pull: { answers: { _id: commentDetails._id } },
+      }
+    );
+
+    console.log("updatedPost", updatedPost);
+    res.status(200).send({ message: "Delete comment success" });
+  } catch (error) {
+    console.log(error);
+    res.status(400).send({ message: "Error occured when deleting comment" });
+  }
+};
 module.exports = {
   createPosts,
   editPost,
   deletePost,
   upvote,
   downvote,
+  comment,
+  deleteComment,
 };
