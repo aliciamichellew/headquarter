@@ -23,6 +23,7 @@ const registerUser = async (req, res) => {
       return;
     }
 
+    //insert data into user database
     const user = await User.create({
       firstName,
       lastName,
@@ -31,6 +32,7 @@ const registerUser = async (req, res) => {
       password,
     });
 
+    //insert data into profile database
     const profile = await Profile.create({
       user: user._id,
       firstName: firstName,
@@ -62,6 +64,7 @@ const registerUser = async (req, res) => {
   }
 };
 
+//login
 const authUser = asyncHandler(async (request, response) => {
   try {
     const { email, password } = request.body;

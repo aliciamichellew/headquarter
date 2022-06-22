@@ -4,6 +4,7 @@ const dotenv = require("dotenv");
 const userRoutes = require("./routes/userRoutes");
 const moduleRoutes = require("./routes/moduleRoutes");
 const profileRoutes = require("./routes/profileRoutes");
+const postRoutes = require("./routes/postRoutes");
 const cors = require("cors");
 var bodyParser = require("body-parser");
 const { notFound, errorHandler } = require("./middlewares/errorMiddleware");
@@ -21,6 +22,7 @@ app.use(cors());
 app.use("/api/users", userRoutes);
 app.use("/api/modules", moduleRoutes);
 app.use("/api/profile", profileRoutes);
+app.use("/api/post", postRoutes);
 app.use(notFound);
 app.use(errorHandler);
 app.use(
