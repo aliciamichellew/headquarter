@@ -78,14 +78,14 @@ export default function AllModules() {
       };
 
       setLoading(true);
-      console.log(searchQuery);
+      // console.log(searchQuery);
       const { data } = await axios.get(
         `/api/modules/${searchQuery}`,
         { searchQuery },
         config
       );
 
-      console.log(data);
+      // console.log(data);
       setModuleList(data);
       setLoading(false);
     } catch (error) {

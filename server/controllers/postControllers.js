@@ -3,6 +3,7 @@ const User = require("../models/userModel");
 const Profile = require("../models/profileModel");
 const Modules = require("../models/moduleModel");
 const Post = require("../models/questionModel");
+const { post } = require("../routes/userRoutes");
 
 const findUserById = async (request, response) => {
   try {
@@ -365,6 +366,81 @@ const deleteComment = async (req, res) => {
     res.status(400).send({ message: "Error occured when deleting comment" });
   }
 };
+
+const getPostsByModuleCode = async (req, res) => {
+  try {
+    const { moduleCode } = req.params;
+
+    const findModule = await Modules.find({
+      moduleCode: moduleCode.toUpperCase(),
+    });
+    const postArray = [];
+
+    if (findModule.length != 0) {
+      //   console.log(findModule[0]);
+
+      const postIds = findModule[0].posts;
+      //   console.log(postIds);
+
+      for (var item of postIds) {
+        const findPost = await Post.find({ _id: item._id });
+        // console.log(findPost[0].user);
+        const findUser = await User.find({ _id: findPost[0].user });
+
+        const comments = [];
+        if (findPost[0].answers.length != 0) {
+          for (var i of findPost[0].answers) {
+            const commentUser = await User.find({ _id: i.author });
+            var commentData = {
+              user: [
+                {
+                  _id: commentUser[0]._id,
+                  name:
+                    commentUser[0].firstName + " " + commentUser[0].lastName,
+                },
+              ],
+              text: i.text,
+              date: i.date,
+              isAnonymous: i.isAnonymous,
+            };
+            comments.push(commentData);
+          }
+        }
+        var data = {
+          user: [
+            {
+              _id: findUser[0]._id,
+              name: findUser[0].firstName + " " + findUser[0].lastName,
+            },
+          ],
+          content: {
+            _id: findPost[0]._id,
+            title: findPost[0].title,
+            text: findPost[0].text,
+            upvote: findPost[0].upvote,
+            downvote: findPost[0].downvote,
+            moduleCode: findPost[0].moduleCode,
+            date: findPost[0].date,
+            isAnonymous: findPost[0].isAnonymous,
+          },
+          comments: comments,
+        };
+        // console.log("data", data);
+        postArray.push(data);
+      }
+    }
+
+    // console.log(postArray);
+    // res.status(200).send({ message: "Get posts by module code success" });
+    res.json(postArray);
+  } catch (error) {
+    console.log(error);
+    res
+      .status(400)
+      .send({ message: "Error occured when getting posts by module code" });
+  }
+};
+
 module.exports = {
   createPosts,
   editPost,
@@ -373,4 +449,5 @@ module.exports = {
   downvote,
   comment,
   deleteComment,
+  getPostsByModuleCode,
 };

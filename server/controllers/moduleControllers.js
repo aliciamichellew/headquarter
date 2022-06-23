@@ -60,7 +60,7 @@ const findModule = asyncHandler(async (request, response) => {
   const url = "https://api.nusmods.com/v2/2021-2022/moduleList.json";
   const data = await axios.get(url);
   const { searchQuery } = request.params;
-  console.log(searchQuery);
+  // console.log(searchQuery);
 
   if (!data.data) {
     response.status(400);

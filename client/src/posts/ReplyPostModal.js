@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useEffect, useState } from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
@@ -9,9 +9,16 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Typography from "@mui/material/Typography";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
+import Box from "@mui/material/Box";
 
-export default function FormDialog() {
+import axios from "axios";
+
+const ReplyPostModal = ({ postId }) => {
   const [open, setOpen] = React.useState(false);
+  const userInfo = localStorage.getItem("userInfo");
+  const userId = JSON.parse(userInfo)._id;
+  const [isAnonymous, setIsAnonymous] = useState(false);
+  const [text, setText] = useState("");
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -19,6 +26,51 @@ export default function FormDialog() {
 
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const handleChange = (e) => {
+    setIsAnonymous(e.target.checked);
+  };
+
+  const handleSubmit = async (event) => {
+    // console.log("masuk");
+    event.preventDefault();
+
+    try {
+      //   console.log("Authorization", JSON.parse(userInfo).token);
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+          //   Authorization: `Bearer ${JSON.parse(userInfo).token}`,
+        },
+      };
+      //   const { data } = await axios.put(
+      //     "/api/post/comment",
+      //     {
+      //       post: { _id: postId },
+      //       comment: { author: userId, text: text, isAnonymous: isAnonymous },
+      //     }
+      //     // config
+      //   );
+
+      //   console.log("post id", postId);
+
+      const { res } = await axios({
+        method: "put",
+        url: "/api/post/comment",
+        data: {
+          post: { _id: postId },
+          comment: { author: userId, text: text, isAnonymous: isAnonymous },
+        },
+        // config,
+      });
+
+      //   console.log(res);
+
+      handleClose();
+    } catch (error) {
+      //   console.log("error", error);
+    }
   };
 
   return (
@@ -46,14 +98,23 @@ export default function FormDialog() {
             maxRows={5}
             multiline
             sx={{ my: 1 }}
+            value={text}
+            onChange={(e) => setText(e.target.value)}
           />
-          <FormControlLabel control={<Checkbox />} label="Anonymous" />
+          <FormControlLabel
+            control={<Checkbox checked={isAnonymous} onChange={handleChange} />}
+            label="Anonymous"
+          />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleClose}>Submit</Button>
+          <Box component="form" noValidate onSubmit={handleSubmit}>
+            <Button onClick={handleClose}>Cancel</Button>
+            <Button type="submit">Submit</Button>
+          </Box>
         </DialogActions>
       </Dialog>
     </div>
   );
-}
+};
+
+export default ReplyPostModal;

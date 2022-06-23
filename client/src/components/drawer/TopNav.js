@@ -48,8 +48,6 @@ export default function TopDrawer({ open, handleDrawerOpen }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const openProfile = Boolean(anchorEl);
   const handleClick = (event) => {
-    console.log("handleclick");
-    console.log(anchorEl);
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {

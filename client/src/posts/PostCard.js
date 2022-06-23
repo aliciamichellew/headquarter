@@ -16,6 +16,7 @@ import ReplyPostModal from "./ReplyPostModal";
 const PostCard = ({ posts, loading }) => {
   if (loading) {
   }
+  // console.log("post comments", posts.comments);
 
   return (
     <Box
@@ -39,10 +40,20 @@ const PostCard = ({ posts, loading }) => {
                 mb: 2,
               }}
             >
-              <UserCard users={posts.user} content={"Today 4:00"} />
+              <UserCard
+                users={
+                  posts.content.isAnonymous
+                    ? [{ name: "Anonymous", _id: posts.user._id }]
+                    : posts.user
+                }
+                content={posts.content.date}
+              />
               <BookmarkBorderOutlinedIcon />
             </Box>
-            <Typography>{posts.content}</Typography>
+            <Box sx={{ display: "flex", flexDirection: "column" }}>
+              <Typography>{posts.content.title}</Typography>
+              <Typography>{posts.content.text}</Typography>
+            </Box>
             {posts.comments.slice(0, 3).map((comment) => (
               <Card sx={{ my: 1 }}>
                 <CardContent>
@@ -55,9 +66,16 @@ const PostCard = ({ posts, loading }) => {
                       mb: 2,
                     }}
                   >
-                    <UserCard users={comment.user} content={"Today 4:00"} />
+                    <UserCard
+                      users={
+                        comment.isAnonymous
+                          ? [{ name: "Anonymous", _id: comment.user._id }]
+                          : comment.user
+                      }
+                      content={comment.date}
+                    />
                   </Box>
-                  <Typography>{comment.content}</Typography>
+                  <Typography>{comment.text}</Typography>
                 </CardContent>
               </Card>
             ))}
@@ -66,7 +84,7 @@ const PostCard = ({ posts, loading }) => {
             <ThumbUpOutlinedIcon />
             <ThumbDownAltOutlinedIcon />
             <Box sx={{ mx: 1 }}>
-              <ReplyPostModal />
+              <ReplyPostModal postId={posts.content._id} />
             </Box>
           </CardActions>
         </Card>

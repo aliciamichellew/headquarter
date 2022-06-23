@@ -11,6 +11,7 @@ import profile from "../../img/profile.png";
 const UserCard = ({ users, content, loading }) => {
   if (loading) {
   }
+  // console.log(users);
 
   return (
     <Box

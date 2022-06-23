@@ -15,11 +15,11 @@ import axios from "axios";
 
 const AddPostModal = ({ moduleCode }) => {
   const userInfo = localStorage.getItem("userInfo");
-  console.log(userInfo);
+  //   console.log(userInfo);
 
   const [open, setOpen] = useState(false);
   const _id = JSON.parse(userInfo)._id;
-  console.log(_id);
+  //   console.log(_id);
   const [isAnonymous, setIsAnonymous] = useState(false);
   const [text, setText] = useState("");
   const [title, setTitle] = useState("");
@@ -39,7 +39,7 @@ const AddPostModal = ({ moduleCode }) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log("masuk");
+    // console.log("masuk");
 
     try {
       const config = {
@@ -48,7 +48,7 @@ const AddPostModal = ({ moduleCode }) => {
         },
       };
 
-      console.log(_id, isAnonymous, text, title, moduleCode);
+      //   console.log(_id, isAnonymous, text, title, moduleCode);
       const { data } = await axios.post(
         "/api/post/add",
         { _id, isAnonymous, text, title, moduleCode },

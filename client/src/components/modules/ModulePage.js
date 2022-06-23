@@ -58,7 +58,7 @@ export default function ModulePage(module) {
         },
       };
 
-      console.log(`/api/modules/searchModules/${moduleCode}`);
+      // console.log(`/api/modules/searchModules/${moduleCode}`);
 
       const { data } = await axios.get(
         `/api/modules/searchModules/${moduleCode}`,
@@ -66,12 +66,36 @@ export default function ModulePage(module) {
         config
       );
 
-      console.log("moduleInfo", data.title);
+      // console.log("moduleInfo", data.title);
       // setModuleCode(data.moduleCode);
       setTitle(data.title);
     };
     getModulesInfo();
   }, []);
+
+  const [posts, setPosts] = useState([]);
+
+  useEffect(() => {
+    const getPosts = async () => {
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+        },
+      };
+
+      const { data } = await axios.get(
+        `/api/post/getpostbymodulecode/${moduleCode}`,
+        { moduleCode },
+        config
+      );
+
+      // console.log(data);
+      setPosts(data);
+      // console.log(posts);
+    };
+
+    getPosts();
+  });
 
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
@@ -121,14 +145,14 @@ export default function ModulePage(module) {
       };
 
       setLoading(true);
-      console.log(searchQuery);
+      // console.log(searchQuery);
       const { data } = await axios.get(
         `/api/modules/${searchQuery}`,
         { searchQuery },
         config
       );
 
-      console.log(data);
+      // console.log(data);
       setModuleList(data);
       setLoading(false);
     } catch (error) {
@@ -139,50 +163,50 @@ export default function ModulePage(module) {
 
   let users = [{ name: "User 1" }, { name: "User 2" }, { name: "User 3" }];
 
-  let posts = [
-    {
-      user: [{ name: "User 1" }],
-      content:
-        "Exciting news! I’m hiring mid-level and senior Product Designers to join my team at Acme, where we’re building the future of eCommerce.",
-      comments: [
-        { user: [{ name: "User 2" }], content: "Test reply" },
-        { user: [{ name: "User 2" }], content: "Test reply" },
-        { user: [{ name: "User 2" }], content: "Test reply" },
-        { user: [{ name: "User 2" }], content: "Test reply" },
-        { user: [{ name: "User 2" }], content: "Test reply" },
-      ],
-    },
-    {
-      user: [{ name: "User 2" }],
-      content:
-        "Exciting news! I’m hiring mid-level and senior Product Designers to join my team at Acme, where we’re building the future of eCommerce.",
-      comments: [{ user: [{ name: "User 2" }], content: "Test reply" }],
-    },
-    {
-      user: [{ name: "User 3" }],
-      content:
-        "Exciting news! I’m hiring mid-level and senior Product Designers to join my team at Acme, where we’re building the future of eCommerce.",
-      comments: [],
-    },
-    {
-      user: [{ name: "User 4" }],
-      content:
-        "Exciting news! I’m hiring mid-level and senior Product Designers to join my team at Acme, where we’re building the future of eCommerce.",
-      comments: [],
-    },
-    {
-      user: [{ name: "User 5" }],
-      content:
-        "Exciting news! I’m hiring mid-level and senior Product Designers to join my team at Acme, where we’re building the future of eCommerce.",
-      comments: [],
-    },
-    {
-      user: [{ name: "User 6" }],
-      content:
-        "Exciting news! I’m hiring mid-level and senior Product Designers to join my team at Acme, where we’re building the future of eCommerce.",
-      comments: [],
-    },
-  ];
+  // let posts = [
+  //   {
+  //     user: [{ name: "User 1" }],
+  //     content:
+  //       "Exciting news! I’m hiring mid-level and senior Product Designers to join my team at Acme, where we’re building the future of eCommerce.",
+  //     comments: [
+  //       { user: [{ name: "User 2" }], content: "Test reply" },
+  //       { user: [{ name: "User 2" }], content: "Test reply" },
+  //       { user: [{ name: "User 2" }], content: "Test reply" },
+  //       { user: [{ name: "User 2" }], content: "Test reply" },
+  //       { user: [{ name: "User 2" }], content: "Test reply" },
+  //     ],
+  //   },
+  //   {
+  //     user: [{ name: "User 2" }],
+  //     content:
+  //       "Exciting news! I’m hiring mid-level and senior Product Designers to join my team at Acme, where we’re building the future of eCommerce.",
+  //     comments: [{ user: [{ name: "User 2" }], content: "Test reply" }],
+  //   },
+  //   {
+  //     user: [{ name: "User 3" }],
+  //     content:
+  //       "Exciting news! I’m hiring mid-level and senior Product Designers to join my team at Acme, where we’re building the future of eCommerce.",
+  //     comments: [],
+  //   },
+  //   {
+  //     user: [{ name: "User 4" }],
+  //     content:
+  //       "Exciting news! I’m hiring mid-level and senior Product Designers to join my team at Acme, where we’re building the future of eCommerce.",
+  //     comments: [],
+  //   },
+  //   {
+  //     user: [{ name: "User 5" }],
+  //     content:
+  //       "Exciting news! I’m hiring mid-level and senior Product Designers to join my team at Acme, where we’re building the future of eCommerce.",
+  //     comments: [],
+  //   },
+  //   {
+  //     user: [{ name: "User 6" }],
+  //     content:
+  //       "Exciting news! I’m hiring mid-level and senior Product Designers to join my team at Acme, where we’re building the future of eCommerce.",
+  //     comments: [],
+  //   },
+  // ];
 
   let [page, setPage] = useState(1);
   const PER_PAGE = 5;
