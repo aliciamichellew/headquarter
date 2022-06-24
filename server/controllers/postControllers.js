@@ -32,6 +32,7 @@ const findUserById = async (request, response) => {
 
 const createPosts = async (req, res) => {
   try {
+    console.log(req.headers);
     console.log(req.body.moduleCode);
     const post = await Post.create({
       user: req.body._id,
