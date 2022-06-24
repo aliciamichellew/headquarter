@@ -208,6 +208,57 @@ export default function ModulePage(module) {
     } catch (error) {}
   };
 
+  const handleEditPost = async (event, postId, isAnonymous, text, title) => {
+    event.preventDefault();
+
+    try {
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+        },
+      };
+
+      const { res } = await axios({
+        method: "put",
+        url: "/api/post/edit",
+        data: {
+          post: {
+            _id: postId,
+            isAnonymous: isAnonymous,
+            text: text,
+            title: title,
+          },
+        },
+      });
+
+      await getPosts();
+    } catch (err) {}
+  };
+
+  const handleDeletePost = async (event, postId) => {
+    event.preventDefault();
+
+    try {
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+        },
+      };
+
+      const { res } = await axios({
+        method: "delete",
+        url: "/api/post/delete",
+        data: {
+          post: {
+            _id: postId,
+          },
+        },
+      });
+
+      await getPosts();
+    } catch (err) {}
+  };
+
   const handlePaginationChange = (e, p) => {
     setPage(p);
     _DATA.jump(p);
@@ -326,7 +377,7 @@ export default function ModulePage(module) {
             </Card>
 
             <Box sx={{ display: "flex", flexDirection: "row", gap: 5, mt: 3 }}>
-              <Box>
+              <Box sx={{ width: "25%" }}>
                 <Box
                   component="form"
                   noValidate
@@ -416,6 +467,7 @@ export default function ModulePage(module) {
                   display: "flex",
                   flexDirection: "column",
                   alignItems: "center",
+                  width: "50%",
                 }}
               >
                 <Card
@@ -456,6 +508,7 @@ export default function ModulePage(module) {
                     alignItems: "flex-start",
                     padding: 0,
                     gap: 3,
+                    width: "100%",
                   }}
                 >
                   {loading && <CircularProgress />}
@@ -464,6 +517,8 @@ export default function ModulePage(module) {
                       posts={posts}
                       userInfo={userInfo}
                       handleAddComment={handleAddComment}
+                      handleEditPost={handleEditPost}
+                      handleDeletePost={handleDeletePost}
                     />
                   ))}
                 </Box>
@@ -476,7 +531,9 @@ export default function ModulePage(module) {
                   sx={{ mt: 2 }}
                 />
               </Box>
-              <Box sx={{ display: "flex", flexDirection: "column" }}>
+              <Box
+                sx={{ display: "flex", flexDirection: "column", width: "25%" }}
+              >
                 <Typography sx={{ fontSize: 30, mb: 3 }}>
                   Experienced Users
                 </Typography>

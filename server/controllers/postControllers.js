@@ -150,7 +150,7 @@ const editPost = async (req, res) => {
 const deletePost = async (req, res) => {
   try {
     const deletePost = req.body.post;
-    const token = req.headers.authorization.split(" ")[1];
+    const token = formatToken(req.headers.authorization);
 
     if (!token) {
       res.status(400).send({ message: "Token required" });

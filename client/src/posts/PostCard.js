@@ -21,8 +21,16 @@ import {
 import ReplyPostModal from "./ReplyPostModal";
 
 import axios from "axios";
+import EditPostModal from "./EditPostModal";
+import DeletePostModal from "./DeletePostModal";
 
-const PostCard = ({ posts, userInfo, handleAddComment }) => {
+const PostCard = ({
+  posts,
+  userInfo,
+  handleAddComment,
+  handleEditPost,
+  handleDeletePost,
+}) => {
   const [upvote, setUpvote] = useState();
   const [downvote, setDownvote] = useState();
   const userInfoJSON = JSON.parse(userInfo);
@@ -118,9 +126,9 @@ const PostCard = ({ posts, userInfo, handleAddComment }) => {
   };
 
   return (
-    <div>
+    <Box sx={{ width: "100%" }}>
       {isPostReady && (
-        <Card>
+        <Card sx={{ width: "100%" }}>
           <CardContent>
             <Box
               sx={{
@@ -192,17 +200,26 @@ const PostCard = ({ posts, userInfo, handleAddComment }) => {
                 />
               }
             />
-            <Box sx={{ mx: 2 }}>
+            <Box sx={{ mx: 2, display: "flex", flexDirection: "row", gap: 3 }}>
               <ReplyPostModal
                 postId={posts.content._id}
                 handleSubmit={handleAddComment}
               />
               {owner && <ReplyPostModal postId={posts.content._id} />}
+              {owner && (
+                <EditPostModal post={posts} handleSubmit={handleEditPost} />
+              )}
+              {owner && (
+                <DeletePostModal
+                  postId={posts.content._id}
+                  handleSubmit={handleDeletePost}
+                />
+              )}
             </Box>
           </CardActions>
         </Card>
       )}
-    </div>
+    </Box>
   );
 };
 
