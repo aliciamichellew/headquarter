@@ -44,7 +44,7 @@ const ModuleCard = ({ modules, loading }) => {
                 navigate(`/modules/${modules.moduleCode}`);
               }}
             >
-              Learn More
+              View
             </Button>
           </CardActions>
         </Card>
