@@ -233,6 +233,80 @@ const upvote = async (req, res) => {
   }
 };
 
+const unupvote = async (req, res) => {
+  try {
+    const upvotePost = req.body.post;
+    const postExist = await Post.findOne({
+      _id: upvotePost._id,
+    });
+
+    if (!postExist) {
+      res.status(400).send({ message: "Post does not exist" });
+      return;
+    }
+
+    const upvoteExist = await Post.findOne({
+      _id: upvotePost._id,
+      upvote: upvotePost.userId,
+    });
+
+    if (!upvoteExist) {
+      res.status(400).send({ message: "User has not upvoted" });
+      return;
+    } else {
+      const upvoteRemove = await Post.updateOne(
+        {
+          _id: upvotePost._id,
+        },
+        {
+          $pull: { upvote: upvotePost.userId },
+        }
+      );
+    }
+    res.status(200).send({ message: "Unupvoting post success" });
+  } catch (error) {
+    console.log(error);
+    res.status(400).send({ message: "Error occured when unupvoting post" });
+  }
+};
+
+const upvoteExist = async (req, res) => {
+  try {
+    const upvotePost = req.query;
+    console.log(upvotePost);
+
+    const postExist = await Post.findOne({
+      _id: upvotePost.postId,
+    });
+
+    if (!postExist) {
+      res.status(400).send({ message: "Post does not exist" });
+      return;
+    }
+
+    const upvoteExist = await Post.findOne({
+      _id: upvotePost.postId,
+      upvote: upvotePost.userId,
+    });
+
+    let upvoted = false;
+    if (upvoteExist) {
+      upvoted = true;
+    } else {
+      upvoted = false;
+    }
+
+    res.json(upvoted);
+    //   console.log("upvote", upvoteNew);
+    //   res.status(200).send({ message: "Upvote post success" });
+  } catch (error) {
+    console.log(error);
+    res
+      .status(400)
+      .send({ message: "Error occured when checking upvote post" });
+  }
+};
+
 const downvote = async (req, res) => {
   try {
     const downvotePost = req.body.post;
@@ -288,6 +362,83 @@ const downvote = async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(400).send({ message: "Error occured when downvoting post" });
+  }
+};
+
+const undownvote = async (req, res) => {
+  try {
+    const downvotePost = req.body.post;
+
+    const postExist = await Post.findOne({
+      _id: downvotePost._id,
+    });
+
+    if (!postExist) {
+      res.status(400).send({ message: "Post does not exist" });
+      return;
+    }
+
+    const downvoteExist = await Post.findOne({
+      _id: downvotePost._id,
+      downvote: downvotePost.userId,
+    });
+
+    if (!downvoteExist) {
+      res.status(400).send({ message: "User has not downvoted" });
+      return;
+    } else {
+      const upvoteRemove = await Post.updateOne(
+        {
+          _id: downvotePost._id,
+        },
+        {
+          $pull: { downvote: downvotePost.userId },
+        }
+      );
+    }
+    res.status(200).send({ message: "Undownvote post success" });
+  } catch (error) {
+    console.log(error);
+    res.status(400).send({ message: "Error occured when undownvoting post" });
+  }
+};
+
+const downvoteExist = async (req, res) => {
+  try {
+    // console.log(req);
+    const downvotePost = req.query;
+    console.log("downvotePost", downvotePost);
+
+    const postExist = await Post.findOne({
+      _id: downvotePost.postId,
+    });
+
+    console.log("postExist", postExist);
+    if (!postExist) {
+      res.status(400).send({ message: "Post does not exist" });
+      return;
+    }
+
+    const downvoteExist = await Post.findOne({
+      _id: downvotePost.postId,
+      downvote: downvotePost.userId,
+    });
+
+    let downvoted = false;
+    if (downvoteExist) {
+      downvoted = true;
+    } else {
+      downvoted = false;
+    }
+
+    res.json(downvoted);
+    //   console.log("upvote", upvoteNew);
+    //   res.status(200).send({ message: "Upvote post success" });
+  } catch (error) {
+    console.log(error);
+    res
+      .status(400)
+      .send({ message: "Error occured when checking downvote post" });
   }
 };
 
@@ -446,7 +597,11 @@ module.exports = {
   editPost,
   deletePost,
   upvote,
+  unupvote,
+  upvoteExist,
   downvote,
+  undownvote,
+  downvoteExist,
   comment,
   deleteComment,
   getPostsByModuleCode,

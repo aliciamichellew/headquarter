@@ -25,6 +25,7 @@ import { useNavigate } from "react-router-dom";
 import TopDrawer from "../../components/drawer/TopNav";
 import SideDrawer from "../../components/drawer/SideNav";
 import profile from "../../img/profile.png";
+import ModuleButton from "../modules/ModuleButton";
 
 const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
@@ -276,21 +277,10 @@ export default function ProfilePage() {
                             sx={{ display: "flex", flexDirection: "column" }}
                           >
                             {modules.map((modules) => (
-                              <Button
-                                size="large"
-                                sx={{
-                                  color: "#000000",
-                                  ":hover": {
-                                    bgcolor: "#FFCE26",
-                                  },
-                                  textAlign: "left",
-                                }}
-                                style={{ justifyContent: "flex-start" }}
-                              >
-                                <Typography>
-                                  {modules.moduleCode} {modules.title}
-                                </Typography>
-                              </Button>
+                              <ModuleButton
+                                moduleCode={modules.moduleCode}
+                                moduleTitle={modules.title}
+                              />
                             ))}
                           </Box>
                         </Box>

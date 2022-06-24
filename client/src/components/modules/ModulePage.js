@@ -24,6 +24,7 @@ import PostCard from "../../posts/PostCard";
 import AddPostModal from "../../posts/AddPostModal";
 import profile from "../../img/profile.png";
 import usePagination from "../utils/Pagination";
+import ModuleButton from "./ModuleButton";
 
 const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
@@ -42,6 +43,7 @@ export default function ModulePage(module) {
 
   let navigate = useNavigate();
 
+  console.log("rerender");
   useEffect(() => {
     const userInfo = localStorage.getItem("userInfo");
 
@@ -57,17 +59,11 @@ export default function ModulePage(module) {
           "Content-type": "application/json",
         },
       };
-
-      // console.log(`/api/modules/searchModules/${moduleCode}`);
-
       const { data } = await axios.get(
         `/api/modules/searchModules/${moduleCode}`,
         { moduleCode },
         config
       );
-
-      // console.log("moduleInfo", data.title);
-      // setModuleCode(data.moduleCode);
       setTitle(data.title);
     };
     getModulesInfo();
@@ -82,20 +78,15 @@ export default function ModulePage(module) {
           "Content-type": "application/json",
         },
       };
-
       const { data } = await axios.get(
         `/api/post/getpostbymodulecode/${moduleCode}`,
         { moduleCode },
         config
       );
-
-      // console.log(data);
       setPosts(data);
-      // console.log(posts);
     };
-
     getPosts();
-  });
+  }, []);
 
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
@@ -392,18 +383,10 @@ export default function ModulePage(module) {
                   }}
                 >
                   {moduleList.slice(0, 10).map((modules) => (
-                    <Button
-                      sx={{
-                        color: "#1E2328",
-                        my: 0.5,
-                        textAlign: "left",
-                      }}
-                    >
-                      <Box sx={{ display: "flex", flexDirection: "column" }}>
-                        <Typography>{modules.moduleCode}</Typography>
-                        <Typography> {modules.title}</Typography>
-                      </Box>
-                    </Button>
+                    <ModuleButton
+                      moduleCode={modules.moduleCode}
+                      moduleTitle={modules.title}
+                    />
                   ))}
                 </Box>
                 <Box>
@@ -462,7 +445,19 @@ export default function ModulePage(module) {
                     <AddPostModal moduleCode={moduleCode} />
                   </Box>
                 </Card>
-                <PostCard posts={_DATA.currentData()} />
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "flex-start",
+                    padding: 0,
+                    gap: 3,
+                  }}
+                >
+                  {_DATA.currentData().map((posts) => (
+                    <PostCard posts={posts} userInfo={userInfo} />
+                  ))}
+                </Box>
                 <Pagination
                   count={count}
                   page={page}

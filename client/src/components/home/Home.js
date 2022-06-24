@@ -10,6 +10,7 @@ import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import { Avatar } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import ModuleButton from "../modules/ModuleButton";
 
 const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
@@ -42,6 +43,16 @@ export default function Home() {
   };
 
   const userInfo = localStorage.getItem("userInfo");
+
+  let modules = [
+    { moduleCode: "CS1010S", title: "Programming Methodology" },
+    { moduleCode: "CS2030", title: "Programming Methodology II" },
+    {
+      moduleCode: "CP2106",
+      title: "CP2106 Independent Software Development Project (Orbital)",
+    },
+    { moduleCode: "CS2040", title: "Data Structures and Algorithms" },
+  ];
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -116,69 +127,12 @@ export default function Home() {
                   <CardContent>
                     <Box component="form" noValidate sx={{ mt: 0 }}>
                       <Box sx={{ display: "flex", flexDirection: "column" }}>
-                        <Button
-                          size="large"
-                          sx={{
-                            color: "#000000",
-                            ":hover": {
-                              bgcolor: "#FFCE26",
-                            },
-                            textAlign: "left",
-                          }}
-                          style={{ justifyContent: "flex-start" }}
-                        >
-                          <Typography fontFamily={"Berlin Sans FB"}>
-                            CP2106 Independent Software Development Project
-                            (Orbital)
-                          </Typography>
-                        </Button>
-                        <Button
-                          size="large"
-                          sx={{
-                            color: "#000000",
-                            ":hover": {
-                              bgcolor: "#FFCE26",
-                            },
-                            textAlign: "left",
-                          }}
-                          style={{ justifyContent: "flex-start" }}
-                        >
-                          <Typography fontFamily={"Berlin Sans FB"}>
-                            CS1010S Programming Methodology
-                          </Typography>
-                        </Button>
-                        <Button
-                          size="large"
-                          sx={{
-                            color: "#000000",
-                            ":hover": {
-                              bgcolor: "#FFCE26",
-                            },
-                            textAlign: "left",
-                          }}
-                          style={{ justifyContent: "flex-start" }}
-                        >
-                          <Typography fontFamily={"Berlin Sans FB"}>
-                            CS2030 Programming Methodology II
-                          </Typography>
-                        </Button>
-                        <Button
-                          size="large"
-                          sx={{
-                            color: "#000000",
-                            ":hover": {
-                              bgcolor: "#FFCE26",
-                            },
-                            textAlign: "left",
-                          }}
-                          style={{
-                            justifyContent: "flex-start",
-                          }}
-                        >
-                          <Typography fontFamily={"Berlin Sans FB"}>
-                            CS2040 Data Structures and Algorithms
-                          </Typography>
-                        </Button>
+                        {modules.map((modules) => (
+                          <ModuleButton
+                            moduleCode={modules.moduleCode}
+                            moduleTitle={modules.title}
+                          />
+                        ))}
                         <Button
                           type="submit"
                           fullWidth
