@@ -2,20 +2,20 @@ import * as React from "react";
 
 import { styled } from "@mui/material/styles";
 import MuiAppBar from "@mui/material/AppBar";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
-import IconButton from "@mui/material/IconButton";
-import HomeIcon from "@mui/icons-material/Home";
-import Box from "@mui/material/Box";
-import Avatar from "@mui/material/Avatar";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import Divider from "@mui/material/Divider";
-import Tooltip from "@mui/material/Tooltip";
-import PersonAdd from "@mui/icons-material/PersonAdd";
-import Settings from "@mui/icons-material/Settings";
-import Logout from "@mui/icons-material/Logout";
+
+import {
+  Toolbar,
+  Typography,
+  IconButton,
+  Box,
+  Avatar,
+  Menu,
+  MenuItem,
+  ListItemIcon,
+  Divider,
+  Tooltip,
+} from "@mui/material";
+import { Home, Logout } from "@mui/icons-material";
 
 import { useNavigate } from "react-router-dom";
 
@@ -89,7 +89,7 @@ export default function TopDrawer({ open, handleDrawerOpen }) {
                 ...(open && { display: "none" }),
               }}
             >
-              <HomeIcon />
+              <Home />
             </IconButton>
             <img src={logo} alt="logo" style={{ width: 40, marginRight: 40 }} />
             <Typography

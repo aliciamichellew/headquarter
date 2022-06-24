@@ -1,18 +1,22 @@
 import React, { useEffect, useState } from "react";
 
 import { styled, useTheme } from "@mui/material/styles";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import Grid from "@mui/material/Grid";
-import Button from "@mui/material/Button";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
+
+import {
+  Box,
+  Typography,
+  Grid,
+  Button,
+  InputLabel,
+  MenuItem,
+  FormControl,
+  Select,
+  Card,
+  TextField,
+  Pagination,
+  CircularProgress,
+} from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import TextField from "@mui/material/TextField";
-import Card from "@mui/material/Card";
-import Pagination from "@mui/material/Pagination";
 
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
@@ -37,11 +41,18 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 
 export default function ModulePage(module) {
   const { moduleCode } = useParams();
-
-  // const [moduleCode, setModuleCode] = useState("");
   const [title, setTitle] = useState("");
+  const [posts, setPosts] = useState([]);
+  const theme = useTheme();
+  const [open, setOpen] = useState(false);
+  const userInfo = localStorage.getItem("userInfo");
+  const [sort, setSort] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [moduleList, setModuleList] = useState([]);
+  const navigate = useNavigate();
+  const userInfoJSON = JSON.parse(userInfo);
 
-  let navigate = useNavigate();
+  console.log("userInfo", userInfoJSON);
 
   console.log("rerender");
   useEffect(() => {
@@ -54,6 +65,7 @@ export default function ModulePage(module) {
 
   useEffect(() => {
     const getModulesInfo = async () => {
+      setLoading(true);
       const config = {
         headers: {
           "Content-type": "application/json",
@@ -65,14 +77,10 @@ export default function ModulePage(module) {
         config
       );
       setTitle(data.title);
+      setLoading(false);
     };
-    getModulesInfo();
-  }, []);
-
-  const [posts, setPosts] = useState([]);
-
-  useEffect(() => {
     const getPosts = async () => {
+      setLoading(true);
       const config = {
         headers: {
           "Content-type": "application/json",
@@ -84,12 +92,11 @@ export default function ModulePage(module) {
         config
       );
       setPosts(data);
+      setLoading(false);
     };
+    getModulesInfo();
     getPosts();
-  }, []);
-
-  const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
+  }, [moduleCode]);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -99,16 +106,9 @@ export default function ModulePage(module) {
     setOpen(false);
   };
 
-  const userInfo = localStorage.getItem("userInfo");
-
-  const [sort, setSort] = React.useState("");
-
   const handleChange = (event) => {
     setSort(event.target.value);
   };
-
-  const [loading, setLoading] = useState(false);
-  const [moduleList, setModuleList] = useState([]);
 
   useEffect(() => {
     const fetchModules = async () => {
@@ -454,6 +454,7 @@ export default function ModulePage(module) {
                     gap: 3,
                   }}
                 >
+                  {loading && <CircularProgress />}
                   {_DATA.currentData().map((posts) => (
                     <PostCard posts={posts} userInfo={userInfo} />
                   ))}

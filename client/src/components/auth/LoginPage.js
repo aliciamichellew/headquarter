@@ -1,24 +1,27 @@
 import React, { useEffect, useState } from "react";
-import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
-import TextField from "@mui/material/TextField";
-import Link from "@mui/material/Link";
-import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid";
-import Typography from "@mui/material/Typography";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
-import CardContent from "@mui/material/CardContent";
+import {
+  Button,
+  CssBaseline,
+  TextField,
+  Link,
+  Box,
+  Grid,
+  Typography,
+  Card,
+  CardContent,
+  CardActions,
+  CircularProgress,
+} from "@mui/material";
+import { createTheme, ThemeProvider, styled } from "@mui/material/styles";
+
 import logo from "../../img/logo.png";
 import TopDrawer from "../../components/drawer/TopNav";
-import { styled } from "@mui/material/styles";
-import CircularProgress from "@mui/material/CircularProgress";
+import ErrorMessage from "../ErrorMessage";
+import setAuthToken from "../utils/setAuthToken";
+
 import axios from "axios";
 
-import { Link as RouterLink } from "react-router-dom";
-import ErrorMessage from "../ErrorMessage";
-import { useNavigate } from "react-router-dom";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 
 const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
@@ -67,6 +70,7 @@ export default function LoginSide() {
   const [loading, setLoading] = useState(false);
 
   let navigate = useNavigate();
+
   useEffect(() => {
     const userInfo = localStorage.getItem("userInfo");
 
@@ -93,6 +97,7 @@ export default function LoginSide() {
       );
 
       localStorage.setItem("userInfo", JSON.stringify(data));
+      setAuthToken(data.token);
       setLoading(false);
     } catch (error) {
       setError(error.response.data.message);

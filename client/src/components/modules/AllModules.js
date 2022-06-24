@@ -2,15 +2,19 @@ import React, { useEffect, useState } from "react";
 
 import { useNavigate } from "react-router-dom";
 
-import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid";
+import {
+  Box,
+  Grid,
+  Button,
+  Typography,
+  Pagination,
+  TextField,
+  CircularProgress,
+} from "@mui/material";
+
 import { styled, useTheme } from "@mui/material/styles";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
-import Pagination from "@mui/material/Pagination";
-import SearchIcon from "@mui/icons-material/Search";
-import TextField from "@mui/material/TextField";
-import CircularProgress from "@mui/material/CircularProgress";
+
+import { Search } from "@mui/icons-material";
 
 import TopDrawer from "../../components/drawer/TopNav";
 import SideDrawer from "../../components/drawer/SideNav";
@@ -169,7 +173,7 @@ export default function AllModules() {
                     width: 250,
                   }}
                 >
-                  <SearchIcon sx={{ color: "action.active", mr: 1, my: 0.5 }} />
+                  <Search sx={{ color: "action.active", mr: 1, my: 0.5 }} />
                   <TextField
                     id="searchQuery"
                     label="Search by Module Code"

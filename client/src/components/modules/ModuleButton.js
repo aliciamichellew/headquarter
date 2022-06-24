@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
-import Box from "@mui/material/Box";
-
+import { Button, Typography, Box } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 const ModuleButton = ({ moduleCode, moduleTitle }) => {

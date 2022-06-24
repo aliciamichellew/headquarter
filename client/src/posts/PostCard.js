@@ -1,19 +1,22 @@
 import React, { useEffect, useState } from "react";
 
-import Box from "@mui/material/Box";
-import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
-import CardContent from "@mui/material/CardContent";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
+import {
+  Box,
+  Card,
+  CardActions,
+  CardContent,
+  Typography,
+  Checkbox,
+  FormControlLabel,
+} from "@mui/material";
 import UserCard from "../components/users/UserCard";
-import BookmarkBorderOutlinedIcon from "@mui/icons-material/BookmarkBorderOutlined";
-import ThumbUpOutlinedIcon from "@mui/icons-material/ThumbUpOutlined";
-import ThumbDownOutlinedIcon from "@mui/icons-material/ThumbDownOutlined";
-import ThumbUpIcon from "@mui/icons-material/ThumbUp";
-import ThumbDownIcon from "@mui/icons-material/ThumbDown";
-import Checkbox from "@mui/material/Checkbox";
-import FormControlLabel from "@mui/material/FormControlLabel";
+import {
+  BookmarkBorderOutlined,
+  ThumbUpOutlined,
+  ThumbDownOutlined,
+  ThumbUp,
+  ThumbDown,
+} from "@mui/icons-material";
 
 import ReplyPostModal from "./ReplyPostModal";
 
@@ -23,6 +26,7 @@ const PostCard = ({ posts, userInfo }) => {
   const [upvote, setUpvote] = useState();
   const [downvote, setDownvote] = useState();
   const userInfoJSON = JSON.parse(userInfo);
+  const [isPostReady, setIsPostReady] = useState(false);
 
   console.log("posts", posts);
   console.log("isAnonymous", posts.content.isAnonymous);
@@ -63,6 +67,7 @@ const PostCard = ({ posts, userInfo }) => {
       };
       const { data } = await axios.get(`/api/post/downvoteexist`, config);
       setDownvote(data);
+      setIsPostReady(true);
     };
 
     checkUpvote();
@@ -115,84 +120,90 @@ const PostCard = ({ posts, userInfo }) => {
     }
   };
 
+  console.log(upvote, downvote);
+
   return (
-    <Card>
-      <CardContent>
-        <Box
-          sx={{
-            display: "flex",
-            width: "100%",
-            justifyContent: "space-between",
-            flexDirection: "row",
-            mb: 2,
-          }}
-        >
-          <UserCard
-            users={
-              posts.content.isAnonymous
-                ? [{ name: "Anonymous", _id: posts.user._id }]
-                : posts.user
-            }
-            content={posts.content.date}
-          />
-          <BookmarkBorderOutlinedIcon />
-        </Box>
-        <Box sx={{ display: "flex", flexDirection: "column" }}>
-          <Typography>{posts.content.title}</Typography>
-          <Typography>{posts.content.text}</Typography>
-        </Box>
-        {posts.comments.slice(0, 3).map((comment) => (
-          <Card sx={{ my: 1 }}>
-            <CardContent>
-              <Box
-                sx={{
-                  display: "flex",
-                  width: "100%",
-                  justifyContent: "space-between",
-                  flexDirection: "row",
-                  mb: 2,
-                }}
-              >
-                <UserCard
-                  users={
-                    comment.isAnonymous
-                      ? [{ name: "Anonymous", _id: comment.user._id }]
-                      : comment.user
-                  }
-                  content={comment.date}
+    <div>
+      {isPostReady && (
+        <Card>
+          <CardContent>
+            <Box
+              sx={{
+                display: "flex",
+                width: "100%",
+                justifyContent: "space-between",
+                flexDirection: "row",
+                mb: 2,
+              }}
+            >
+              <UserCard
+                users={
+                  posts.content.isAnonymous
+                    ? [{ name: "Anonymous", _id: posts.user._id }]
+                    : posts.user
+                }
+                content={posts.content.date}
+              />
+              <BookmarkBorderOutlined />
+            </Box>
+            <Box sx={{ display: "flex", flexDirection: "column" }}>
+              <Typography>{posts.content.title}</Typography>
+              <Typography>{posts.content.text}</Typography>
+            </Box>
+            {posts.comments.slice(0, 3).map((comment) => (
+              <Card sx={{ my: 1 }}>
+                <CardContent>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      width: "100%",
+                      justifyContent: "space-between",
+                      flexDirection: "row",
+                      mb: 2,
+                    }}
+                  >
+                    <UserCard
+                      users={
+                        comment.isAnonymous
+                          ? [{ name: "Anonymous", _id: comment.user._id }]
+                          : comment.user
+                      }
+                      content={comment.date}
+                    />
+                  </Box>
+                  <Typography>{comment.text}</Typography>
+                </CardContent>
+              </Card>
+            ))}
+          </CardContent>
+          <CardActions sx={{ flexDirection: "row", ml: 1 }}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  icon={<ThumbUpOutlined />}
+                  checkedIcon={<ThumbUp />}
+                  checked={upvote ? upvote : false}
+                  onChange={handleChangeUpvote}
                 />
-              </Box>
-              <Typography>{comment.text}</Typography>
-            </CardContent>
-          </Card>
-        ))}
-      </CardContent>
-      <CardActions sx={{ flexDirection: "row", ml: 1 }}>
-        <FormControlLabel
-          control={
-            <Checkbox
-              icon={<ThumbUpOutlinedIcon />}
-              checkedIcon={<ThumbUpIcon />}
-              checked={upvote ? upvote : false}
-              onChange={handleChangeUpvote}
+              }
             />
-          }
-        />
-        <FormControlLabel
-          control={
-            <Checkbox
-              icon={<ThumbDownOutlinedIcon />}
-              checkedIcon={<ThumbDownIcon />}
-              checked={downvote ? downvote : false}
-              onChange={handleChangeDownvote}
+            <FormControlLabel
+              control={
+                <Checkbox
+                  icon={<ThumbDownOutlined />}
+                  checkedIcon={<ThumbDown />}
+                  checked={downvote ? downvote : false}
+                  onChange={handleChangeDownvote}
+                />
+              }
             />
-          }
-        />
-        <Box sx={{ mx: 1 }}>
-          <ReplyPostModal postId={posts.content._id} />
-        </Box>
-      </CardActions>
-    </Card>
+            <Box sx={{ mx: 1 }}>
+              <ReplyPostModal postId={posts.content._id} />
+            </Box>
+          </CardActions>
+        </Card>
+      )}
+    </div>
   );
 };
 

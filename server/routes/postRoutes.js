@@ -26,7 +26,7 @@ router.route("/downvote").put(downvote);
 router.route("/undownvote").put(undownvote);
 router.route("/downvoteexist").get(downvoteExist);
 router.route("/comment").put(comment);
-router.route("/deletecomment").put(protect, deleteComment);
+router.route("/deletecomment").put(deleteComment);
 router.route("/getpostbymodulecode/:moduleCode").get(getPostsByModuleCode);
 
 module.exports = router;

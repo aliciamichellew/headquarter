@@ -1,21 +1,25 @@
 import * as React from "react";
 import { styled } from "@mui/material/styles";
 import MuiDrawer from "@mui/material/Drawer";
-import List from "@mui/material/List";
-import Divider from "@mui/material/Divider";
-import IconButton from "@mui/material/IconButton";
-import ViewModuleIcon from "@mui/icons-material/ViewModule";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import HomeIcon from "@mui/icons-material/Home";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import WorkIcon from "@mui/icons-material/Work";
-import AccountBoxIcon from "@mui/icons-material/AccountBox";
+import {
+  List,
+  Divider,
+  IconButton,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+} from "@mui/material";
+import {
+  ViewModule,
+  ChevronLeft,
+  ChevronRight,
+  Home,
+  Work,
+  AccountBox,
+  Logout,
+} from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
-import LogoutIcon from "@mui/icons-material/Logout";
 
 const drawerWidth = 240;
 
@@ -87,11 +91,7 @@ export default function SideDrawer({ open, handleDrawerClose, theme }) {
           }}
           sx={{ color: "#FFCE26" }}
         >
-          {theme.direction === "rtl" ? (
-            <ChevronRightIcon />
-          ) : (
-            <ChevronLeftIcon />
-          )}
+          {theme.direction === "rtl" ? <ChevronRight /> : <ChevronLeft />}
         </IconButton>
       </DrawerHeader>
       <Divider />
@@ -122,7 +122,7 @@ export default function SideDrawer({ open, handleDrawerClose, theme }) {
                 color: "#FFCE26",
               }}
             >
-              <HomeIcon />
+              <Home />
             </ListItemIcon>
             <ListItemText
               primary={"Home"}
@@ -155,7 +155,7 @@ export default function SideDrawer({ open, handleDrawerClose, theme }) {
                 color: "#FFCE26",
               }}
             >
-              <ViewModuleIcon />
+              <ViewModule />
             </ListItemIcon>
             <ListItemText
               primary={"Modules"}
@@ -185,7 +185,7 @@ export default function SideDrawer({ open, handleDrawerClose, theme }) {
                 color: "#FFCE26",
               }}
             >
-              <WorkIcon />
+              <Work />
             </ListItemIcon>
             <ListItemText
               primary={"Internships"}
@@ -218,7 +218,7 @@ export default function SideDrawer({ open, handleDrawerClose, theme }) {
                 color: "#FFCE26",
               }}
             >
-              <AccountBoxIcon />
+              <AccountBox />
             </ListItemIcon>
             <ListItemText
               primary={"Profile"}
@@ -252,7 +252,7 @@ export default function SideDrawer({ open, handleDrawerClose, theme }) {
                 color: "#FFCE26",
               }}
             >
-              <LogoutIcon />
+              <Logout />
             </ListItemIcon>
             <ListItemText
               primary={"Logout"}

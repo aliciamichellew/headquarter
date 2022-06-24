@@ -1,23 +1,28 @@
 import React, { useEffect } from "react";
 
 import { styled, useTheme } from "@mui/material/styles";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import Grid from "@mui/material/Grid";
-import Button from "@mui/material/Button";
-import ChatIcon from "@mui/icons-material/Chat";
-import AddBoxIcon from "@mui/icons-material/AddBox";
-import InstagramIcon from "@mui/icons-material/Instagram";
-import GitHubIcon from "@mui/icons-material/GitHub";
-import LanguageIcon from "@mui/icons-material/Language";
-import LinkedInIcon from "@mui/icons-material/LinkedIn";
-import FacebookIcon from "@mui/icons-material/Facebook";
-import TwitterIcon from "@mui/icons-material/Twitter";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
-import Paper from "@mui/material/Paper";
+import {
+  Box,
+  Typography,
+  Grid,
+  Button,
+  Card,
+  CardContent,
+  Tabs,
+  Tab,
+} from "@mui/material";
+
+import {
+  AddBox,
+  Instagram,
+  GitHub,
+  Language,
+  LinkedIn,
+  Facebook,
+  Twitter,
+  Chat,
+} from "@mui/icons-material";
+
 import PropTypes from "prop-types";
 
 import { useNavigate } from "react-router-dom";
@@ -204,7 +209,7 @@ export default function ProfilePage() {
                       height: 40,
                     }}
                   >
-                    <AddBoxIcon sx={{ mr: 1 }} />
+                    <AddBox sx={{ mr: 1 }} />
                     Follow
                   </Button>
                   <Button
@@ -220,25 +225,17 @@ export default function ProfilePage() {
                       height: 40,
                     }}
                   >
-                    <ChatIcon sx={{ mr: 1 }} />
+                    <Chat sx={{ mr: 1 }} />
                     Chat
                   </Button>
                 </Box>
                 <Box sx={{ display: "flex", flexDirection: "row", mt: 4 }}>
-                  <LanguageIcon
-                    sx={{ mr: 2, fontSize: 40, color: "#FFCE26" }}
-                  />
-                  <LinkedInIcon
-                    sx={{ mr: 2, fontSize: 40, color: "#FFCE26" }}
-                  />
-                  <GitHubIcon sx={{ mr: 2, fontSize: 40, color: "#FFCE26" }} />
-                  <FacebookIcon
-                    sx={{ mr: 2, fontSize: 40, color: "#FFCE26" }}
-                  />
-                  <InstagramIcon
-                    sx={{ mr: 2, fontSize: 40, color: "#FFCE26" }}
-                  />
-                  <TwitterIcon sx={{ mr: 0, fontSize: 40, color: "#FFCE26" }} />
+                  <Language sx={{ mr: 2, fontSize: 40, color: "#FFCE26" }} />
+                  <LinkedIn sx={{ mr: 2, fontSize: 40, color: "#FFCE26" }} />
+                  <GitHub sx={{ mr: 2, fontSize: 40, color: "#FFCE26" }} />
+                  <Facebook sx={{ mr: 2, fontSize: 40, color: "#FFCE26" }} />
+                  <Instagram sx={{ mr: 2, fontSize: 40, color: "#FFCE26" }} />
+                  <Twitter sx={{ mr: 0, fontSize: 40, color: "#FFCE26" }} />
                 </Box>
               </Box>
               <Box sx={{ display: "flex", flexDirection: "row", mt: 3 }}>
