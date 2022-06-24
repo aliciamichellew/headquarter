@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Button,
   TextField,
@@ -12,9 +12,7 @@ import {
   Box,
 } from "@mui/material";
 
-import axios from "axios";
-
-const ReplyPostModal = ({ postId }) => {
+const ReplyPostModal = ({ postId, handleSubmit }) => {
   const [open, setOpen] = React.useState(false);
   const userInfo = localStorage.getItem("userInfo");
   const userId = JSON.parse(userInfo)._id;
@@ -31,29 +29,6 @@ const ReplyPostModal = ({ postId }) => {
 
   const handleChange = (e) => {
     setIsAnonymous(e.target.checked);
-  };
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-
-    try {
-      const config = {
-        headers: {
-          "Content-type": "application/json",
-        },
-      };
-
-      const { res } = await axios({
-        method: "put",
-        url: "/api/post/comment",
-        data: {
-          post: { _id: postId },
-          comment: { author: userId, text: text, isAnonymous: isAnonymous },
-        },
-      });
-
-      handleClose();
-    } catch (error) {}
   };
 
   return (
@@ -90,7 +65,14 @@ const ReplyPostModal = ({ postId }) => {
           />
         </DialogContent>
         <DialogActions>
-          <Box component="form" noValidate onSubmit={handleSubmit}>
+          <Box
+            component="form"
+            noValidate
+            onSubmit={(event) => {
+              handleSubmit(event, postId, userId, text, isAnonymous);
+              handleClose();
+            }}
+          >
             <Button onClick={handleClose}>Cancel</Button>
             <Button type="submit">Submit</Button>
           </Box>

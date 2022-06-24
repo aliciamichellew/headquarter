@@ -4,22 +4,35 @@ const Profile = require("../models/profileModel");
 const generateToken = require("../utils/generateToken");
 const { buildErrorObject } = require("../middlewares/errorMiddleware");
 
+const findUserById = async (userId) => {
+  return new Promise((resolve, reject) => {
+    User.findById(userId, (err, item) => {
+      itemNotFound(err, item, reject, "USER_DOES_NOT_EXIST");
+      resolve(item);
+    });
+  });
+};
+
+const isUserExist = async (email, username) => {
+  const user = await User.findOne({
+    $or: [
+      {
+        email,
+      },
+      {
+        username,
+      },
+    ],
+  });
+
+  return user ? true : false;
+};
+
 const registerUser = async (req, res) => {
   try {
     const { firstName, lastName, username, email, password } = req.body;
 
-    const userExists = await User.findOne({
-      $or: [
-        {
-          email,
-        },
-        {
-          username,
-        },
-      ],
-    });
-
-    if (userExists) {
+    if (await isUserExist(email, username)) {
       res.status(400).send({ message: "User already exist" });
       return;
     }
@@ -69,7 +82,6 @@ const registerUser = async (req, res) => {
 const authUser = asyncHandler(async (request, response) => {
   try {
     const { email, password } = request.body;
-
     const user = await User.findOne({ email });
 
     if (user && (await user.matchPassword(password))) {
@@ -86,7 +98,6 @@ const authUser = asyncHandler(async (request, response) => {
       throw new Error("Invalid Email or Password!");
     }
   } catch (error) {
-    console.log(error);
     response.status(400).send({ message: "Error occured when auth user" });
   }
 });
@@ -94,7 +105,6 @@ const authUser = asyncHandler(async (request, response) => {
 const findUsersbyEmail = async (request, response) => {
   try {
     const { email } = request.params;
-
     const user = await User.findOne({ email });
 
     if (user) {
@@ -114,15 +124,6 @@ const findUsersbyEmail = async (request, response) => {
       .status(400)
       .send({ message: "Error occured when finding user by email" });
   }
-};
-
-const findUserById = async (userId) => {
-  return new Promise((resolve, reject) => {
-    User.findById(userId, (err, item) => {
-      itemNotFound(err, item, reject, "USER_DOES_NOT_EXIST");
-      resolve(item);
-    });
-  });
 };
 
 const getUserFromToken = async (req, res) => {

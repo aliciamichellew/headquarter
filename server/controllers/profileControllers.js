@@ -1,13 +1,13 @@
 const asyncHandler = require("express-async-handler");
 const Profile = require("../models/profileModel");
 const User = require("../models/userModel");
-const generateToken = require("../utils/generateToken");
 
 const updateUserProfile = asyncHandler(async (req, res) => {
   try {
     const newProfile = req.body.profile;
     console.log("newProfile", newProfile);
 
+    // Disallow user to update email and username of profile
     if (
       newProfile.hasOwnProperty("email") ||
       newProfile.hasOwnProperty("username")
@@ -23,13 +23,12 @@ const updateUserProfile = asyncHandler(async (req, res) => {
       { new: true }
     );
 
+    // Need to update User db if first name or last name is updated
     if (
       newProfile.hasOwnProperty("firstName") ||
       newProfile.hasOwnProperty("lastName")
     ) {
-      console.log("masuk");
-      console.log(req.user._id);
-      const updatedUser = await User.findOneAndUpdate(
+      await User.findOneAndUpdate(
         {
           _id: req.user._id,
         },
@@ -41,11 +40,8 @@ const updateUserProfile = asyncHandler(async (req, res) => {
       );
     }
 
-    console.log("profile", profile);
     res.status(200).send({ message: "Update status success" });
-    return;
   } catch (err) {
-    console.log(err);
     res.status(400).send({ message: "Error occured when updating user" });
   }
 });

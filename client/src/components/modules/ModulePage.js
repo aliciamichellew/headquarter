@@ -52,6 +52,38 @@ export default function ModulePage(module) {
   const navigate = useNavigate();
   const userInfoJSON = JSON.parse(userInfo);
 
+  const getPosts = async () => {
+    setLoading(true);
+    const config = {
+      headers: {
+        "Content-type": "application/json",
+      },
+    };
+    const { data } = await axios.get(
+      `/api/post/getpostbymodulecode/${moduleCode}`,
+      { moduleCode },
+      config
+    );
+    setPosts(data);
+    setLoading(false);
+  };
+
+  const getModulesInfo = async () => {
+    setLoading(true);
+    const config = {
+      headers: {
+        "Content-type": "application/json",
+      },
+    };
+    const { data } = await axios.get(
+      `/api/modules/searchModules/${moduleCode}`,
+      { moduleCode },
+      config
+    );
+    setTitle(data.title);
+    setLoading(false);
+  };
+
   useEffect(() => {
     const userInfo = localStorage.getItem("userInfo");
 
@@ -61,36 +93,6 @@ export default function ModulePage(module) {
   });
 
   useEffect(() => {
-    const getModulesInfo = async () => {
-      setLoading(true);
-      const config = {
-        headers: {
-          "Content-type": "application/json",
-        },
-      };
-      const { data } = await axios.get(
-        `/api/modules/searchModules/${moduleCode}`,
-        { moduleCode },
-        config
-      );
-      setTitle(data.title);
-      setLoading(false);
-    };
-    const getPosts = async () => {
-      setLoading(true);
-      const config = {
-        headers: {
-          "Content-type": "application/json",
-        },
-      };
-      const { data } = await axios.get(
-        `/api/post/getpostbymodulecode/${moduleCode}`,
-        { moduleCode },
-        config
-      );
-      setPosts(data);
-      setLoading(false);
-    };
     getModulesInfo();
     getPosts();
   }, [moduleCode]);
@@ -150,7 +152,6 @@ export default function ModulePage(module) {
       setLoading(false);
     } catch (error) {
       throw error.message;
-      setLoading(false);
     }
   };
 
@@ -181,6 +182,29 @@ export default function ModulePage(module) {
       );
       currentPosts.push(data);
       setPosts(currentPosts);
+    } catch (error) {}
+  };
+
+  const handleAddComment = async (event, postId, userId, text, isAnonymous) => {
+    event.preventDefault();
+
+    try {
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+        },
+      };
+
+      const { res } = await axios({
+        method: "put",
+        url: "/api/post/comment",
+        data: {
+          post: { _id: postId },
+          comment: { author: userId, text: text, isAnonymous: isAnonymous },
+        },
+      });
+
+      await getPosts();
     } catch (error) {}
   };
 
@@ -436,7 +460,11 @@ export default function ModulePage(module) {
                 >
                   {loading && <CircularProgress />}
                   {_DATA.currentData().map((posts) => (
-                    <PostCard posts={posts} userInfo={userInfo} />
+                    <PostCard
+                      posts={posts}
+                      userInfo={userInfo}
+                      handleAddComment={handleAddComment}
+                    />
                   ))}
                 </Box>
                 <Pagination

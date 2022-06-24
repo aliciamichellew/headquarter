@@ -12,8 +12,6 @@ import {
   Box,
 } from "@mui/material";
 
-import axios from "axios";
-
 const AddPostModal = ({ moduleCode, handleSubmit }) => {
   const userInfo = localStorage.getItem("userInfo");
 

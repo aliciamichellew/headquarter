@@ -11,8 +11,9 @@ import {
   CardContent,
   CardActions,
   CircularProgress,
+  Alert,
 } from "@mui/material";
-import { createTheme, ThemeProvider, styled } from "@mui/material/styles";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 import logo from "../../img/logo.png";
 import TopDrawer from "../../components/drawer/TopNav";
@@ -22,15 +23,6 @@ import setAuthToken from "../utils/setAuthToken";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 
 import axios from "axios";
-
-const DrawerHeader = styled("div")(({ theme }) => ({
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "flex-end",
-  padding: theme.spacing(0, 1),
-  // necessary for content to be below app bar
-  ...theme.mixins.toolbar,
-}));
 
 function Copyright(props) {
   return (
@@ -54,6 +46,7 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function SignUpSide() {
+  const [isSignUpFail, setIsSignUpFail] = useState(false);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [username, setUsername] = useState("");
@@ -92,11 +85,13 @@ export default function SignUpSide() {
           { firstName, lastName, username, email, password },
           config
         );
-
-        setLoading(false);
         localStorage.setItem("userInfo", JSON.stringify(data));
         setAuthToken(data.token);
-      } catch (error) {}
+      } catch (error) {
+        setIsSignUpFail(true);
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
@@ -269,6 +264,11 @@ export default function SignUpSide() {
                       />
                     </Box>
                   </CardContent>
+                  {isSignUpFail && (
+                    <div style={{ padding: "0px 10px 0px 10px" }}>
+                      <Alert severity="error">User already existed!</Alert>
+                    </div>
+                  )}
                   <CardActions
                     sx={{
                       display: "flex",

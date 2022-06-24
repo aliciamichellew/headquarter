@@ -1,15 +1,80 @@
-const asyncHandler = require("express-async-handler");
 const User = require("../models/userModel");
-const Profile = require("../models/profileModel");
 const Modules = require("../models/moduleModel");
 const Post = require("../models/questionModel");
-const { post } = require("../routes/userRoutes");
 const { getUserIdFromToken } = require("../middlewares/authMiddleware");
+
+const formatToken = (previous) => {
+  return previous.split(" ")[1];
+};
+
+const addPostToModule = async (moduleId, postId) => {
+  const moduleUpdated = await Modules.updateOne(
+    {
+      _id: moduleId,
+    },
+    {
+      $push: { posts: postId },
+    }
+  );
+  return moduleUpdated;
+};
+
+const editPostField = async (id, op, key, value) => {
+  await Post.updateOne(
+    {
+      _id: id,
+    },
+    {
+      [op]: { [key]: value },
+    }
+  );
+};
+
+const getPostReturnFormat = (user, post, comments) => {
+  const data = {
+    user: [
+      {
+        _id: user._id,
+        name: user.firstName + " " + user.lastName,
+      },
+    ],
+    content: {
+      _id: post._id,
+      title: post.title,
+      text: post.text,
+      upvote: post.upvote,
+      downvote: post.downvote,
+      moduleCode: post.moduleCode,
+      date: post.date,
+      isAnonymous: post.isAnonymous,
+    },
+    comments: comments,
+  };
+  return data;
+};
+
+const getAllComments = async (answers) => {
+  const comments = [];
+  for (let i of answers) {
+    const commentUser = await User.findOne({ _id: i.author });
+    let commentData = {
+      user: [
+        {
+          _id: commentUser._id,
+          name: commentUser.firstName + " " + commentUser.lastName,
+        },
+      ],
+      text: i.text,
+      date: i.date,
+      isAnonymous: i.isAnonymous,
+    };
+    comments.push(commentData);
+  }
+  return comments;
+};
 
 const createPosts = async (req, res) => {
   try {
-    console.log(req.headers);
-    console.log(req.body.moduleCode);
     const post = await Post.create({
       user: req.body._id,
       isAnonymous: req.body.isAnonymous,
@@ -18,70 +83,29 @@ const createPosts = async (req, res) => {
       moduleCode: req.body.moduleCode,
       date: Date.now(),
     });
-
     const moduleCode = req.body.moduleCode;
-
     const moduleExists = await Modules.findOne({ moduleCode });
-
     const postId = post._id;
 
     if (!moduleExists) {
       const newModule = await Modules.create({
         moduleCode: moduleCode,
       });
-      const moduleUpdated = await Modules.updateOne(
-        {
-          _id: newModule._id,
-        },
-        {
-          $push: { posts: postId },
-        }
-      );
-
-      console.log("newModule", newModule);
+      await addPostToModule(newModule._id, postId);
     } else {
-      const moduleUpdated = await Modules.updateOne(
-        {
-          _id: moduleExists._id,
-        },
-        {
-          $push: { posts: postId },
-        }
-      );
-      console.log("moduleUpdated", moduleUpdated);
+      await addPostToModule(moduleExists._id, postId);
     }
 
     const findUser = await User.find({ _id: post.user });
-
-    const comments = [];
-    const data = {
-      user: [
-        {
-          _id: findUser[0]._id,
-          name: findUser[0].firstName + " " + findUser[0].lastName,
-        },
-      ],
-      content: {
-        _id: post._id,
-        title: post.title,
-        text: post.text,
-        upvote: post.upvote,
-        downvote: post.downvote,
-        moduleCode: post.moduleCode,
-        date: post.date,
-        isAnonymous: post.isAnonymous,
-      },
-      comments: comments,
-    };
+    const returnFormat = getPostReturnFormat(findUser, post, []);
 
     if (post) {
-      res.status(201).json(data);
+      res.status(201).json(returnFormat);
     } else {
       res.status(400).send({ message: "Error occured when creating new post" });
       return;
     }
   } catch (error) {
-    console.log(error);
     res.status(400).send({ message: "Error occured when creating new post" });
   }
 };
@@ -89,17 +113,18 @@ const createPosts = async (req, res) => {
 const editPost = async (req, res) => {
   try {
     const newPost = req.body.post;
-    console.log(newPost);
 
     const postExist = await Post.findOne({
       _id: newPost._id,
     });
 
+    // Checks if there's an existent post
     if (!postExist) {
       res.status(400).send({ message: "Post does not exist" });
       return;
     }
 
+    // Checks if user is trying to change user or module code which is not allowed
     if (
       newPost.hasOwnProperty("user") ||
       newPost.hasOwnProperty("moduleCode")
@@ -108,7 +133,7 @@ const editPost = async (req, res) => {
       return;
     }
 
-    const post = await Post.findOneAndUpdate(
+    await Post.findOneAndUpdate(
       {
         _id: newPost._id,
       },
@@ -116,10 +141,8 @@ const editPost = async (req, res) => {
       { new: true }
     );
 
-    console.log("post", post);
     res.status(200).send({ message: "Update post success" });
   } catch (error) {
-    console.log(error);
     res.status(400).send({ message: "Error occured when updating post" });
   }
 };
@@ -128,7 +151,6 @@ const deletePost = async (req, res) => {
   try {
     const deletePost = req.body.post;
     const token = req.headers.authorization.split(" ")[1];
-    console.log(token);
 
     if (!token) {
       res.status(400).send({ message: "Token required" });
@@ -136,12 +158,9 @@ const deletePost = async (req, res) => {
     }
 
     const userId = await getUserIdFromToken(token);
-
     const postExist = await Post.findOne({
       _id: deletePost._id,
     });
-
-    console.log(postExist);
 
     if (!postExist) {
       res.status(400).send({ message: "Post does not exist" });
@@ -157,15 +176,12 @@ const deletePost = async (req, res) => {
       _id: deletePost._id,
     });
 
-    console.log(deletePost._id);
     const postModuleExist = await Modules.findOne({
       posts: deletePost._id,
     });
-    console.log(postModuleExist);
 
     if (postModuleExist) {
-      console.log("post Module exist");
-      const postModuleRemove = await Modules.updateOne(
+      await Modules.updateOne(
         {
           _id: postModuleExist._id,
         },
@@ -173,13 +189,10 @@ const deletePost = async (req, res) => {
           $pull: { posts: deletePost._id },
         }
       );
-      console.log(postModuleRemove);
     }
 
-    console.log("post", post);
     res.status(200).send({ message: "Delete post success" });
   } catch (error) {
-    console.log(error);
     res.status(400).send({ message: "Error occured when deleting post" });
   }
 };
@@ -213,31 +226,17 @@ const upvote = async (req, res) => {
     });
 
     if (downvoteExist) {
-      console.log("downvote exist");
-      const upvoteRemove = await Post.updateOne(
-        {
-          _id: upvotePost._id,
-        },
-        {
-          $pull: { downvote: upvotePost.userId },
-        }
+      await editPostField(
+        upvotePost._id,
+        "$pull",
+        "downvote",
+        upvotePost.userId
       );
-      console.log(upvoteRemove);
     }
 
-    const upvoteNew = await Post.updateOne(
-      {
-        _id: upvotePost._id,
-      },
-      {
-        $push: { upvote: upvotePost.userId },
-      }
-    );
-
-    console.log("upvote", upvoteNew);
+    await editPostField(upvotePost._id, "$push", "upvote", upvotePost.userId);
     res.status(200).send({ message: "Upvote post success" });
   } catch (error) {
-    console.log(error);
     res.status(400).send({ message: "Error occured when upvoting post" });
   }
 };
@@ -263,18 +262,15 @@ const unupvote = async (req, res) => {
       res.status(400).send({ message: "User has not upvoted" });
       return;
     } else {
-      const upvoteRemove = await Post.updateOne(
-        {
-          _id: upvotePost._id,
-        },
-        {
-          $pull: { upvote: upvotePost.userId },
-        }
+      await editPostField(
+        upvotePost._id,
+        "$pull",
+        "downvote",
+        upvotePost.userId
       );
     }
     res.status(200).send({ message: "Unupvoting post success" });
   } catch (error) {
-    console.log(error);
     res.status(400).send({ message: "Error occured when unupvoting post" });
   }
 };
@@ -343,28 +339,20 @@ const downvote = async (req, res) => {
     });
 
     if (upvoteExist) {
-      console.log("upvote exist");
-      const upvoteRemove = await Post.updateOne(
-        {
-          _id: downvotePost._id,
-        },
-        {
-          $pull: { upvote: downvotePost.userId },
-        }
+      await editPostField(
+        downvotePost._id,
+        "$pull",
+        "upvote",
+        downvotePost.userId
       );
-      console.log(upvoteRemove);
     }
 
-    const downvoteNew = await Post.updateOne(
-      {
-        _id: downvotePost._id,
-      },
-      {
-        $push: { downvote: downvotePost.userId },
-      }
+    await editPostField(
+      downvotePost._id,
+      "$push",
+      "downvote",
+      downvotePost.userId
     );
-
-    console.log("downvote", downvoteNew);
     res.status(200).send({ message: "Downvote post success" });
   } catch (error) {
     console.log(error);
@@ -394,18 +382,15 @@ const undownvote = async (req, res) => {
       res.status(400).send({ message: "User has not downvoted" });
       return;
     } else {
-      const upvoteRemove = await Post.updateOne(
-        {
-          _id: downvotePost._id,
-        },
-        {
-          $pull: { downvote: downvotePost.userId },
-        }
+      await editPostField(
+        downvotePost._id,
+        "$pull",
+        "downvote",
+        downvotePost.userId
       );
     }
     res.status(200).send({ message: "Undownvote post success" });
   } catch (error) {
-    console.log(error);
     res.status(400).send({ message: "Error occured when undownvoting post" });
   }
 };
@@ -413,13 +398,10 @@ const undownvote = async (req, res) => {
 const downvoteExist = async (req, res) => {
   try {
     const downvotePost = req.query;
-    console.log("downvotePost", downvotePost);
-
     const postExist = await Post.findOne({
       _id: downvotePost.postId,
     });
 
-    console.log("postExist", postExist);
     if (!postExist) {
       res.status(400).send({ message: "Post does not exist" });
       return;
@@ -449,9 +431,7 @@ const downvoteExist = async (req, res) => {
 const comment = async (req, res) => {
   try {
     const newComment = req.body.comment;
-    console.log(newComment);
     const postDetails = req.body.post;
-    console.log(postDetails);
 
     const postExist = await Post.findOne({
       _id: postDetails._id,
@@ -462,30 +442,19 @@ const comment = async (req, res) => {
       return;
     }
 
-    const updatedPost = await Post.updateOne(
-      {
-        _id: postDetails._id,
-      },
-      {
-        $push: { answers: newComment },
-      }
-    );
-
-    console.log("updatedPost", updatedPost);
+    await editPostField(postDetails._id, "$push", "answers", newComment);
     res.status(200).send({ message: "Post comment success" });
   } catch (error) {
-    console.log(error);
     res.status(400).send({ message: "Error occured when commenting post" });
   }
 };
 
 const deleteComment = async (req, res) => {
   try {
-    const commentDetails = req.body.comment;
-    const postDetails = req.body.post;
+    const { comment, post } = req.body;
 
     const postExist = await Post.findOne({
-      _id: postDetails._id,
+      _id: post._id,
     });
 
     if (!postExist) {
@@ -494,30 +463,18 @@ const deleteComment = async (req, res) => {
     }
 
     const commentExist = await Post.find({
-      _id: postDetails._id,
-      answers: { _id: commentDetails._id },
+      _id: post._id,
+      answers: { _id: comment._id },
     });
 
-    console.log(commentExist);
-
-    if (commentExist.length == 0) {
+    if (commentExist.length === 0) {
       res.status(400).send({ message: "Comment does not exist" });
       return;
     }
 
-    const updatedPost = await Post.updateOne(
-      {
-        _id: postDetails._id,
-      },
-      {
-        $pull: { answers: { _id: commentDetails._id } },
-      }
-    );
-
-    console.log("updatedPost", updatedPost);
+    await editPostField(post._id, "$pull", "answers", comment._id);
     res.status(200).send({ message: "Delete comment success" });
   } catch (error) {
-    console.log(error);
     res.status(400).send({ message: "Error occured when deleting comment" });
   }
 };
@@ -526,74 +483,37 @@ const getPostsByModuleCode = async (req, res) => {
   try {
     const { moduleCode } = req.params;
 
-    const findModule = await Modules.find({
+    const findModule = await Modules.findOne({
       moduleCode: moduleCode.toUpperCase(),
     });
-    const postArray = [];
+    if (!findModule) {
+      res.status(400).send({ message: "Module does not exist" });
+      return;
+    }
 
-    if (findModule.length != 0) {
-      const postIds = findModule[0].posts;
-
-      if (postIds.length != 0) {
-        for (var item of postIds) {
-          const findPost = await Post.find({ _id: item._id });
-
-          if (!findPost) {
-            res.status(400).send({ message: "Post does not exist" });
-            return;
-          }
-
-          const findUser = await User.find({ _id: findPost[0].user });
-          if (!findPost) {
-            res.status(400).send({ message: "User does not exist" });
-            return;
-          }
-
-          const comments = [];
-          if (findPost[0].answers.length != 0) {
-            for (var i of findPost[0].answers) {
-              const commentUser = await User.find({ _id: i.author });
-              var commentData = {
-                user: [
-                  {
-                    _id: commentUser[0]._id,
-                    name:
-                      commentUser[0].firstName + " " + commentUser[0].lastName,
-                  },
-                ],
-                text: i.text,
-                date: i.date,
-                isAnonymous: i.isAnonymous,
-              };
-              comments.push(commentData);
-            }
-          }
-          var data = {
-            user: [
-              {
-                _id: findUser[0]._id,
-                name: findUser[0].firstName + " " + findUser[0].lastName,
-              },
-            ],
-            content: {
-              _id: findPost[0]._id,
-              title: findPost[0].title,
-              text: findPost[0].text,
-              upvote: findPost[0].upvote,
-              downvote: findPost[0].downvote,
-              moduleCode: findPost[0].moduleCode,
-              date: findPost[0].date,
-              isAnonymous: findPost[0].isAnonymous,
-            },
-            comments: comments,
-          };
-          postArray.push(data);
+    const posts = [];
+    const postIds = findModule.posts;
+    if (postIds.length !== 0) {
+      for (var item of postIds) {
+        const findPost = await Post.findOne({ _id: item._id });
+        if (!findPost) {
+          res.status(400).send({ message: "Post does not exist" });
+          return;
         }
+
+        const findUser = await User.findOne({ _id: findPost.user });
+        if (!findPost) {
+          res.status(400).send({ message: "User does not exist" });
+          return;
+        }
+
+        const comments = await getAllComments(findPost.answers);
+        posts.push(getPostReturnFormat(findUser, findPost, comments));
       }
     }
-    res.json(postArray);
+
+    res.status(200).json(posts);
   } catch (error) {
-    console.log(error);
     res
       .status(400)
       .send({ message: "Error occured when getting posts by module code" });

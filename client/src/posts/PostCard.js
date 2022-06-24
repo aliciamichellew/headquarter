@@ -22,7 +22,7 @@ import ReplyPostModal from "./ReplyPostModal";
 
 import axios from "axios";
 
-const PostCard = ({ posts, userInfo }) => {
+const PostCard = ({ posts, userInfo, handleAddComment }) => {
   const [upvote, setUpvote] = useState();
   const [downvote, setDownvote] = useState();
   const userInfoJSON = JSON.parse(userInfo);
@@ -193,7 +193,10 @@ const PostCard = ({ posts, userInfo }) => {
               }
             />
             <Box sx={{ mx: 2 }}>
-              <ReplyPostModal postId={posts.content._id} />
+              <ReplyPostModal
+                postId={posts.content._id}
+                handleSubmit={handleAddComment}
+              />
               {owner && <ReplyPostModal postId={posts.content._id} />}
             </Box>
           </CardActions>
