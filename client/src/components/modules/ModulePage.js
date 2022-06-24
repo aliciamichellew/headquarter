@@ -173,7 +173,7 @@ export default function ModulePage(module) {
         },
       };
 
-      const currentPosts = posts;
+      const currentPosts = [...posts];
       const { data } = await axios.post(
         "/api/post/add",
         { _id, isAnonymous, text, title, moduleCode },

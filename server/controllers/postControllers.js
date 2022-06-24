@@ -6,35 +6,6 @@ const Post = require("../models/questionModel");
 const { post } = require("../routes/userRoutes");
 const { getUserIdFromToken } = require("../middlewares/authMiddleware");
 
-// const getUserIdFromToken = async (token) => {
-//   return new Promise((resolve, reject) => {
-//     // Decrypts, verifies and decode token
-//     jwt.verify(auth.decrypt(token), process.env.JWT_SECRET, (err, decoded) => {
-//       if (err) {
-//         reject(409, "BAD_TOKEN");
-//       }
-//       resolve(decoded.data._id);
-//     });
-//   });
-// };
-
-// getUserFromToken = async (req, res) => {
-//   try {
-//     var tokenEncrypted = req.headers.authorization;
-//     if (tokenEncrypted) {
-//       tokenEncrypted = tokenEncrypted.replace("Bearer ", "").trim();
-//       let userId = await getUserIdFromToken(tokenEncrypted);
-//       const user = await findUserById(userId);
-//       res.status(200).json(user);
-//     } else {
-//       res.status(409).send({ message: "No token available" });
-//       return;
-//     }
-//   } catch (err) {
-//     res.status(422).send({ message: err.message });
-//   }
-// };
-
 const createPosts = async (req, res) => {
   try {
     console.log(req.headers);
@@ -335,8 +306,6 @@ const upvoteExist = async (req, res) => {
     }
 
     res.json(upvoted);
-    //   console.log("upvote", upvoteNew);
-    //   res.status(200).send({ message: "Upvote post success" });
   } catch (error) {
     console.log(error);
     res
@@ -443,7 +412,6 @@ const undownvote = async (req, res) => {
 
 const downvoteExist = async (req, res) => {
   try {
-    // console.log(req);
     const downvotePost = req.query;
     console.log("downvotePost", downvotePost);
 
@@ -470,8 +438,6 @@ const downvoteExist = async (req, res) => {
     }
 
     res.json(downvoted);
-    //   console.log("upvote", upvoteNew);
-    //   res.status(200).send({ message: "Upvote post success" });
   } catch (error) {
     console.log(error);
     res
@@ -566,61 +532,65 @@ const getPostsByModuleCode = async (req, res) => {
     const postArray = [];
 
     if (findModule.length != 0) {
-      //   console.log(findModule[0]);
-
       const postIds = findModule[0].posts;
-      //   console.log(postIds);
 
-      for (var item of postIds) {
-        const findPost = await Post.find({ _id: item._id });
-        // console.log(findPost[0].user);
-        const findUser = await User.find({ _id: findPost[0].user });
+      if (postIds.length != 0) {
+        for (var item of postIds) {
+          const findPost = await Post.find({ _id: item._id });
 
-        const comments = [];
-        if (findPost[0].answers.length != 0) {
-          for (var i of findPost[0].answers) {
-            const commentUser = await User.find({ _id: i.author });
-            var commentData = {
-              user: [
-                {
-                  _id: commentUser[0]._id,
-                  name:
-                    commentUser[0].firstName + " " + commentUser[0].lastName,
-                },
-              ],
-              text: i.text,
-              date: i.date,
-              isAnonymous: i.isAnonymous,
-            };
-            comments.push(commentData);
+          if (!findPost) {
+            res.status(400).send({ message: "Post does not exist" });
+            return;
           }
-        }
-        var data = {
-          user: [
-            {
-              _id: findUser[0]._id,
-              name: findUser[0].firstName + " " + findUser[0].lastName,
+
+          const findUser = await User.find({ _id: findPost[0].user });
+          if (!findPost) {
+            res.status(400).send({ message: "User does not exist" });
+            return;
+          }
+
+          const comments = [];
+          if (findPost[0].answers.length != 0) {
+            for (var i of findPost[0].answers) {
+              const commentUser = await User.find({ _id: i.author });
+              var commentData = {
+                user: [
+                  {
+                    _id: commentUser[0]._id,
+                    name:
+                      commentUser[0].firstName + " " + commentUser[0].lastName,
+                  },
+                ],
+                text: i.text,
+                date: i.date,
+                isAnonymous: i.isAnonymous,
+              };
+              comments.push(commentData);
+            }
+          }
+          var data = {
+            user: [
+              {
+                _id: findUser[0]._id,
+                name: findUser[0].firstName + " " + findUser[0].lastName,
+              },
+            ],
+            content: {
+              _id: findPost[0]._id,
+              title: findPost[0].title,
+              text: findPost[0].text,
+              upvote: findPost[0].upvote,
+              downvote: findPost[0].downvote,
+              moduleCode: findPost[0].moduleCode,
+              date: findPost[0].date,
+              isAnonymous: findPost[0].isAnonymous,
             },
-          ],
-          content: {
-            _id: findPost[0]._id,
-            title: findPost[0].title,
-            text: findPost[0].text,
-            upvote: findPost[0].upvote,
-            downvote: findPost[0].downvote,
-            moduleCode: findPost[0].moduleCode,
-            date: findPost[0].date,
-            isAnonymous: findPost[0].isAnonymous,
-          },
-          comments: comments,
-        };
-        // console.log("data", data);
-        postArray.push(data);
+            comments: comments,
+          };
+          postArray.push(data);
+        }
       }
     }
-
-    // console.log(postArray);
-    // res.status(200).send({ message: "Get posts by module code success" });
     res.json(postArray);
   } catch (error) {
     console.log(error);
@@ -631,7 +601,6 @@ const getPostsByModuleCode = async (req, res) => {
 };
 
 module.exports = {
-  // getUserFromToken,
   createPosts,
   editPost,
   deletePost,

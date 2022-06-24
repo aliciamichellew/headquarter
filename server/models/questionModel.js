@@ -42,7 +42,6 @@ const QuestionSchema = new mongoose.Schema({
       date: {
         type: Date,
         default: Date.now,
-        // required: true,
       },
       isAnonymous: {
         type: Boolean,

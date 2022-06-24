@@ -134,11 +134,11 @@ const getUserFromToken = async (req, res) => {
       const user = await findUserById(userId);
       res.status(200).json(user);
     } else {
-      handleError(res, buildErrObject(409, "No token available"));
+      handleError(res, buildErrorObject(409, "No token available"));
       return;
     }
   } catch (err) {
-    handleError(res, buildErrObject(422, err.message));
+    handleError(res, buildErrorObject(422, err.message));
   }
 };
 

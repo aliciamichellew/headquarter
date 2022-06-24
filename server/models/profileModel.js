@@ -47,7 +47,6 @@ const ProfileSchema = new mongoose.Schema({
       module: {
         moduleCode: {
           type: "String",
-          // required: true,
         },
         title: {
           type: "String",
@@ -118,6 +117,5 @@ const ProfileSchema = new mongoose.Schema({
 });
 
 const Profile = mongoose.model("profile", ProfileSchema);
-// const users = mongoose.model("users", userModel);
 
 module.exports = Profile;

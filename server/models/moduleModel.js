@@ -1,6 +1,4 @@
 const mongoose = require("mongoose");
-// const questionModel = require("./questionModel");
-// const profileModel = require("./profileModel");
 
 const moduleTemplate = new mongoose.Schema({
   moduleCode: {
@@ -8,10 +6,7 @@ const moduleTemplate = new mongoose.Schema({
     required: true,
     unique: true,
   },
-  // moduleTitle: {
-  //   type: String,
-  //   required: true,
-  // },
+
   experiencedUser: [
     {
       user: {

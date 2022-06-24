@@ -37,23 +37,11 @@ const ReplyPostModal = ({ postId }) => {
     event.preventDefault();
 
     try {
-      //   console.log("Authorization", JSON.parse(userInfo).token);
       const config = {
         headers: {
           "Content-type": "application/json",
-          //   Authorization: `Bearer ${JSON.parse(userInfo).token}`,
         },
       };
-      //   const { data } = await axios.put(
-      //     "/api/post/comment",
-      //     {
-      //       post: { _id: postId },
-      //       comment: { author: userId, text: text, isAnonymous: isAnonymous },
-      //     }
-      //     // config
-      //   );
-
-      //   console.log("post id", postId);
 
       const { res } = await axios({
         method: "put",
@@ -62,15 +50,10 @@ const ReplyPostModal = ({ postId }) => {
           post: { _id: postId },
           comment: { author: userId, text: text, isAnonymous: isAnonymous },
         },
-        // config,
       });
 
-      //   console.log(res);
-
       handleClose();
-    } catch (error) {
-      //   console.log("error", error);
-    }
+    } catch (error) {}
   };
 
   return (
