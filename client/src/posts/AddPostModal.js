@@ -14,17 +14,14 @@ import {
 
 import axios from "axios";
 
-const AddPostModal = ({ moduleCode }) => {
+const AddPostModal = ({ moduleCode, handleSubmit }) => {
   const userInfo = localStorage.getItem("userInfo");
-  //   console.log(userInfo);
 
   const [open, setOpen] = useState(false);
   const _id = JSON.parse(userInfo)._id;
-  //   console.log(_id);
   const [isAnonymous, setIsAnonymous] = useState(false);
   const [text, setText] = useState("");
   const [title, setTitle] = useState("");
-  //   const module = moduleCode;
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -36,27 +33,6 @@ const AddPostModal = ({ moduleCode }) => {
 
   const handleChange = (e) => {
     setIsAnonymous(e.target.checked);
-  };
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    // console.log("masuk");
-
-    try {
-      const config = {
-        headers: {
-          "Content-type": "application/json",
-        },
-      };
-
-      //   console.log(_id, isAnonymous, text, title, moduleCode);
-      const { data } = await axios.post(
-        "/api/post/add",
-        { _id, isAnonymous, text, title, moduleCode },
-        config
-      );
-      handleClose();
-    } catch (error) {}
   };
 
   return (
@@ -101,7 +77,14 @@ const AddPostModal = ({ moduleCode }) => {
           />
         </DialogContent>
         <DialogActions>
-          <Box component="form" noValidate onSubmit={handleSubmit}>
+          <Box
+            component="form"
+            noValidate
+            onSubmit={(event) => {
+              handleSubmit(event, _id, isAnonymous, text, title, moduleCode);
+              handleClose();
+            }}
+          >
             <Button onClick={handleClose}>Cancel</Button>
             <Button type="submit">Submit</Button>
           </Box>

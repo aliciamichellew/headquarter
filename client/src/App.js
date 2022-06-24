@@ -1,6 +1,6 @@
 import "./styles.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import * as React from "react";
+import React, { useEffect } from "react";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import Landing from "./components/auth/LoginPage";
 
@@ -11,6 +11,7 @@ import Profile from "./components/Profile";
 import AllModules from "./components/modules/AllModules";
 import ProfilePage from "./components/profile/ProfilePage";
 import ModulePage from "./components/modules/ModulePage";
+import setAuthToken from "./components/utils/setAuthToken";
 
 const theme = createTheme({
   typography: {
@@ -19,6 +20,13 @@ const theme = createTheme({
 });
 
 export default function App() {
+  useEffect(() => {
+    const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+
+    if (userInfo) {
+      setAuthToken(userInfo.token);
+    }
+  }, [localStorage.getItem("userInfo")]);
   return (
     <ThemeProvider theme={theme}>
       <BrowserRouter>

@@ -34,7 +34,6 @@ const ReplyPostModal = ({ postId }) => {
   };
 
   const handleSubmit = async (event) => {
-    // console.log("masuk");
     event.preventDefault();
 
     try {

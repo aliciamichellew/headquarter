@@ -52,9 +52,6 @@ export default function ModulePage(module) {
   const navigate = useNavigate();
   const userInfoJSON = JSON.parse(userInfo);
 
-  console.log("userInfo", userInfoJSON);
-
-  console.log("rerender");
   useEffect(() => {
     const userInfo = localStorage.getItem("userInfo");
 
@@ -98,6 +95,13 @@ export default function ModulePage(module) {
     getPosts();
   }, [moduleCode]);
 
+  const [page, setPage] = useState(1);
+  const PER_PAGE = 5;
+  const count = Math.ceil(posts.length / PER_PAGE);
+  const _DATA = usePagination(posts, PER_PAGE);
+
+  console.log("posts module", posts);
+
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -136,14 +140,12 @@ export default function ModulePage(module) {
       };
 
       setLoading(true);
-      // console.log(searchQuery);
       const { data } = await axios.get(
         `/api/modules/${searchQuery}`,
         { searchQuery },
         config
       );
 
-      // console.log(data);
       setModuleList(data);
       setLoading(false);
     } catch (error) {
@@ -154,56 +156,33 @@ export default function ModulePage(module) {
 
   let users = [{ name: "User 1" }, { name: "User 2" }, { name: "User 3" }];
 
-  // let posts = [
-  //   {
-  //     user: [{ name: "User 1" }],
-  //     content:
-  //       "Exciting news! I’m hiring mid-level and senior Product Designers to join my team at Acme, where we’re building the future of eCommerce.",
-  //     comments: [
-  //       { user: [{ name: "User 2" }], content: "Test reply" },
-  //       { user: [{ name: "User 2" }], content: "Test reply" },
-  //       { user: [{ name: "User 2" }], content: "Test reply" },
-  //       { user: [{ name: "User 2" }], content: "Test reply" },
-  //       { user: [{ name: "User 2" }], content: "Test reply" },
-  //     ],
-  //   },
-  //   {
-  //     user: [{ name: "User 2" }],
-  //     content:
-  //       "Exciting news! I’m hiring mid-level and senior Product Designers to join my team at Acme, where we’re building the future of eCommerce.",
-  //     comments: [{ user: [{ name: "User 2" }], content: "Test reply" }],
-  //   },
-  //   {
-  //     user: [{ name: "User 3" }],
-  //     content:
-  //       "Exciting news! I’m hiring mid-level and senior Product Designers to join my team at Acme, where we’re building the future of eCommerce.",
-  //     comments: [],
-  //   },
-  //   {
-  //     user: [{ name: "User 4" }],
-  //     content:
-  //       "Exciting news! I’m hiring mid-level and senior Product Designers to join my team at Acme, where we’re building the future of eCommerce.",
-  //     comments: [],
-  //   },
-  //   {
-  //     user: [{ name: "User 5" }],
-  //     content:
-  //       "Exciting news! I’m hiring mid-level and senior Product Designers to join my team at Acme, where we’re building the future of eCommerce.",
-  //     comments: [],
-  //   },
-  //   {
-  //     user: [{ name: "User 6" }],
-  //     content:
-  //       "Exciting news! I’m hiring mid-level and senior Product Designers to join my team at Acme, where we’re building the future of eCommerce.",
-  //     comments: [],
-  //   },
-  // ];
+  const handleCreatePost = async (
+    event,
+    _id,
+    isAnonymous,
+    text,
+    title,
+    moduleCode
+  ) => {
+    event.preventDefault();
 
-  let [page, setPage] = useState(1);
-  const PER_PAGE = 5;
+    try {
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+        },
+      };
 
-  const count = Math.ceil(posts.length / PER_PAGE);
-  const _DATA = usePagination(posts, PER_PAGE);
+      const currentPosts = posts;
+      const { data } = await axios.post(
+        "/api/post/add",
+        { _id, isAnonymous, text, title, moduleCode },
+        config
+      );
+      currentPosts.push(data);
+      setPosts(currentPosts);
+    } catch (error) {}
+  };
 
   const handlePaginationChange = (e, p) => {
     setPage(p);
@@ -360,7 +339,6 @@ export default function ModulePage(module) {
                     fullWidth
                     variant="contained"
                     sx={{
-                      // mt: 2,
                       mb: 0,
                       color: "#FFCE26",
                       backgroundColor: "#1E2328",
@@ -430,7 +408,6 @@ export default function ModulePage(module) {
                       flexDirection: "row",
                       m: 2,
                       width: "100%",
-                      // alignItems: "center",
                     }}
                   >
                     <img
@@ -442,7 +419,10 @@ export default function ModulePage(module) {
                         borderRadius: "50%",
                       }}
                     />
-                    <AddPostModal moduleCode={moduleCode} />
+                    <AddPostModal
+                      moduleCode={moduleCode}
+                      handleSubmit={handleCreatePost}
+                    />
                   </Box>
                 </Card>
                 <Box

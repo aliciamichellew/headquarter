@@ -28,8 +28,7 @@ const PostCard = ({ posts, userInfo }) => {
   const userInfoJSON = JSON.parse(userInfo);
   const [isPostReady, setIsPostReady] = useState(false);
 
-  console.log("posts", posts);
-  console.log("isAnonymous", posts.content.isAnonymous);
+  const owner = userInfoJSON._id === posts.user[0]._id;
 
   useEffect(() => {
     var checkdata = {
@@ -38,8 +37,6 @@ const PostCard = ({ posts, userInfo }) => {
         userId: userInfoJSON._id,
       },
     };
-
-    console.log(checkdata);
 
     const checkUpvote = async () => {
       const config = {
@@ -120,8 +117,6 @@ const PostCard = ({ posts, userInfo }) => {
     }
   };
 
-  console.log(upvote, downvote);
-
   return (
     <div>
       {isPostReady && (
@@ -197,8 +192,9 @@ const PostCard = ({ posts, userInfo }) => {
                 />
               }
             />
-            <Box sx={{ mx: 1 }}>
+            <Box sx={{ mx: 2 }}>
               <ReplyPostModal postId={posts.content._id} />
+              {owner && <ReplyPostModal postId={posts.content._id} />}
             </Box>
           </CardActions>
         </Card>

@@ -5,7 +5,6 @@ import profile from "../../img/profile.png";
 const UserCard = ({ users, content, loading }) => {
   if (loading) {
   }
-  // console.log(users);
 
   return (
     <Box
@@ -15,8 +14,6 @@ const UserCard = ({ users, content, loading }) => {
         alignItems: "flex-start",
         padding: 0,
         gap: 3,
-        // overflow: "auto",
-        // flexFlow: "wrap",
       }}
     >
       {users.map((users) => (
