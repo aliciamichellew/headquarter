@@ -13,4 +13,41 @@ const errorHandler = (error, request, response, next) => {
   });
 };
 
-module.exports = { notFound, errorHandler };
+const handleError = (res, err) => {
+  res.status(err.code).json({
+    errors: {
+      msg: err.message,
+    },
+  });
+};
+
+const handleSuccess = (res, obj) => {
+  res.status(200).json(obj);
+};
+
+const buildErrorObject = (code, message) => {
+  return { code, message };
+};
+
+const buildSuccessObject = (message) => {
+  return message;
+};
+
+const itemNotFound = (error, item, reject, message) => {
+  if (error) {
+    reject(this.buildErrorObject(422, error.message));
+  }
+  if (!item) {
+    reject(this.buildErrorObject(404, message));
+  }
+};
+
+module.exports = {
+  notFound,
+  errorHandler,
+  handleError,
+  handleSuccess,
+  buildErrorObject,
+  buildSuccessObject,
+  itemNotFound,
+};

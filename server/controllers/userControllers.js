@@ -2,6 +2,7 @@ const asyncHandler = require("express-async-handler");
 const User = require("../models/userModel");
 const Profile = require("../models/profileModel");
 const generateToken = require("../utils/generateToken");
+const { buildErrorObject } = require("../middlewares/errorMiddleware");
 
 const registerUser = async (req, res) => {
   try {
@@ -85,7 +86,8 @@ const authUser = asyncHandler(async (request, response) => {
       throw new Error("Invalid Email or Password!");
     }
   } catch (error) {
-    res.status(400).send({ message: "Error occured when auth user" });
+    console.log(error);
+    response.status(400).send({ message: "Error occured when auth user" });
   }
 });
 
@@ -114,8 +116,35 @@ const findUsersbyEmail = async (request, response) => {
   }
 };
 
+const findUserById = async (userId) => {
+  return new Promise((resolve, reject) => {
+    User.findById(userId, (err, item) => {
+      itemNotFound(err, item, reject, "USER_DOES_NOT_EXIST");
+      resolve(item);
+    });
+  });
+};
+
+const getUserFromToken = async (req, res) => {
+  try {
+    var tokenEncrypted = req.headers.authorization;
+    if (tokenEncrypted) {
+      tokenEncrypted = tokenEncrypted.replace("Bearer ", "").trim();
+      let userId = await getUserIdFromToken(tokenEncrypted);
+      const user = await findUserById(userId);
+      res.status(200).json(user);
+    } else {
+      handleError(res, buildErrObject(409, "No token available"));
+      return;
+    }
+  } catch (err) {
+    handleError(res, buildErrObject(422, err.message));
+  }
+};
+
 module.exports = {
   registerUser,
   authUser,
   findUsersbyEmail,
+  getUserFromToken,
 };

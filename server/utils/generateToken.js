@@ -1,9 +1,21 @@
 const jwt = require("jsonwebtoken");
+const auth = require("../middlewares/authMiddleware");
 
-const generateToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, {
-    expiresIn: "30d",
-  });
+const generateToken = (userId) => {
+  // Gets expiration time
+  const expiration = Math.floor(Date.now() / 1000) + 60 * 60;
+  // returns signed and encrypted token
+  return auth.encrypt(
+    jwt.sign(
+      {
+        data: {
+          _id: userId,
+        },
+        exp: expiration,
+      },
+      process.env.JWT_SECRET
+    )
+  );
 };
 
 module.exports = generateToken;

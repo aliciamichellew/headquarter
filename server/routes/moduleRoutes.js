@@ -1,14 +1,14 @@
 const express = require("express");
 const {
-  registerModule,
+  // registerModule,
   findModule,
-  getModuleList,
+  // getModuleList,
   getModulefromNUSMODS,
   findModulebyModuleCode,
 } = require("../controllers/moduleControllers");
 const router = express.Router();
 
-router.route("/registermodule").post(registerModule);
+// router.route("/registermodule").post(registerModule);
 router.route("/").get(getModulefromNUSMODS);
 router.route("/:searchQuery").get(findModule);
 router.route("/searchModules/:moduleCode").get(findModulebyModuleCode);

@@ -4,31 +4,36 @@ const Profile = require("../models/profileModel");
 const Modules = require("../models/moduleModel");
 const Post = require("../models/questionModel");
 const { post } = require("../routes/userRoutes");
+const { getUserIdFromToken } = require("../middlewares/authMiddleware");
 
-const findUserById = async (request, response) => {
-  try {
-    const { _id } = request.body;
+// const getUserIdFromToken = async (token) => {
+//   return new Promise((resolve, reject) => {
+//     // Decrypts, verifies and decode token
+//     jwt.verify(auth.decrypt(token), process.env.JWT_SECRET, (err, decoded) => {
+//       if (err) {
+//         reject(409, "BAD_TOKEN");
+//       }
+//       resolve(decoded.data._id);
+//     });
+//   });
+// };
 
-    const user = await User.findOne({ _id });
-
-    if (user) {
-      response.json({
-        _id: user._id,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        username: user.username,
-        email: user.email,
-      });
-    } else {
-      response.status(400);
-      throw new Error("No Users Found!");
-    }
-  } catch (error) {
-    res
-      .status(400)
-      .send({ message: "Error occured when finding user by email" });
-  }
-};
+// getUserFromToken = async (req, res) => {
+//   try {
+//     var tokenEncrypted = req.headers.authorization;
+//     if (tokenEncrypted) {
+//       tokenEncrypted = tokenEncrypted.replace("Bearer ", "").trim();
+//       let userId = await getUserIdFromToken(tokenEncrypted);
+//       const user = await findUserById(userId);
+//       res.status(200).json(user);
+//     } else {
+//       res.status(409).send({ message: "No token available" });
+//       return;
+//     }
+//   } catch (err) {
+//     res.status(422).send({ message: err.message });
+//   }
+// };
 
 const createPosts = async (req, res) => {
   try {
@@ -75,15 +80,31 @@ const createPosts = async (req, res) => {
       console.log("moduleUpdated", moduleUpdated);
     }
 
-    if (post) {
-      res.status(201).json({
-        user: post.user,
-        isAnonymous: post.isAnonymous,
-        text: post.text,
+    const findUser = await User.find({ _id: post.user });
+
+    const comments = [];
+    const data = {
+      user: [
+        {
+          _id: findUser[0]._id,
+          name: findUser[0].firstName + " " + findUser[0].lastName,
+        },
+      ],
+      content: {
+        _id: post._id,
         title: post.title,
+        text: post.text,
+        upvote: post.upvote,
+        downvote: post.downvote,
         moduleCode: post.moduleCode,
         date: post.date,
-      });
+        isAnonymous: post.isAnonymous,
+      },
+      comments: comments,
+    };
+
+    if (post) {
+      res.status(201).json(data);
     } else {
       res.status(400).send({ message: "Error occured when creating new post" });
       return;
@@ -135,13 +156,29 @@ const editPost = async (req, res) => {
 const deletePost = async (req, res) => {
   try {
     const deletePost = req.body.post;
+    const token = req.headers.authorization.split(" ")[1];
+    console.log(token);
+
+    if (!token) {
+      res.status(400).send({ message: "Token required" });
+      return;
+    }
+
+    const userId = await getUserIdFromToken(token);
 
     const postExist = await Post.findOne({
       _id: deletePost._id,
     });
 
+    console.log(postExist);
+
     if (!postExist) {
       res.status(400).send({ message: "Post does not exist" });
+      return;
+    }
+
+    if (postExist.user != userId) {
+      res.status(400).send({ message: "User unauthorized" });
       return;
     }
 
@@ -594,6 +631,7 @@ const getPostsByModuleCode = async (req, res) => {
 };
 
 module.exports = {
+  // getUserFromToken,
   createPosts,
   editPost,
   deletePost,
