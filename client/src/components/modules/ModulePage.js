@@ -15,8 +15,11 @@ import {
   TextField,
   Pagination,
   CircularProgress,
+  FormControlLabel,
+  Checkbox,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
+import { Add, Check, Remove } from "@mui/icons-material";
 
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
@@ -51,6 +54,21 @@ export default function ModulePage(module) {
   const [moduleList, setModuleList] = useState([]);
   const navigate = useNavigate();
   const userInfoJSON = JSON.parse(userInfo);
+  const [follow, setFollow] = useState();
+
+  const checkFollow = async () => {
+    const config = {
+      headers: {
+        "Content-type": "application/json",
+      },
+      params: {
+        moduleCode: moduleCode,
+        userId: userInfoJSON._id,
+      },
+    };
+    const { data } = await axios.get(`/api/modules/checkfollowmodule`, config);
+    setFollow(data);
+  };
 
   const getPosts = async () => {
     setLoading(true);
@@ -94,11 +112,12 @@ export default function ModulePage(module) {
 
   useEffect(() => {
     getModulesInfo();
+    checkFollow();
     getPosts();
   }, [moduleCode]);
 
   const [page, setPage] = useState(1);
-  const PER_PAGE = 5;
+  const PER_PAGE = 10;
   const count = Math.ceil(posts.length / PER_PAGE);
   const _DATA = usePagination(posts, PER_PAGE);
 
@@ -114,6 +133,30 @@ export default function ModulePage(module) {
 
   const handleChange = (event) => {
     setSort(event.target.value);
+  };
+
+  const handleChangeFollow = async (e) => {
+    if (!follow) {
+      await axios({
+        method: "put",
+        url: "/api/profile/followmodule",
+        data: {
+          moduleCode: moduleCode,
+          userId: userInfoJSON._id,
+        },
+      });
+      setFollow(true);
+    } else {
+      await axios({
+        method: "put",
+        url: "/api/profile/unfollowmodule",
+        data: {
+          moduleCode: moduleCode,
+          userId: userInfoJSON._id,
+        },
+      });
+      setFollow(false);
+    }
   };
 
   useEffect(() => {
@@ -143,7 +186,7 @@ export default function ModulePage(module) {
 
       setLoading(true);
       const { data } = await axios.get(
-        `/api/modules/${searchQuery}`,
+        `/api/modules/allmodules/${searchQuery}`,
         { searchQuery },
         config
       );
@@ -360,7 +403,7 @@ export default function ModulePage(module) {
                   >
                     Experienced
                   </Button>
-                  <Button
+                  {/* <Button
                     size="large"
                     variant="contained"
                     sx={{
@@ -371,7 +414,19 @@ export default function ModulePage(module) {
                     }}
                   >
                     Added to My Modules
-                  </Button>
+                  </Button> */}
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        icon={<Add sx={{ color: "#FFCE26" }} />}
+                        checkedIcon={<Check sx={{ color: "#FFCE26" }} />}
+                        checked={follow ? follow : false}
+                        onChange={handleChangeFollow}
+                      />
+                    }
+                    label={follow ? "Added to My Modules" : "Add to My Modules"}
+                    sx={{ color: "#FFCE26" }}
+                  />
                   <FormControl
                     sx={{ mx: 2, minWidth: 120, borderColor: "#FFCE26" }}
                   >
@@ -533,7 +588,7 @@ export default function ModulePage(module) {
                   sx={{
                     display: "flex",
                     flexDirection: "column",
-                    alignItems: "flex-start",
+                    alignItems: "center",
                     padding: 0,
                     gap: 3,
                     width: "100%",
@@ -551,6 +606,9 @@ export default function ModulePage(module) {
                       showComment={false}
                     />
                   ))}
+                  {_DATA.currentData().length == 0 && (
+                    <Typography fontSize={40}>No Post Yet!</Typography>
+                  )}
                 </Box>
                 <Pagination
                   count={count}

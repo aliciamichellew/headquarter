@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 
 import { styled, useTheme } from "@mui/material/styles";
 import {
@@ -31,6 +31,7 @@ import TopDrawer from "../../components/drawer/TopNav";
 import SideDrawer from "../../components/drawer/SideNav";
 import profile from "../../img/profile.png";
 import ModuleButton from "../modules/ModuleButton";
+import axios from "axios";
 
 const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
@@ -82,7 +83,29 @@ const styles = {
 };
 
 export default function ProfilePage() {
-  let navigate = useNavigate();
+  const navigate = useNavigate();
+  const [modules, setModules] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const userInfo = localStorage.getItem("userInfo");
+  const userInfoJSON = JSON.parse(userInfo);
+  const userId = userInfoJSON._id;
+  const getMyModules = async (e) => {
+    try {
+      setLoading(false);
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+        },
+      };
+      const { data } = await axios.get(
+        `/api/modules/mymodules/${userId}`,
+        { userId },
+        config
+      );
+      setModules(data);
+      setLoading(false);
+    } catch (error) {}
+  };
   useEffect(() => {
     const userInfo = localStorage.getItem("userInfo");
 
@@ -90,6 +113,9 @@ export default function ProfilePage() {
       navigate("/");
     }
   });
+  useEffect(() => {
+    getMyModules();
+  }, []);
 
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
@@ -102,7 +128,7 @@ export default function ProfilePage() {
     setOpen(false);
   };
 
-  const userInfo = localStorage.getItem("userInfo");
+  // const userInfo = localStorage.getItem("userInfo");
 
   const [value, setValue] = React.useState(0);
 
@@ -110,15 +136,15 @@ export default function ProfilePage() {
     setValue(newValue);
   };
 
-  let modules = [
-    { moduleCode: "CS1010S", title: "Programming Methodology" },
-    { moduleCode: "CS2030", title: "Programming Methodology II" },
-    {
-      moduleCode: "CP2106",
-      title: "CP2106 Independent Software Development Project (Orbital)",
-    },
-    { moduleCode: "CS2040", title: "Data Structures and Algorithms" },
-  ];
+  // let modules = [
+  //   { moduleCode: "CS1010S", title: "Programming Methodology" },
+  //   { moduleCode: "CS2030", title: "Programming Methodology II" },
+  //   {
+  //     moduleCode: "CP2106",
+  //     title: "CP2106 Independent Software Development Project (Orbital)",
+  //   },
+  //   { moduleCode: "CS2040", title: "Data Structures and Algorithms" },
+  // ];
 
   return (
     <Box sx={{ display: "flex" }}>

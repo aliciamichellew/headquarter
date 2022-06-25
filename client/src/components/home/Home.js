@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { styled, useTheme } from "@mui/material/styles";
 import {
   Box,
@@ -14,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 import TopDrawer from "../../components/drawer/TopNav";
 import SideDrawer from "../../components/drawer/SideNav";
 import ModuleButton from "../modules/ModuleButton";
+import axios from "axios";
 
 const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
@@ -25,7 +26,30 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 }));
 
 export default function Home() {
-  let navigate = useNavigate();
+  const navigate = useNavigate();
+  const [modules, setModules] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const userInfo = localStorage.getItem("userInfo");
+  const userInfoJSON = JSON.parse(userInfo);
+  const userId = userInfoJSON._id;
+  const getMyModules = async (e) => {
+    try {
+      setLoading(false);
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+        },
+      };
+      const { data } = await axios.get(
+        `/api/modules/mymodules/${userId}`,
+        { userId },
+        config
+      );
+      setModules(data);
+      setLoading(false);
+    } catch (error) {}
+  };
+
   useEffect(() => {
     const userInfo = localStorage.getItem("userInfo");
 
@@ -33,6 +57,10 @@ export default function Home() {
       navigate("/");
     }
   });
+
+  useEffect(() => {
+    getMyModules();
+  }, []);
 
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
@@ -45,17 +73,15 @@ export default function Home() {
     setOpen(false);
   };
 
-  const userInfo = localStorage.getItem("userInfo");
-
-  let modules = [
-    { moduleCode: "AC5001", title: "Architectural History of Singapore" },
-    { moduleCode: "CS2030", title: "Programming Methodology II" },
-    {
-      moduleCode: "CP2106",
-      title: "CP2106 Independent Software Development Project (Orbital)",
-    },
-    { moduleCode: "CS2040", title: "Data Structures and Algorithms" },
-  ];
+  // let modules = [
+  //   { moduleCode: "AC5001", title: "Architectural History of Singapore" },
+  //   { moduleCode: "CS2030", title: "Programming Methodology II" },
+  //   {
+  //     moduleCode: "CP2106",
+  //     title: "CP2106 Independent Software Development Project (Orbital)",
+  //   },
+  //   { moduleCode: "CS2040", title: "Data Structures and Algorithms" },
+  // ];
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -149,6 +175,9 @@ export default function Home() {
                             mb: 0,
                             color: "#000000",
                             backgroundColor: "#FFCE26",
+                          }}
+                          onClick={() => {
+                            navigate("/mymodules");
                           }}
                         >
                           <Typography fontFamily={"Berlin Sans FB"}>

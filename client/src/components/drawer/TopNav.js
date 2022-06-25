@@ -15,7 +15,7 @@ import {
   Divider,
   Tooltip,
 } from "@mui/material";
-import { Home, Logout } from "@mui/icons-material";
+import { Home, Logout, ViewModule } from "@mui/icons-material";
 
 import { useNavigate } from "react-router-dom";
 
@@ -176,6 +176,13 @@ export default function TopDrawer({ open, handleDrawerOpen, isHomePage }) {
                     }}
                   >
                     <Avatar /> Profile
+                  </MenuItem>
+                  <MenuItem
+                    onClick={() => {
+                      navigate("/mymodules");
+                    }}
+                  >
+                    <ViewModule sx={{ mr: 1 }} /> My Modules
                   </MenuItem>
                   <Divider />
                   <MenuItem

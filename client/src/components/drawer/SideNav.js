@@ -102,7 +102,7 @@ export default function SideDrawer({ open, handleDrawerClose, theme }) {
           sx={{ display: "block" }}
           fontFamily={"Berlin Sans FB"}
           onClick={() => {
-            navigate("/");
+            navigate("/home");
           }}
         >
           <ListItemButton

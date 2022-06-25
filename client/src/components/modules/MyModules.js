@@ -32,8 +32,17 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   ...theme.mixins.toolbar,
 }));
 
-export default function AllModules() {
-  let navigate = useNavigate();
+export default function MyModules() {
+  const navigate = useNavigate();
+  const userInfo = localStorage.getItem("userInfo");
+  const userInfoJSON = JSON.parse(userInfo);
+  const userId = userInfoJSON._id;
+  const theme = useTheme();
+  const [open, setOpen] = React.useState(false);
+  const [moduleList, setModuleList] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+
   useEffect(() => {
     const userInfo = localStorage.getItem("userInfo");
 
@@ -41,9 +50,6 @@ export default function AllModules() {
       navigate("/");
     }
   });
-
-  const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -53,25 +59,25 @@ export default function AllModules() {
     setOpen(false);
   };
 
-  const [moduleList, setModuleList] = useState([]);
-  const [loading, setLoading] = useState(false);
-
   useEffect(() => {
     const fetchModules = async () => {
+      setLoading(true);
       const config = {
         headers: {
           "Content-type": "application/json",
         },
       };
-      setLoading(true);
-      const res = await axios.get("/api/modules", config);
-      setModuleList(res.data);
+      const { data } = await axios.get(
+        `/api/modules/mymodules/${userId}`,
+        { userId },
+        config
+      );
+      setModuleList(data);
       setLoading(false);
     };
     fetchModules();
   }, []);
 
-  const [searchQuery, setSearchQuery] = useState("");
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -83,8 +89,8 @@ export default function AllModules() {
 
       setLoading(true);
       const { data } = await axios.get(
-        `/api/modules/allmodules/${searchQuery}`,
-        { searchQuery },
+        `/api/modules/mymodules/search/${userId}/${searchQuery}`,
+        { userId, searchQuery },
         config
       );
 
@@ -155,7 +161,7 @@ export default function AllModules() {
                 sx={{ mx: 0, mt: 0 }}
                 align={"left"}
               >
-                View All Modules
+                View My Modules
               </Typography>
               {loading && <CircularProgress />}
               <Box
