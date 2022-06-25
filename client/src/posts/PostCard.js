@@ -37,6 +37,7 @@ const PostCard = ({
   const [downvote, setDownvote] = useState();
   const userInfoJSON = JSON.parse(userInfo);
   const [isPostReady, setIsPostReady] = useState(false);
+  console.log(posts);
 
   const owner = userInfoJSON._id === posts.user[0]._id;
 

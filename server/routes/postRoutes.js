@@ -12,6 +12,7 @@ const {
   undownvote,
   upvoteExist,
   downvoteExist,
+  getPostByPostId,
 } = require("../controllers/postControllers");
 const { protect } = require("../middlewares/authMiddleware");
 const router = express.Router();
@@ -28,5 +29,6 @@ router.route("/downvoteexist").get(protect, downvoteExist);
 router.route("/comment").put(protect, comment);
 router.route("/deletecomment").put(protect, deleteComment);
 router.route("/getpostbymodulecode/:moduleCode").get(getPostsByModuleCode);
+router.route("/getpostbypostid/:postId").get(getPostByPostId);
 
 module.exports = router;

@@ -530,6 +530,34 @@ const getPostsByModuleCode = async (req, res) => {
   }
 };
 
+const getPostByPostId = async (req, res) => {
+  try {
+    const { postId } = req.params;
+    const findPost = await Post.findOne({ _id: postId });
+
+    if (!findPost) {
+      res.status(400).send({ message: "Post does not exist" });
+      return;
+    }
+
+    const findUser = await User.findOne({ _id: findPost.user });
+    if (!findPost) {
+      res.status(400).send({ message: "User does not exist" });
+      return;
+    }
+
+    const comments = await getAllComments(findPost.answers);
+    const post = getPostReturnFormat(findUser, findPost, comments);
+
+    res.status(200).json(post);
+  } catch (error) {
+    console.log(error);
+    res
+      .status(400)
+      .send({ message: "Error occured when getting posts by post id" });
+  }
+};
+
 module.exports = {
   createPosts,
   editPost,
@@ -543,4 +571,5 @@ module.exports = {
   comment,
   deleteComment,
   getPostsByModuleCode,
+  getPostByPostId,
 };

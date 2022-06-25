@@ -12,6 +12,7 @@ import AllModules from "./components/modules/AllModules";
 import ProfilePage from "./components/profile/ProfilePage";
 import ModulePage from "./components/modules/ModulePage";
 import setAuthToken from "./components/utils/setAuthToken";
+import CommentPage from "./posts/CommentPage";
 
 const theme = createTheme({
   typography: {
@@ -39,6 +40,7 @@ export default function App() {
           <Route path="/allmodules" element={<AllModules />} />
           <Route path="/profilepage" element={<ProfilePage />} />
           <Route path="/modules/:moduleCode" element={<ModulePage />} />
+          <Route path="/commentpage/:postId" element={<CommentPage />} />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>
