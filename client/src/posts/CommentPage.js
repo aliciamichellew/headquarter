@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import { useNavigate, useParams } from "react-router-dom";
 
-import { Box, Grid, Typography } from "@mui/material";
+import { Box, Grid, Typography, Button } from "@mui/material";
 
 import { styled, useTheme } from "@mui/material/styles";
 
@@ -11,6 +11,7 @@ import axios from "axios";
 import TopDrawer from "../components/drawer/TopNav";
 import SideDrawer from "../components/drawer/SideNav";
 import PostCard from "./PostCard";
+import { ArrowBack } from "@mui/icons-material";
 
 const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
@@ -38,6 +39,8 @@ export default function CommentPage() {
         "Content-type": "application/json",
       },
     };
+
+    console.log(`/api/post/getpostbypostid/${postId}`);
     const { data } = await axios.get(
       `/api/post/getpostbypostid/${postId}`,
       { postId },
@@ -158,7 +161,7 @@ export default function CommentPage() {
 
   useEffect(() => {
     console.log("masuk");
-    // getPost();
+    getPost();
   }, []);
 
   const theme = useTheme();
@@ -208,15 +211,39 @@ export default function CommentPage() {
                 overflow: "auto",
               }}
             >
-              <Typography>Comment Page</Typography>
-              <PostCard
-                posts={post}
-                userInfo={userInfo}
-                handleAddComment={handleAddComment}
-                handleEditPost={handleEditPost}
-                handleDeletePost={handleDeletePost}
-                handleDeleteComment={handleDeleteComment}
-              />
+              {post && (
+                <Button
+                  size="large"
+                  sx={{
+                    color: "#1E2328",
+                    my: 0.5,
+                    textAlign: "left",
+                    ":hover": {
+                      bgcolor: "#FFCE26",
+                    },
+                  }}
+                  style={{ justifyContent: "flex-start" }}
+                  onClick={() => {
+                    navigate(`/modules/${post.content.moduleCode}`);
+                  }}
+                  startIcon={<ArrowBack />}
+                >
+                  <Box sx={{ display: "flex", flexDirection: "column" }}>
+                    <Typography fontSize={20}>Back</Typography>
+                  </Box>
+                </Button>
+              )}
+              {post && (
+                <PostCard
+                  posts={post}
+                  userInfo={userInfo}
+                  handleAddComment={handleAddComment}
+                  handleEditPost={handleEditPost}
+                  handleDeletePost={handleDeletePost}
+                  handleDeleteComment={handleDeleteComment}
+                  showComment={true}
+                />
+              )}
             </Box>
           </Grid>
         </Box>

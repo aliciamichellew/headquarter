@@ -8,6 +8,7 @@ import {
   Typography,
   Checkbox,
   FormControlLabel,
+  Button,
 } from "@mui/material";
 import UserCard from "../components/users/UserCard";
 import {
@@ -16,6 +17,7 @@ import {
   ThumbDownOutlined,
   ThumbUp,
   ThumbDown,
+  CommentOutlined,
 } from "@mui/icons-material";
 
 import ReplyPostModal from "./ReplyPostModal";
@@ -24,6 +26,7 @@ import axios from "axios";
 import EditPostModal from "./EditPostModal";
 import DeletePostModal from "./DeletePostModal";
 import CommentCard from "./CommentCard";
+import { useNavigate, useParams } from "react-router-dom";
 
 const PostCard = ({
   posts,
@@ -32,12 +35,14 @@ const PostCard = ({
   handleEditPost,
   handleDeletePost,
   handleDeleteComment,
+  showComment,
 }) => {
   const [upvote, setUpvote] = useState();
   const [downvote, setDownvote] = useState();
   const userInfoJSON = JSON.parse(userInfo);
   const [isPostReady, setIsPostReady] = useState(false);
   console.log(posts);
+  const navigate = useNavigate();
 
   const owner = userInfoJSON._id === posts.user[0]._id;
 
@@ -158,14 +163,15 @@ const PostCard = ({
               </Typography>
               <Typography sx={{ mb: 1 }}>{posts.content.text}</Typography>
             </Box>
-            {posts.comments.slice(0, 3).map((comment) => (
-              <CommentCard
-                postId={posts.content._id}
-                comment={comment}
-                userInfo={userInfoJSON}
-                handleDeleteComment={handleDeleteComment}
-              />
-            ))}
+            {showComment &&
+              posts.comments.map((comment) => (
+                <CommentCard
+                  postId={posts.content._id}
+                  comment={comment}
+                  userInfo={userInfoJSON}
+                  handleDeleteComment={handleDeleteComment}
+                />
+              ))}
           </CardContent>
           <CardActions sx={{ flexDirection: "row", ml: 1 }}>
             <Box sx={{ mx: 2, display: "flex", flexDirection: "row" }}>
@@ -190,10 +196,33 @@ const PostCard = ({
                 }
               />
               <Box sx={{ display: "flex", flexDirection: "row", gap: 3 }}>
-                <ReplyPostModal
-                  postId={posts.content._id}
-                  handleSubmit={handleAddComment}
-                />
+                {showComment && (
+                  <ReplyPostModal
+                    postId={posts.content._id}
+                    handleSubmit={handleAddComment}
+                  />
+                )}
+                {!showComment && (
+                  <Button
+                    sx={{
+                      color: "#1E2328",
+                      my: 0.5,
+                      textAlign: "left",
+                      ":hover": {
+                        bgcolor: "#FFCE26",
+                      },
+                    }}
+                    style={{ justifyContent: "flex-start" }}
+                    onClick={() => {
+                      navigate(`/commentpage/${posts.content._id}`);
+                    }}
+                    startIcon={<CommentOutlined />}
+                  >
+                    <Box sx={{ display: "flex", flexDirection: "column" }}>
+                      <Typography>Comment</Typography>
+                    </Box>
+                  </Button>
+                )}
                 {owner && (
                   <EditPostModal post={posts} handleSubmit={handleEditPost} />
                 )}

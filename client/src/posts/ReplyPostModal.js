@@ -12,6 +12,8 @@ import {
   Box,
 } from "@mui/material";
 
+import { Reply } from "@mui/icons-material";
+
 const ReplyPostModal = ({ postId, handleSubmit }) => {
   const [open, setOpen] = React.useState(false);
   const userInfo = localStorage.getItem("userInfo");
@@ -34,16 +36,21 @@ const ReplyPostModal = ({ postId, handleSubmit }) => {
   return (
     <div>
       <Button
-        variant="contained"
         sx={{
-          backgroundColor: "#D4D4D4",
-          color: "#909090",
-          height: 40,
-          width: "100%",
+          color: "#1E2328",
+          my: 0.5,
+          textAlign: "left",
+          ":hover": {
+            bgcolor: "#FFCE26",
+          },
         }}
+        style={{ justifyContent: "center" }}
         onClick={handleClickOpen}
+        startIcon={<Reply />}
       >
-        Reply
+        <Box sx={{ display: "flex", flexDirection: "column" }}>
+          <Typography>Reply</Typography>
+        </Box>
       </Button>
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Create New Post</DialogTitle>

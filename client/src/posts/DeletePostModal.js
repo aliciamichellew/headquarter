@@ -11,6 +11,7 @@ import {
   Checkbox,
   Box,
 } from "@mui/material";
+import { Delete } from "@mui/icons-material";
 
 const DeletePostModal = ({ post, isComment, handleSubmit }) => {
   const userInfo = localStorage.getItem("userInfo");
@@ -37,16 +38,21 @@ const DeletePostModal = ({ post, isComment, handleSubmit }) => {
   return (
     <div>
       <Button
-        variant="contained"
         sx={{
-          backgroundColor: "#D4D4D4",
-          color: "#909090",
-          height: 40,
-          width: "100%",
+          color: "#1E2328",
+          my: 0.5,
+          textAlign: "left",
+          ":hover": {
+            bgcolor: "#FFCE26",
+          },
         }}
+        startIcon={<Delete />}
+        style={{ justifyContent: "center" }}
         onClick={handleClickOpen}
       >
-        Delete
+        <Box sx={{ display: "flex", flexDirection: "column" }}>
+          <Typography>Delete</Typography>
+        </Box>
       </Button>
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Delete Post</DialogTitle>

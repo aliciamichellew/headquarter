@@ -548,6 +548,7 @@ export default function ModulePage(module) {
                       handleEditPost={handleEditPost}
                       handleDeletePost={handleDeletePost}
                       handleDeleteComment={handleDeleteComment}
+                      showComment={false}
                     />
                   ))}
                 </Box>

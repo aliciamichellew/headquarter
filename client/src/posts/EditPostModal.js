@@ -11,6 +11,7 @@ import {
   Checkbox,
   Box,
 } from "@mui/material";
+import { Edit } from "@mui/icons-material";
 
 const EditPostModal = ({ post, handleSubmit }) => {
   const userInfo = localStorage.getItem("userInfo");
@@ -37,16 +38,21 @@ const EditPostModal = ({ post, handleSubmit }) => {
   return (
     <div>
       <Button
-        variant="contained"
         sx={{
-          backgroundColor: "#D4D4D4",
-          color: "#909090",
-          height: 40,
-          width: "100%",
+          color: "#1E2328",
+          my: 0.5,
+          textAlign: "left",
+          ":hover": {
+            bgcolor: "#FFCE26",
+          },
         }}
+        style={{ justifyContent: "center" }}
         onClick={handleClickOpen}
+        startIcon={<Edit />}
       >
-        Edit
+        <Box sx={{ display: "flex", flexDirection: "column" }}>
+          <Typography>Edit</Typography>
+        </Box>
       </Button>
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Edit Post</DialogTitle>
