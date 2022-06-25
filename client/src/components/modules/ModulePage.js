@@ -208,6 +208,30 @@ export default function ModulePage(module) {
     } catch (error) {}
   };
 
+  const handleDeleteComment = async (event, postId, commentId) => {
+    event.preventDefault();
+
+    try {
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+        },
+      };
+
+      console.log(postId, commentId);
+      const { res } = await axios({
+        method: "put",
+        url: "/api/post/deletecomment",
+        data: {
+          post: { _id: postId },
+          comment: { _id: commentId },
+        },
+      });
+
+      await getPosts();
+    } catch (error) {}
+  };
+
   const handleEditPost = async (event, postId, isAnonymous, text, title) => {
     event.preventDefault();
 
@@ -266,7 +290,11 @@ export default function ModulePage(module) {
 
   return (
     <Box sx={{ display: "flex" }}>
-      <TopDrawer open={open} handleDrawerOpen={handleDrawerOpen} />
+      <TopDrawer
+        open={open}
+        handleDrawerOpen={handleDrawerOpen}
+        isHomePage={false}
+      />
       <SideDrawer
         open={open}
         handleDrawerClose={handleDrawerClose}
@@ -519,6 +547,7 @@ export default function ModulePage(module) {
                       handleAddComment={handleAddComment}
                       handleEditPost={handleEditPost}
                       handleDeletePost={handleDeletePost}
+                      handleDeleteComment={handleDeleteComment}
                     />
                   ))}
                 </Box>

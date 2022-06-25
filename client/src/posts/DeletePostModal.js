@@ -12,7 +12,7 @@ import {
   Box,
 } from "@mui/material";
 
-const DeletePostModal = ({ postId, handleSubmit }) => {
+const DeletePostModal = ({ post, isComment, handleSubmit }) => {
   const userInfo = localStorage.getItem("userInfo");
 
   const [open, setOpen] = useState(false);
@@ -23,6 +23,15 @@ const DeletePostModal = ({ postId, handleSubmit }) => {
 
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const submitRequest = (event, post, isComment) => {
+    if (isComment) {
+      console.log("post submit request", post);
+      handleSubmit(event, post.postId, post.comment._id);
+    } else {
+      handleSubmit(event, post.content._id);
+    }
   };
 
   return (
@@ -40,7 +49,7 @@ const DeletePostModal = ({ postId, handleSubmit }) => {
         Delete
       </Button>
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Edit Post</DialogTitle>
+        <DialogTitle>Delete Post</DialogTitle>
         <DialogContent
           sx={{ display: "flex", flexDirection: "column", width: "500px" }}
         >
@@ -53,7 +62,7 @@ const DeletePostModal = ({ postId, handleSubmit }) => {
             component="form"
             noValidate
             onSubmit={(event) => {
-              handleSubmit(event, postId);
+              submitRequest(event, post, isComment);
               handleClose();
             }}
           >

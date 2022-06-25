@@ -58,6 +58,7 @@ const getAllComments = async (answers) => {
   for (let i of answers) {
     const commentUser = await User.findOne({ _id: i.author });
     let commentData = {
+      _id: i._id,
       user: [
         {
           _id: commentUser._id,
@@ -462,9 +463,10 @@ const deleteComment = async (req, res) => {
       return;
     }
 
+    console.log(comment);
     const commentExist = await Post.find({
       _id: post._id,
-      answers: { _id: comment._id },
+      answers: { $elemMatch: { _id: comment._id } },
     });
 
     if (commentExist.length === 0) {
@@ -472,7 +474,15 @@ const deleteComment = async (req, res) => {
       return;
     }
 
-    await editPostField(post._id, "$pull", "answers", comment._id);
+    await Post.updateOne(
+      {
+        _id: post._id,
+      },
+      {
+        $pull: { answers: { _id: comment._id } },
+      }
+    );
+    // await editPostField(post._id, "$pull", "answers", comment._id);
     res.status(200).send({ message: "Delete comment success" });
   } catch (error) {
     res.status(400).send({ message: "Error occured when deleting comment" });

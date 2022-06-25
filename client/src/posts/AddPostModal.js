@@ -34,7 +34,7 @@ const AddPostModal = ({ moduleCode, handleSubmit }) => {
   };
 
   return (
-    <div>
+    <Box sx={{ width: "100%" }}>
       <Button
         variant="contained"
         sx={{
@@ -88,7 +88,7 @@ const AddPostModal = ({ moduleCode, handleSubmit }) => {
           </Box>
         </DialogActions>
       </Dialog>
-    </div>
+    </Box>
   );
 };
 

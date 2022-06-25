@@ -108,7 +108,11 @@ export default function SignUpSide() {
   return (
     <ThemeProvider theme={theme}>
       <Box sx={{ display: "flex" }}>
-        <TopDrawer open={open} handleDrawerOpen={handleDrawerOpen} />
+        <TopDrawer
+          open={open}
+          handleDrawerOpen={handleDrawerOpen}
+          isHomePage={true}
+        />
         <Box component="main" sx={{ flexGrow: 1, p: 0 }}>
           <Grid container component="main" sx={{ height: "100vh" }}>
             <CssBaseline />

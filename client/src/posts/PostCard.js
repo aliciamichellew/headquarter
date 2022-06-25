@@ -23,6 +23,7 @@ import ReplyPostModal from "./ReplyPostModal";
 import axios from "axios";
 import EditPostModal from "./EditPostModal";
 import DeletePostModal from "./DeletePostModal";
+import CommentCard from "./CommentCard";
 
 const PostCard = ({
   posts,
@@ -30,6 +31,7 @@ const PostCard = ({
   handleAddComment,
   handleEditPost,
   handleDeletePost,
+  handleDeleteComment,
 }) => {
   const [upvote, setUpvote] = useState();
   const [downvote, setDownvote] = useState();
@@ -150,71 +152,58 @@ const PostCard = ({
               <BookmarkBorderOutlined />
             </Box>
             <Box sx={{ display: "flex", flexDirection: "column" }}>
-              <Typography>{posts.content.title}</Typography>
-              <Typography>{posts.content.text}</Typography>
+              <Typography fontSize={25} sx={{ mb: 1 }}>
+                {posts.content.title}
+              </Typography>
+              <Typography sx={{ mb: 1 }}>{posts.content.text}</Typography>
             </Box>
             {posts.comments.slice(0, 3).map((comment) => (
-              <Card sx={{ my: 1 }}>
-                <CardContent>
-                  <Box
-                    sx={{
-                      display: "flex",
-                      width: "100%",
-                      justifyContent: "space-between",
-                      flexDirection: "row",
-                      mb: 2,
-                    }}
-                  >
-                    <UserCard
-                      users={
-                        comment.isAnonymous
-                          ? [{ name: "Anonymous", _id: comment.user._id }]
-                          : comment.user
-                      }
-                      content={comment.date}
-                    />
-                  </Box>
-                  <Typography>{comment.text}</Typography>
-                </CardContent>
-              </Card>
+              <CommentCard
+                postId={posts.content._id}
+                comment={comment}
+                userInfo={userInfoJSON}
+                handleDeleteComment={handleDeleteComment}
+              />
             ))}
           </CardContent>
           <CardActions sx={{ flexDirection: "row", ml: 1 }}>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  icon={<ThumbUpOutlined />}
-                  checkedIcon={<ThumbUp />}
-                  checked={upvote ? upvote : false}
-                  onChange={handleChangeUpvote}
-                />
-              }
-            />
-            <FormControlLabel
-              control={
-                <Checkbox
-                  icon={<ThumbDownOutlined />}
-                  checkedIcon={<ThumbDown />}
-                  checked={downvote ? downvote : false}
-                  onChange={handleChangeDownvote}
-                />
-              }
-            />
-            <Box sx={{ mx: 2, display: "flex", flexDirection: "row", gap: 3 }}>
-              <ReplyPostModal
-                postId={posts.content._id}
-                handleSubmit={handleAddComment}
+            <Box sx={{ mx: 2, display: "flex", flexDirection: "row" }}>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    icon={<ThumbUpOutlined />}
+                    checkedIcon={<ThumbUp />}
+                    checked={upvote ? upvote : false}
+                    onChange={handleChangeUpvote}
+                  />
+                }
               />
-              {owner && <ReplyPostModal postId={posts.content._id} />}
-              {owner && (
-                <EditPostModal post={posts} handleSubmit={handleEditPost} />
-              )}
-              {owner && (
-                <DeletePostModal
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    icon={<ThumbDownOutlined />}
+                    checkedIcon={<ThumbDown />}
+                    checked={downvote ? downvote : false}
+                    onChange={handleChangeDownvote}
+                  />
+                }
+              />
+              <Box sx={{ display: "flex", flexDirection: "row", gap: 3 }}>
+                <ReplyPostModal
                   postId={posts.content._id}
-                  handleSubmit={handleDeletePost}
+                  handleSubmit={handleAddComment}
                 />
-              )}
+                {owner && (
+                  <EditPostModal post={posts} handleSubmit={handleEditPost} />
+                )}
+                {owner && (
+                  <DeletePostModal
+                    post={posts}
+                    isComment={false}
+                    handleSubmit={handleDeletePost}
+                  />
+                )}
+              </Box>
             </Box>
           </CardActions>
         </Card>

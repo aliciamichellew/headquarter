@@ -54,7 +54,11 @@ export default function Profile() {
 
   return (
     <Box sx={{ display: "flex" }}>
-      <TopDrawer open={open} handleDrawerOpen={handleDrawerOpen} />
+      <TopDrawer
+        open={open}
+        handleDrawerOpen={handleDrawerOpen}
+        isHomePage={false}
+      />
       <SideDrawer
         open={open}
         handleDrawerClose={handleDrawerClose}
