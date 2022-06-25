@@ -73,16 +73,6 @@ export default function Home() {
     setOpen(false);
   };
 
-  // let modules = [
-  //   { moduleCode: "AC5001", title: "Architectural History of Singapore" },
-  //   { moduleCode: "CS2030", title: "Programming Methodology II" },
-  //   {
-  //     moduleCode: "CP2106",
-  //     title: "CP2106 Independent Software Development Project (Orbital)",
-  //   },
-  //   { moduleCode: "CS2040", title: "Data Structures and Algorithms" },
-  // ];
-
   return (
     <Box sx={{ display: "flex" }}>
       <TopDrawer

@@ -55,6 +55,7 @@ export default function ModulePage(module) {
   const navigate = useNavigate();
   const userInfoJSON = JSON.parse(userInfo);
   const [follow, setFollow] = useState();
+  const userId = userInfoJSON._id;
 
   const checkFollow = async () => {
     const config = {
@@ -161,14 +162,18 @@ export default function ModulePage(module) {
 
   useEffect(() => {
     const fetchModules = async () => {
+      setLoading(true);
       const config = {
         headers: {
           "Content-type": "application/json",
         },
       };
-      setLoading(true);
-      const res = await axios.get("/api/modules", config);
-      setModuleList(res.data);
+      const { data } = await axios.get(
+        `/api/modules/mymodules/${userId}`,
+        { userId },
+        config
+      );
+      setModuleList(data);
       setLoading(false);
     };
     fetchModules();
@@ -186,8 +191,8 @@ export default function ModulePage(module) {
 
       setLoading(true);
       const { data } = await axios.get(
-        `/api/modules/allmodules/${searchQuery}`,
-        { searchQuery },
+        `/api/modules/mymodules/search/${userId}/${searchQuery}`,
+        { userId, searchQuery },
         config
       );
 
@@ -403,18 +408,6 @@ export default function ModulePage(module) {
                   >
                     Experienced
                   </Button>
-                  {/* <Button
-                    size="large"
-                    variant="contained"
-                    sx={{
-                      mx: 2,
-                      color: "#4BB543",
-                      outlineColor: "#4BB543",
-                      backgroundColor: "white",
-                    }}
-                  >
-                    Added to My Modules
-                  </Button> */}
                   <FormControlLabel
                     control={
                       <Checkbox
@@ -537,6 +530,9 @@ export default function ModulePage(module) {
                       backgroundColor: "#1E2328",
                       width: "100%",
                       height: 40,
+                    }}
+                    onClick={() => {
+                      navigate("/mymodules");
                     }}
                   >
                     <Typography fontFamily={"Berlin Sans FB"}>

@@ -53,7 +53,7 @@ const ReplyPostModal = ({ postId, handleSubmit }) => {
         </Box>
       </Button>
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Create New Post</DialogTitle>
+        <DialogTitle>Reply Post</DialogTitle>
         <DialogContent
           sx={{ display: "flex", flexDirection: "column", width: "500px" }}
         >
