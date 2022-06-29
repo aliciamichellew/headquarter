@@ -32,6 +32,8 @@ import AddPostModal from "../../posts/AddPostModal";
 import profile from "../../img/profile.png";
 import usePagination from "../utils/Pagination";
 import ModuleButton from "./ModuleButton";
+import ExperiencedModuleModal from "./ExperiencedModuleModal";
+import DeleteExperiencedModuleModal from "./DeleteExperiencedModuleModal";
 
 const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
@@ -56,6 +58,7 @@ export default function ModulePage(module) {
   const userInfoJSON = JSON.parse(userInfo);
   const [follow, setFollow] = useState();
   const userId = userInfoJSON._id;
+  const [experienced, setExperienced] = useState();
 
   const checkFollow = async () => {
     const config = {
@@ -69,6 +72,24 @@ export default function ModulePage(module) {
     };
     const { data } = await axios.get(`/api/modules/checkfollowmodule`, config);
     setFollow(data);
+  };
+
+  const checkExperienced = async () => {
+    const config = {
+      headers: {
+        "Content-type": "application/json",
+      },
+      params: {
+        moduleCode: moduleCode,
+        userId: userInfoJSON._id,
+      },
+    };
+    const { data } = await axios.get(
+      `/api/modules/checkexperiencedmodule`,
+      config
+    );
+    console.log(data);
+    setExperienced(data);
   };
 
   const getPosts = async () => {
@@ -114,6 +135,7 @@ export default function ModulePage(module) {
   useEffect(() => {
     getModulesInfo();
     checkFollow();
+    checkExperienced();
     getPosts();
   }, [moduleCode]);
 
@@ -331,6 +353,38 @@ export default function ModulePage(module) {
     } catch (err) {}
   };
 
+  const handleExperienced = async (
+    event,
+    userId,
+    moduleCode,
+    acadYear,
+    semester
+  ) => {
+    await axios({
+      method: "put",
+      url: "/api/profile/experiencedmodule",
+      data: {
+        moduleCode: moduleCode,
+        userId: userInfoJSON._id,
+        acadYear: acadYear,
+        semester: semester,
+      },
+    });
+    setExperienced(true);
+  };
+
+  const handleRemoveExperienced = async (event, moduleCode) => {
+    await axios({
+      method: "put",
+      url: "/api/profile/unexperiencedmodule",
+      data: {
+        moduleCode: moduleCode,
+        userId: userInfoJSON._id,
+      },
+    });
+    setExperienced(false);
+  };
+
   const handlePaginationChange = (e, p) => {
     setPage(p);
     _DATA.jump(p);
@@ -396,7 +450,7 @@ export default function ModulePage(module) {
                     alignItems: "center",
                   }}
                 >
-                  <Button
+                  {/* <Button
                     size="large"
                     variant="contained"
                     sx={{
@@ -407,7 +461,19 @@ export default function ModulePage(module) {
                     }}
                   >
                     Experienced
-                  </Button>
+                  </Button> */}
+                  {!experienced && (
+                    <ExperiencedModuleModal
+                      moduleCode={moduleCode}
+                      handleExperienced={handleExperienced}
+                    />
+                  )}
+                  {experienced && (
+                    <DeleteExperiencedModuleModal
+                      moduleCode={moduleCode}
+                      handleRemoveExperienced={handleRemoveExperienced}
+                    />
+                  )}
                   <FormControlLabel
                     control={
                       <Checkbox

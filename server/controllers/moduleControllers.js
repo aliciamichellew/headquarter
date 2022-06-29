@@ -105,9 +105,6 @@ const findModuleSearchQueryMyModules = async (req, res) => {
       throw new Error("Fetch Failed!");
     }
 
-    // console.log(findSearchQuery);
-    // console.log(findSearchQuery.searchQuery);
-
     const module = data.filter((x) =>
       x.moduleCode.includes(searchQuery.toUpperCase())
     );
@@ -121,6 +118,35 @@ const findModuleSearchQueryMyModules = async (req, res) => {
   }
 };
 
+const userExperiencedModule = async (req, res) => {
+  try {
+    console.log("masuk");
+    const checkExperienced = req.query;
+
+    const profile = await Profile.findOne({ user: checkExperienced.userId });
+    if (!profile) {
+      res.status(200).send({ message: "User not found!" });
+    }
+
+    let experienced = false;
+    const findModuleExperienced = await Profile.findOne({
+      user: checkExperienced.userId,
+      moduleTaken: { $elemMatch: { moduleCode: checkExperienced.moduleCode } },
+    });
+
+    if (findModuleExperienced) {
+      experienced = true;
+    }
+    console.log(experienced);
+    res.json(experienced);
+  } catch (error) {
+    console.log(error);
+    res
+      .status(400)
+      .send({ message: "Error occured when checking user experience module" });
+  }
+};
+
 module.exports = {
   findModule,
   getModulefromNUSMODS,
@@ -128,4 +154,5 @@ module.exports = {
   getMyModules,
   userFollowModule,
   findModuleSearchQueryMyModules,
+  userExperiencedModule,
 };

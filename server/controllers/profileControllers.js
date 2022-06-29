@@ -121,8 +121,93 @@ const unfollowModule = async (req, res) => {
   }
 };
 
+const experiencedModule = async (req, res) => {
+  try {
+    const { moduleCode, userId, acadYear, semester } = req.body;
+    const url = `https://api.nusmods.com/v2/2021-2022/modules/${moduleCode.toUpperCase()}.json`;
+    const response = await axios.get(url);
+    console.log(response);
+    if (!response) {
+      res.status(400).send({ message: "Module not found" });
+      return;
+    }
+    const moduleData = {
+      moduleCode: response.data.moduleCode,
+      title: response.data.title,
+      acadYear: acadYear,
+      semester: semester,
+    };
+    console.log(moduleData);
+
+    console.log("useraId", userId, "moduleCode", moduleCode);
+    const findModuleExperienced = await Profile.findOne({
+      user: userId,
+      moduleTaken: { $elemMatch: { moduleCode: moduleCode } },
+    });
+
+    if (findModuleExperienced) {
+      res.status(200).send({ message: "Module experienced already" });
+      return;
+    }
+    await Profile.updateOne(
+      { user: userId },
+      { $push: { moduleTaken: moduleData } }
+    );
+    res.status(200).send({ message: "Experienced module success" });
+  } catch (error) {
+    console.log(error);
+    res
+      .status(400)
+      .send({ message: "Error occured when adding module to experienced" });
+  }
+};
+
+const unexperiencedModule = async (req, res) => {
+  try {
+    const { moduleCode, userId } = req.body;
+    const url = `https://api.nusmods.com/v2/2021-2022/modules/${moduleCode.toUpperCase()}.json`;
+    const response = await axios.get(url);
+    console.log(response);
+    if (!response) {
+      res.status(400).send({ message: "Module not found" });
+      return;
+    }
+    const moduleData = {
+      moduleCode: response.data.moduleCode,
+      title: response.data.title,
+    };
+    console.log(moduleData);
+
+    console.log("useraId", userId, "moduleCode", moduleCode);
+
+    const findModuleExperienced = await Profile.findOne({
+      user: userId,
+      moduleTaken: { $elemMatch: { moduleCode: moduleCode } },
+    });
+
+    console.log(findModuleExperienced);
+
+    if (!findModuleExperienced) {
+      res.status(200).send({ message: "User is not experienced" });
+      return;
+    }
+    await Profile.updateOne(
+      { user: userId },
+      { $pull: { moduleTaken: { moduleCode: moduleCode } } }
+    );
+    res.status(200).send({ message: "Unexperienced module success" });
+  } catch (error) {
+    console.log(error);
+    res
+      .status(400)
+      .send({ message: "Error occured when removing module from experienced" });
+  }
+};
+
 module.exports = {
   updateUserProfile,
   followModule,
   unfollowModule,
+  experiencedModule,
+  unexperiencedModule,
 };

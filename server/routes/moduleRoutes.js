@@ -6,6 +6,7 @@ const {
   getMyModules,
   userFollowModule,
   findModuleSearchQueryMyModules,
+  userExperiencedModule,
 } = require("../controllers/moduleControllers");
 // const { followModule } = require("../controllers/profileControllers");
 const router = express.Router();
@@ -15,6 +16,7 @@ router.route("/").get(getModulefromNUSMODS);
 router.route("/searchModules/:moduleCode").get(findModulebyModuleCode);
 router.route("/mymodules/:userId").get(protect, getMyModules);
 router.route("/checkfollowmodule").get(protect, userFollowModule);
+router.route("/checkexperiencedmodule").get(protect, userExperiencedModule);
 router.route("/allmodules/:searchQuery").get(findModule);
 router
   .route("/mymodules/search/:userId/:searchQuery")

@@ -44,14 +44,13 @@ const ProfileSchema = new mongoose.Schema({
   },
   moduleTaken: [
     {
-      module: {
-        moduleCode: {
-          type: "String",
-        },
-        title: {
-          type: "String",
-          required: true,
-        },
+      moduleCode: {
+        type: "String",
+        required: true,
+      },
+      title: {
+        type: "String",
+        required: true,
       },
       acadYear: {
         type: String,
