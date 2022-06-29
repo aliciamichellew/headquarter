@@ -44,9 +44,9 @@ const ExperiencedModuleModal = ({ moduleCode, handleExperienced }) => {
           color: "#FFCE26",
           my: 0.5,
           textAlign: "left",
-          ":hover": {
-            bgcolor: "#FFCE26",
-          },
+          //   ":hover": {
+          //     bgcolor: "#FFCE26",
+          //   },
         }}
         startIcon={<Add />}
         style={{ justifyContent: "center" }}

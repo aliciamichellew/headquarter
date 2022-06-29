@@ -45,6 +45,7 @@ export default function Home() {
         { userId },
         config
       );
+      console.log("data");
       setModules(data);
       setLoading(false);
     } catch (error) {}

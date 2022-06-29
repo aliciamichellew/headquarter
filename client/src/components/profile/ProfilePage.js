@@ -98,7 +98,7 @@ export default function ProfilePage() {
         },
       };
       const { data } = await axios.get(
-        `/api/modules/mymodules/${userId}`,
+        `/api/modules/moduletaken/${userId}`,
         { userId },
         config
       );

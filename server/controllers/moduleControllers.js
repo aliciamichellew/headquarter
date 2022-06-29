@@ -64,6 +64,24 @@ const getMyModules = async (req, res) => {
   }
 };
 
+const getModuleTaken = async (req, res) => {
+  try {
+    console.log("getmoduletaken");
+    const { userId } = req.params;
+    const profile = await Profile.findOne({ user: userId });
+    if (!profile) {
+      res.status(200).send({ message: "User not found!" });
+    }
+    console.log(profile);
+    res.json(profile.moduleTaken);
+  } catch (error) {
+    console.log(error);
+    res
+      .status(400)
+      .send({ message: "Error occured when getting module taken" });
+  }
+};
+
 const userFollowModule = async (req, res) => {
   try {
     console.log("masuk");
@@ -155,4 +173,5 @@ module.exports = {
   userFollowModule,
   findModuleSearchQueryMyModules,
   userExperiencedModule,
+  getModuleTaken,
 };
