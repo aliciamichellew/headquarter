@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Button,
   TextField,
@@ -7,8 +7,6 @@ import {
   DialogContent,
   DialogTitle,
   Typography,
-  FormControlLabel,
-  Checkbox,
   Box,
   FormControl,
   MenuItem,

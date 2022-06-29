@@ -56,26 +56,21 @@ const getMyModules = async (req, res) => {
     if (!profile) {
       res.status(200).send({ message: "User not found!" });
     }
-    // console.log(profile);
     res.json(profile.myModules);
   } catch (error) {
-    console.log(error);
     res.status(400).send({ message: "Error occured when getting my module" });
   }
 };
 
 const getModuleTaken = async (req, res) => {
   try {
-    console.log("getmoduletaken");
     const { userId } = req.params;
     const profile = await Profile.findOne({ user: userId });
     if (!profile) {
       res.status(200).send({ message: "User not found!" });
     }
-    console.log(profile);
     res.json(profile.moduleTaken);
   } catch (error) {
-    console.log(error);
     res
       .status(400)
       .send({ message: "Error occured when getting module taken" });
@@ -84,7 +79,6 @@ const getModuleTaken = async (req, res) => {
 
 const userFollowModule = async (req, res) => {
   try {
-    console.log("masuk");
     const checkFollow = req.query;
 
     const profile = await Profile.findOne({ user: checkFollow.userId });
@@ -101,7 +95,6 @@ const userFollowModule = async (req, res) => {
     if (findModuleFollowed) {
       followed = true;
     }
-    console.log(followed);
     res.json(followed);
   } catch (error) {
     res
@@ -129,7 +122,6 @@ const findModuleSearchQueryMyModules = async (req, res) => {
 
     res.json(module);
   } catch (error) {
-    console.log(error);
     res
       .status(400)
       .send({ message: "Error occured when doing search query my modules" });
@@ -138,7 +130,6 @@ const findModuleSearchQueryMyModules = async (req, res) => {
 
 const userExperiencedModule = async (req, res) => {
   try {
-    console.log("masuk");
     const checkExperienced = req.query;
 
     const profile = await Profile.findOne({ user: checkExperienced.userId });
@@ -155,10 +146,8 @@ const userExperiencedModule = async (req, res) => {
     if (findModuleExperienced) {
       experienced = true;
     }
-    console.log(experienced);
     res.json(experienced);
   } catch (error) {
-    console.log(error);
     res
       .status(400)
       .send({ message: "Error occured when checking user experience module" });

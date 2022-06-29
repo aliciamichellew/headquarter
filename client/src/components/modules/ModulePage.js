@@ -19,7 +19,7 @@ import {
   Checkbox,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import { Add, Check, Remove } from "@mui/icons-material";
+import { Add, Check } from "@mui/icons-material";
 
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
@@ -88,7 +88,6 @@ export default function ModulePage(module) {
       `/api/modules/checkexperiencedmodule`,
       config
     );
-    console.log(data);
     setExperienced(data);
   };
 
@@ -143,8 +142,6 @@ export default function ModulePage(module) {
   const PER_PAGE = 10;
   const count = Math.ceil(posts.length / PER_PAGE);
   const _DATA = usePagination(posts, PER_PAGE);
-
-  console.log("posts module", posts);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -288,7 +285,6 @@ export default function ModulePage(module) {
         },
       };
 
-      console.log(postId, commentId);
       const { res } = await axios({
         method: "put",
         url: "/api/post/deletecomment",

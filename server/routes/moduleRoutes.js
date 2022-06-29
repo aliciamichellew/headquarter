@@ -9,7 +9,7 @@ const {
   userExperiencedModule,
   getModuleTaken,
 } = require("../controllers/moduleControllers");
-// const { followModule } = require("../controllers/profileControllers");
+
 const router = express.Router();
 const { protect } = require("../middlewares/authMiddleware");
 

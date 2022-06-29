@@ -1,14 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Button,
-  TextField,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
   Typography,
-  FormControlLabel,
-  Checkbox,
   Box,
 } from "@mui/material";
 import { Delete } from "@mui/icons-material";
@@ -28,7 +25,6 @@ const DeletePostModal = ({ post, isComment, handleSubmit }) => {
 
   const submitRequest = (event, post, isComment) => {
     if (isComment) {
-      console.log("post submit request", post);
       handleSubmit(event, post.postId, post.comment._id);
     } else {
       handleSubmit(event, post.content._id);

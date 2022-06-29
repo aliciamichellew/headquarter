@@ -1,14 +1,11 @@
 const asyncHandler = require("express-async-handler");
 const Profile = require("../models/profileModel");
 const User = require("../models/userModel");
-const { post } = require("../routes/postRoutes");
-const { findModulebyModuleCode } = require("./moduleControllers");
 const axios = require("axios");
 
 const updateUserProfile = asyncHandler(async (req, res) => {
   try {
     const newProfile = req.body.profile;
-    console.log("newProfile", newProfile);
 
     // Disallow user to update email and username of profile
     if (
@@ -54,7 +51,6 @@ const followModule = async (req, res) => {
     const { moduleCode, userId } = req.body;
     const url = `https://api.nusmods.com/v2/2021-2022/modules/${moduleCode.toUpperCase()}.json`;
     const response = await axios.get(url);
-    console.log(response);
     if (!response) {
       res.status(400).send({ message: "Module not found" });
       return;
@@ -63,7 +59,6 @@ const followModule = async (req, res) => {
       moduleCode: response.data.moduleCode,
       title: response.data.title,
     };
-    console.log(moduleData);
 
     const findModuleFollowed = await Profile.findOne({
       user: userId,
@@ -80,7 +75,6 @@ const followModule = async (req, res) => {
     );
     res.status(200).send({ message: "Follow module success" });
   } catch (error) {
-    console.log(error);
     res.status(400).send({ message: "Error occured when following module" });
   }
 };
@@ -90,7 +84,6 @@ const unfollowModule = async (req, res) => {
     const { moduleCode, userId } = req.body;
     const url = `https://api.nusmods.com/v2/2021-2022/modules/${moduleCode.toUpperCase()}.json`;
     const response = await axios.get(url);
-    console.log(response);
     if (!response) {
       res.status(400).send({ message: "Module not found" });
       return;
@@ -99,7 +92,6 @@ const unfollowModule = async (req, res) => {
       moduleCode: response.data.moduleCode,
       title: response.data.title,
     };
-    console.log(moduleData);
 
     const findModuleFollowed = await Profile.findOne({
       user: userId,
@@ -116,7 +108,6 @@ const unfollowModule = async (req, res) => {
     );
     res.status(200).send({ message: "Unfollow module success" });
   } catch (error) {
-    console.log(error);
     res.status(400).send({ message: "Error occured when unfollowing module" });
   }
 };
@@ -126,7 +117,6 @@ const experiencedModule = async (req, res) => {
     const { moduleCode, userId, acadYear, semester } = req.body;
     const url = `https://api.nusmods.com/v2/2021-2022/modules/${moduleCode.toUpperCase()}.json`;
     const response = await axios.get(url);
-    console.log(response);
     if (!response) {
       res.status(400).send({ message: "Module not found" });
       return;
@@ -137,9 +127,7 @@ const experiencedModule = async (req, res) => {
       acadYear: acadYear,
       semester: semester,
     };
-    console.log(moduleData);
 
-    console.log("useraId", userId, "moduleCode", moduleCode);
     const findModuleExperienced = await Profile.findOne({
       user: userId,
       moduleTaken: { $elemMatch: { moduleCode: moduleCode } },
@@ -155,7 +143,6 @@ const experiencedModule = async (req, res) => {
     );
     res.status(200).send({ message: "Experienced module success" });
   } catch (error) {
-    console.log(error);
     res
       .status(400)
       .send({ message: "Error occured when adding module to experienced" });
@@ -167,7 +154,6 @@ const unexperiencedModule = async (req, res) => {
     const { moduleCode, userId } = req.body;
     const url = `https://api.nusmods.com/v2/2021-2022/modules/${moduleCode.toUpperCase()}.json`;
     const response = await axios.get(url);
-    console.log(response);
     if (!response) {
       res.status(400).send({ message: "Module not found" });
       return;
@@ -176,16 +162,11 @@ const unexperiencedModule = async (req, res) => {
       moduleCode: response.data.moduleCode,
       title: response.data.title,
     };
-    console.log(moduleData);
-
-    console.log("useraId", userId, "moduleCode", moduleCode);
 
     const findModuleExperienced = await Profile.findOne({
       user: userId,
       moduleTaken: { $elemMatch: { moduleCode: moduleCode } },
     });
-
-    console.log(findModuleExperienced);
 
     if (!findModuleExperienced) {
       res.status(200).send({ message: "User is not experienced" });
@@ -197,7 +178,6 @@ const unexperiencedModule = async (req, res) => {
     );
     res.status(200).send({ message: "Unexperienced module success" });
   } catch (error) {
-    console.log(error);
     res
       .status(400)
       .send({ message: "Error occured when removing module from experienced" });

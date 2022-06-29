@@ -1,17 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Button,
-  TextField,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
   Typography,
-  FormControlLabel,
-  Checkbox,
   Box,
 } from "@mui/material";
-import { Check, Delete } from "@mui/icons-material";
+import { Check } from "@mui/icons-material";
 
 const DeleteExperiencedModuleModal = ({
   moduleCode,
@@ -40,9 +37,6 @@ const DeleteExperiencedModuleModal = ({
           color: "#FFCE26",
           my: 0.5,
           textAlign: "left",
-          //   ":hover": {
-          //     bgcolor: "#FFCE26",
-          //   },
         }}
         startIcon={<Check />}
         style={{ justifyContent: "center" }}

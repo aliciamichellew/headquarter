@@ -1,33 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 
-import {
-  Box,
-  Card,
-  CardActions,
-  CardContent,
-  Typography,
-  Checkbox,
-  FormControlLabel,
-} from "@mui/material";
+import { Box, Card, CardActions, CardContent, Typography } from "@mui/material";
 import UserCard from "../components/users/UserCard";
-import {
-  BookmarkBorderOutlined,
-  ThumbUpOutlined,
-  ThumbDownOutlined,
-  ThumbUp,
-  ThumbDown,
-} from "@mui/icons-material";
-
-import ReplyPostModal from "./ReplyPostModal";
-
-import axios from "axios";
-import EditPostModal from "./EditPostModal";
 import DeletePostModal from "./DeletePostModal";
 
 const CommentCard = ({ postId, comment, userInfo, handleDeleteComment }) => {
   const owner = userInfo._id === comment.user[0]._id;
-
-  console.log(postId);
 
   const post = { postId: postId, comment: comment };
 

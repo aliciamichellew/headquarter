@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import { useNavigate, useParams } from "react-router-dom";
-
 import { Box, Grid, Typography, Button } from "@mui/material";
-
 import { styled, useTheme } from "@mui/material/styles";
 
 import axios from "axios";
@@ -23,16 +21,13 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 }));
 
 export default function CommentPage() {
-  console.log("masuk comment page");
   const { postId } = useParams();
-  console.log(postId);
   const [loading, setLoading] = useState(false);
   const [post, setPost] = useState();
   const userInfo = localStorage.getItem("userInfo");
   const navigate = useNavigate();
 
   const getPost = async () => {
-    console.log("kepanggil");
     setLoading(true);
     const config = {
       headers: {
@@ -40,14 +35,12 @@ export default function CommentPage() {
       },
     };
 
-    console.log(`/api/post/getpostbypostid/${postId}`);
     const { data } = await axios.get(
       `/api/post/getpostbypostid/${postId}`,
       { postId },
       config
     );
 
-    console.log("data", data);
     setPost(data);
     setLoading(false);
   };
@@ -85,7 +78,6 @@ export default function CommentPage() {
         },
       };
 
-      console.log(postId, commentId);
       const { res } = await axios({
         method: "put",
         url: "/api/post/deletecomment",
@@ -151,7 +143,6 @@ export default function CommentPage() {
   };
 
   useEffect(() => {
-    console.log("masuk use effect userinfo");
     const userInfo = localStorage.getItem("userInfo");
 
     if (!userInfo) {
@@ -160,7 +151,6 @@ export default function CommentPage() {
   });
 
   useEffect(() => {
-    console.log("masuk");
     getPost();
   }, []);
 

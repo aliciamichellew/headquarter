@@ -20,7 +20,6 @@ const protect = asyncHandler(async (req, res, next) => {
 
       //decodes token id
       const decoded = await getUserIdFromToken(token);
-      console.log("decoded", decoded);
 
       req.user = await User.findById(decoded).select("-password");
 

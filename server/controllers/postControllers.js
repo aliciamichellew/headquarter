@@ -279,7 +279,6 @@ const unupvote = async (req, res) => {
 const upvoteExist = async (req, res) => {
   try {
     const upvotePost = req.query;
-    console.log(upvotePost);
 
     const postExist = await Post.findOne({
       _id: upvotePost.postId,
@@ -304,7 +303,6 @@ const upvoteExist = async (req, res) => {
 
     res.json(upvoted);
   } catch (error) {
-    console.log(error);
     res
       .status(400)
       .send({ message: "Error occured when checking upvote post" });
@@ -356,7 +354,6 @@ const downvote = async (req, res) => {
     );
     res.status(200).send({ message: "Downvote post success" });
   } catch (error) {
-    console.log(error);
     res.status(400).send({ message: "Error occured when downvoting post" });
   }
 };
@@ -422,7 +419,6 @@ const downvoteExist = async (req, res) => {
 
     res.json(downvoted);
   } catch (error) {
-    console.log(error);
     res
       .status(400)
       .send({ message: "Error occured when checking downvote post" });
@@ -463,7 +459,6 @@ const deleteComment = async (req, res) => {
       return;
     }
 
-    console.log(comment);
     const commentExist = await Post.find({
       _id: post._id,
       answers: { $elemMatch: { _id: comment._id } },
@@ -551,7 +546,6 @@ const getPostByPostId = async (req, res) => {
 
     res.status(200).json(post);
   } catch (error) {
-    console.log(error);
     res
       .status(400)
       .send({ message: "Error occured when getting posts by post id" });
