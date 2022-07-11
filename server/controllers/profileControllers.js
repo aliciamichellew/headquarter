@@ -3,6 +3,21 @@ const Profile = require("../models/profileModel");
 const User = require("../models/userModel");
 const axios = require("axios");
 
+const getUserProfile = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const profile = await Profile.findOne({
+      user: userId,
+    });
+    res.json(profile);
+  } catch (error) {
+    console.log(error);
+    res
+      .status(400)
+      .send({ message: "Error occured when getting user profile" });
+  }
+};
+
 const updateUserProfile = asyncHandler(async (req, res) => {
   try {
     const newProfile = req.body.profile;
@@ -185,6 +200,7 @@ const unexperiencedModule = async (req, res) => {
 };
 
 module.exports = {
+  getUserProfile,
   updateUserProfile,
   followModule,
   unfollowModule,

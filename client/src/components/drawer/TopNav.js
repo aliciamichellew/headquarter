@@ -172,7 +172,7 @@ export default function TopDrawer({ open, handleDrawerOpen, isHomePage }) {
                 >
                   <MenuItem
                     onClick={() => {
-                      navigate("/profilepage");
+                      navigate("/myprofile");
                     }}
                   >
                     <Avatar /> Profile

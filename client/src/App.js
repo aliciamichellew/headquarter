@@ -7,13 +7,14 @@ import Landing from "./components/auth/LoginPage";
 import Home from "./components/home/Home";
 import Login from "./components/auth/LoginPage";
 import SignUp from "./components/auth/SignUpPage";
-import Profile from "./components/Profile";
+// import Profile from "./components/Profile";
 import AllModules from "./components/modules/AllModules";
 import ProfilePage from "./components/profile/ProfilePage";
 import ModulePage from "./components/modules/ModulePage";
 import setAuthToken from "./components/utils/setAuthToken";
 import CommentPage from "./posts/CommentPage";
 import MyModules from "./components/modules/MyModules";
+import MyProfilePage from "./components/profile/MyProfilePage";
 
 const theme = createTheme({
   typography: {
@@ -37,7 +38,8 @@ export default function App() {
           <Route path="/home" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
-          <Route path="/profile" element={<Profile />} />
+          <Route path="/myprofile" element={<MyProfilePage />} />
+          {/* <Route path="/profile" element={<Profile />} /> */}
           <Route path="/allmodules" element={<AllModules />} />
           <Route path="/mymodules" element={<MyModules />} />
           <Route path="/profilepage" element={<ProfilePage />} />

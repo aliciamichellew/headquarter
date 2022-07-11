@@ -446,18 +446,6 @@ export default function ModulePage(module) {
                     alignItems: "center",
                   }}
                 >
-                  {/* <Button
-                    size="large"
-                    variant="contained"
-                    sx={{
-                      mx: 2,
-                      color: "#4BB543",
-                      outlineColor: "#4BB543",
-                      backgroundColor: "white",
-                    }}
-                  >
-                    Experienced
-                  </Button> */}
                   {!experienced && (
                     <ExperiencedModuleModal
                       moduleCode={moduleCode}
