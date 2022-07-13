@@ -112,6 +112,12 @@ const ProfileSchema = new mongoose.Schema({
       required: true,
     },
   ],
+  myFollowing: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "users",
+    },
+  ],
 });
 
 const Profile = mongoose.model("profile", ProfileSchema);

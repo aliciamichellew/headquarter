@@ -3,6 +3,17 @@ const Profile = require("../models/profileModel");
 const User = require("../models/userModel");
 const axios = require("axios");
 
+const editFollowingList = async (id, op, key, value) => {
+  await Profile.updateOne(
+    {
+      user: id,
+    },
+    {
+      [op]: { [key]: value },
+    }
+  );
+};
+
 const getUserProfile = async (req, res) => {
   try {
     const { userId } = req.params;
@@ -199,6 +210,74 @@ const unexperiencedModule = async (req, res) => {
   }
 };
 
+const followUser = async (req, res) => {
+  try {
+    const { userId, userIdFollow } = req.body;
+
+    console.log(userIdFollow);
+
+    const findUser = await User.findOne({
+      _id: userIdFollow,
+    });
+
+    if (!findUser) {
+      res.status(200).send({ message: "User not found" });
+      return;
+    }
+
+    const findUserFollow = await Profile.findOne({
+      user: userId,
+      myFollowing: userIdFollow,
+    });
+
+    if (findUserFollow) {
+      res.status(200).send({ message: "User has followed user" });
+      return;
+    }
+
+    console.log(userIdFollow);
+    await editFollowingList(userId, "$push", "myFollowing", userIdFollow);
+    res.status(200).send({ message: "Follow user success" });
+  } catch (error) {
+    console.log(error);
+    res.status(400).send({ message: "Error occured when following user" });
+  }
+};
+
+const unfollowUser = async (req, res) => {
+  try {
+    const { userId, userIdFollow } = req.body;
+
+    console.log(userIdFollow);
+
+    const findUser = await User.findOne({
+      _id: userIdFollow,
+    });
+
+    if (!findUser) {
+      res.status(200).send({ message: "User not found" });
+      return;
+    }
+
+    const findUserFollow = await Profile.findOne({
+      user: userId,
+      myFollowing: userIdFollow,
+    });
+
+    if (!findUserFollow) {
+      res.status(200).send({ message: "User is not followed" });
+      return;
+    }
+
+    console.log(userIdFollow);
+    await editFollowingList(userId, "$pull", "myFollowing", userIdFollow);
+    res.status(200).send({ message: "Unfollow user success" });
+  } catch (error) {
+    console.log(error);
+    res.status(400).send({ message: "Error occured when unfollowing user" });
+  }
+};
+
 module.exports = {
   getUserProfile,
   updateUserProfile,
@@ -206,4 +285,6 @@ module.exports = {
   unfollowModule,
   experiencedModule,
   unexperiencedModule,
+  followUser,
+  unfollowUser,
 };
