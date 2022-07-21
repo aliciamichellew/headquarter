@@ -35,6 +35,7 @@ import profile from "../../img/profile.png";
 import ModuleButton from "../modules/ModuleButton";
 import axios from "axios";
 import EditProfileModal from "./EditProfileModal";
+import ProfileButton from "./ProfileButton";
 // import { getUserProfile } from "../../../../server/controllers/profileControllers";
 
 const DrawerHeader = styled("div")(({ theme }) => ({
@@ -89,6 +90,7 @@ const styles = {
 export default function MyProfilePage() {
   const navigate = useNavigate();
   const [modules, setModules] = useState([]);
+  const [friends, setFriends] = useState([]);
   const [loading, setLoading] = useState(false);
   const userInfo = localStorage.getItem("userInfo");
   const userInfoJSON = JSON.parse(userInfo);
@@ -117,6 +119,26 @@ export default function MyProfilePage() {
         config
       );
       setModules(data);
+      setLoading(false);
+    } catch (error) {}
+  };
+
+  const getMyFriends = async (e) => {
+    try {
+      setLoading(true);
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+        },
+      };
+      const { data } = await axios.get(
+        `/api/profile/getfollowing/${userId}`,
+        { userId },
+        config
+      );
+
+      setFriends(data);
+      console.log(friends);
       setLoading(false);
     } catch (error) {}
   };
@@ -159,6 +181,7 @@ export default function MyProfilePage() {
   useEffect(() => {
     getUserProfile();
     getMyModules();
+    getMyFriends();
   }, []);
 
   const theme = useTheme();
@@ -386,6 +409,11 @@ export default function MyProfilePage() {
                       {...a11yProps(1)}
                       style={styles.tab}
                     />
+                    <Tab
+                      label="Following"
+                      {...a11yProps(1)}
+                      style={styles.tab}
+                    />
                   </Tabs>
                 </Box>
 
@@ -445,6 +473,30 @@ export default function MyProfilePage() {
                                   {modules.moduleCode} {modules.title}
                                 </Typography>
                               </Button>
+                            ))}
+                          </Box>
+                        </Box>
+                      </CardContent>
+                    </Card>
+                  </Box>
+                </TabPanel>
+                <TabPanel value={value} index={2}>
+                  <Box sx={{ mt: 0 }}>
+                    <Typography sx={{ fontSize: 25, color: "#FFCE26" }}>
+                      My Friends
+                    </Typography>
+                    <Card sx={{ mx: 0, mt: 3 }}>
+                      <CardContent>
+                        <Box component="form" noValidate sx={{ mt: 0 }}>
+                          <Box
+                            sx={{ display: "flex", flexDirection: "column" }}
+                          >
+                            {friends.map((friends) => (
+                              <ProfileButton
+                                firstName={friends.firstName}
+                                lastName={friends.lastName}
+                                username={friends.username}
+                              />
                             ))}
                           </Box>
                         </Box>
