@@ -51,6 +51,7 @@ const registerUser = async (req, res) => {
       user: user._id,
       firstName: firstName,
       lastName: lastName,
+      username: username,
     });
 
     if (user && profile) {

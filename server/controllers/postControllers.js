@@ -36,6 +36,7 @@ const getPostReturnFormat = (user, post, comments) => {
       {
         _id: user._id,
         name: user.firstName + " " + user.lastName,
+        username: user.username,
       },
     ],
     content: {

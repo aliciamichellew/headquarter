@@ -8,6 +8,9 @@ const {
   getUserProfile,
   followUser,
   unfollowUser,
+  getFollowing,
+  getUserIdFromUsername,
+  checkFollowUser,
 } = require("../controllers/profileControllers");
 const { protect } = require("../middlewares/authMiddleware");
 const router = express.Router();
@@ -20,5 +23,9 @@ router.route("/experiencedmodule").put(protect, experiencedModule);
 router.route("/unexperiencedmodule").put(protect, unexperiencedModule);
 router.route("/followuser").put(protect, followUser);
 router.route("/unfollowuser").put(protect, unfollowUser);
+// router.route("/unfollowuser").put(protect, unfollowUser);
+router.route("/getfollowing/:userId").get(protect, getFollowing);
+router.route("/getuserid/:username").get(getUserIdFromUsername);
+router.route("/checkfollowuser").get(checkFollowUser);
 
 module.exports = router;

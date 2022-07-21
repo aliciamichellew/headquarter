@@ -39,10 +39,9 @@ export default function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/myprofile" element={<MyProfilePage />} />
-          {/* <Route path="/profile" element={<Profile />} /> */}
           <Route path="/allmodules" element={<AllModules />} />
           <Route path="/mymodules" element={<MyModules />} />
-          <Route path="/profilepage" element={<ProfilePage />} />
+          <Route path="/profile/:username" element={<ProfilePage />} />
           <Route path="/modules/:moduleCode" element={<ModulePage />} />
           <Route path="/commentpage/:postId" element={<CommentPage />} />
         </Routes>

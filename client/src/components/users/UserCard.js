@@ -1,10 +1,13 @@
 import React from "react";
 import { Box, Card, Typography } from "@mui/material";
 import profile from "../../img/profile.png";
+import { useNavigate } from "react-router-dom";
 
 const UserCard = ({ users, content, loading }) => {
   if (loading) {
   }
+
+  const navigate = useNavigate();
 
   return (
     <Box
@@ -29,7 +32,16 @@ const UserCard = ({ users, content, loading }) => {
               />
             </Box>
             <Box sx={{ display: "flex", flexDirection: "column" }}>
-              <Typography>{users.name}</Typography>
+              <Typography
+                onClick={() => {
+                  navigate(`/profile/${users.username}`);
+                }}
+              >
+                {users.name}
+              </Typography>
+              {/* <Link href="#" underline="none" color="inherit">
+                {users.name}
+              </Link> */}
               <Typography>{content}</Typography>
             </Box>
           </Box>

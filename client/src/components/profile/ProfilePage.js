@@ -10,6 +10,9 @@ import {
   CardContent,
   Tabs,
   Tab,
+  IconButton,
+  FormControlLabel,
+  Checkbox,
 } from "@mui/material";
 
 import {
@@ -21,11 +24,13 @@ import {
   Facebook,
   Twitter,
   Chat,
+  Add,
+  Check,
 } from "@mui/icons-material";
 
 import PropTypes from "prop-types";
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import TopDrawer from "../../components/drawer/TopNav";
 import SideDrawer from "../../components/drawer/SideNav";
@@ -83,12 +88,84 @@ const styles = {
 };
 
 export default function ProfilePage() {
+  const { username } = useParams();
+
   const navigate = useNavigate();
   const [modules, setModules] = useState([]);
   const [loading, setLoading] = useState(false);
   const userInfo = localStorage.getItem("userInfo");
   const userInfoJSON = JSON.parse(userInfo);
-  const userId = userInfoJSON._id;
+  const [userId, setUserId] = useState("");
+  const [userProfile, setUserProfile] = useState();
+  const [profilePic, setProfilePic] = useState("");
+  const [bio, setBio] = useState("");
+  const [twitter, setTwitter] = useState("");
+  const [facebook, setFacebook] = useState("");
+  const [linkedIn, setLinkedIn] = useState("");
+  const [instagram, setInstagram] = useState("");
+  const [website, setWebsite] = useState("");
+  const [github, setGithub] = useState("");
+  const [follow, setFollow] = useState();
+
+  const checkFollow = async () => {
+    const config = {
+      headers: {
+        "Content-type": "application/json",
+      },
+      params: {
+        userId: userInfoJSON._id,
+        userIdFollow: userId,
+      },
+    };
+    const { data } = await axios.get(`/api/profile/checkfollowuser`, config);
+    console.log(data);
+    setFollow(data);
+  };
+
+  const getUserId = async (e) => {
+    try {
+      setLoading(true);
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+        },
+      };
+      const { data } = await axios.get(
+        `/api/profile/getuserid/${username}`,
+        { username },
+        config
+      );
+      setUserId(data);
+      setLoading(false);
+    } catch (error) {}
+  };
+
+  const getProfile = async (e) => {
+    try {
+      setLoading(true);
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+        },
+      };
+      const { data } = await axios.get(
+        `/api/profile/getprofile/${userId}`,
+        { userId },
+        config
+      );
+      setUserProfile(data);
+      setProfilePic(data.profilePic || "");
+      setBio(data.bio || "");
+      setTwitter(data.social.twitter || "");
+      setFacebook(data.social.facebook || "");
+      setLinkedIn(data.social.linkedin || "");
+      setInstagram(data.social.instagram || "");
+      setWebsite(data.social.website || "");
+      setGithub(data.social.github || "");
+      setLoading(false);
+    } catch (error) {}
+  };
+
   const getMyModules = async (e) => {
     try {
       setLoading(false);
@@ -113,9 +190,42 @@ export default function ProfilePage() {
       navigate("/");
     }
   });
+
+  const handleChangeFollow = async (e) => {
+    if (!follow) {
+      await axios({
+        method: "put",
+        url: "/api/profile/followuser",
+        data: {
+          userId: userInfoJSON._id,
+          userIdFollow: userId,
+        },
+      });
+      setFollow(true);
+    } else {
+      await axios({
+        method: "put",
+        url: "/api/profile/unfollowuser",
+        data: {
+          userId: userInfoJSON._id,
+          userIdFollow: userId,
+        },
+      });
+      setFollow(false);
+    }
+  };
+
   useEffect(() => {
-    getMyModules();
+    getUserId();
   }, []);
+
+  useEffect(() => {
+    if (userId) {
+      getProfile();
+      getMyModules();
+      checkFollow();
+    }
+  }, [userId]);
 
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
@@ -128,23 +238,11 @@ export default function ProfilePage() {
     setOpen(false);
   };
 
-  // const userInfo = localStorage.getItem("userInfo");
-
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-
-  // let modules = [
-  //   { moduleCode: "CS1010S", title: "Programming Methodology" },
-  //   { moduleCode: "CS2030", title: "Programming Methodology II" },
-  //   {
-  //     moduleCode: "CP2106",
-  //     title: "CP2106 Independent Software Development Project (Orbital)",
-  //   },
-  //   { moduleCode: "CS2040", title: "Data Structures and Algorithms" },
-  // ];
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -217,16 +315,16 @@ export default function ProfilePage() {
                     }}
                   >
                     <Typography sx={{ fontSize: 40, color: "#FFCE26" }}>
-                      {JSON.parse(userInfo).firstName.toUpperCase()}{" "}
-                      {JSON.parse(userInfo).lastName.toUpperCase()}
+                      {userProfile && userProfile.firstName.toUpperCase()}{" "}
+                      {userProfile && userProfile.lastName.toUpperCase()}
                     </Typography>
                     <Typography sx={{ fontSize: 20, color: "#FFCE26" }}>
-                      Hi! Nice to meet you! Feel free to follow and chat me!
+                      {userProfile && userProfile.bio}
                     </Typography>
                   </Box>
                 </Box>
                 <Box sx={{ display: "flex", flexDirection: "row" }}>
-                  <Button
+                  {/* <Button
                     fullWidth
                     variant="contained"
                     sx={{
@@ -241,7 +339,19 @@ export default function ProfilePage() {
                   >
                     <AddBox sx={{ mr: 1 }} />
                     Follow
-                  </Button>
+                  </Button> */}
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        icon={<Add sx={{ color: "#FFCE26" }} />}
+                        checkedIcon={<Check sx={{ color: "#FFCE26" }} />}
+                        checked={follow ? follow : false}
+                        onChange={handleChangeFollow}
+                      />
+                    }
+                    label={follow ? "Followed" : "Follow"}
+                    sx={{ color: "#FFCE26" }}
+                  />
                   <Button
                     fullWidth
                     variant="contained"
@@ -260,12 +370,62 @@ export default function ProfilePage() {
                   </Button>
                 </Box>
                 <Box sx={{ display: "flex", flexDirection: "row", mt: 4 }}>
-                  <Language sx={{ mr: 2, fontSize: 40, color: "#FFCE26" }} />
-                  <LinkedIn sx={{ mr: 2, fontSize: 40, color: "#FFCE26" }} />
-                  <GitHub sx={{ mr: 2, fontSize: 40, color: "#FFCE26" }} />
-                  <Facebook sx={{ mr: 2, fontSize: 40, color: "#FFCE26" }} />
-                  <Instagram sx={{ mr: 2, fontSize: 40, color: "#FFCE26" }} />
-                  <Twitter sx={{ mr: 0, fontSize: 40, color: "#FFCE26" }} />
+                  {website && (
+                    <IconButton>
+                      <Language
+                        sx={{ mr: 2, fontSize: 40, color: "#FFCE26" }}
+                        onClick={() => window.open(`https://${website}`)}
+                      />
+                    </IconButton>
+                  )}
+                  {linkedIn && (
+                    <IconButton>
+                      <LinkedIn
+                        sx={{ mr: 2, fontSize: 40, color: "#FFCE26" }}
+                        onClick={() => window.open(`https://${linkedIn}`)}
+                      />
+                    </IconButton>
+                  )}
+                  {github && (
+                    <IconButton>
+                      <GitHub
+                        sx={{ mr: 2, fontSize: 40, color: "#FFCE26" }}
+                        onClick={() =>
+                          window.open(`https://www.github.com/${github}`)
+                        }
+                      />
+                    </IconButton>
+                  )}
+                  {facebook && (
+                    <IconButton>
+                      <Facebook
+                        sx={{ mr: 2, fontSize: 40, color: "#FFCE26" }}
+                        onClick={() =>
+                          window.open(`https://www.facebook.com/${facebook}/`)
+                        }
+                      />
+                    </IconButton>
+                  )}
+                  {instagram && (
+                    <IconButton>
+                      <Instagram
+                        sx={{ mr: 2, fontSize: 40, color: "#FFCE26" }}
+                        onClick={() =>
+                          window.open(`https://www.instagram.com/${instagram}/`)
+                        }
+                      />
+                    </IconButton>
+                  )}
+                  {twitter && (
+                    <IconButton>
+                      <Twitter
+                        sx={{ mr: 0, fontSize: 40, color: "#FFCE26" }}
+                        onClick={() =>
+                          window.open(`https://www.twitter.com/${twitter}/`)
+                        }
+                      />
+                    </IconButton>
+                  )}
                 </Box>
               </Box>
               <Box sx={{ display: "flex", flexDirection: "row", mt: 3 }}>

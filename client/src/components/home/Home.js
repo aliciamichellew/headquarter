@@ -15,6 +15,7 @@ import TopDrawer from "../../components/drawer/TopNav";
 import SideDrawer from "../../components/drawer/SideNav";
 import ModuleButton from "../modules/ModuleButton";
 import axios from "axios";
+import ProfileButton from "../profile/ProfileButton";
 
 const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
@@ -28,6 +29,7 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 export default function Home() {
   const navigate = useNavigate();
   const [modules, setModules] = useState([]);
+  const [friends, setFriends] = useState([]);
   const [loading, setLoading] = useState(false);
   const userInfo = localStorage.getItem("userInfo");
   const userInfoJSON = JSON.parse(userInfo);
@@ -51,6 +53,26 @@ export default function Home() {
     } catch (error) {}
   };
 
+  const getMyFriends = async (e) => {
+    try {
+      setLoading(true);
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+        },
+      };
+      const { data } = await axios.get(
+        `/api/profile/getfollowing/${userId}`,
+        { userId },
+        config
+      );
+
+      setFriends(data);
+      console.log(friends);
+      setLoading(false);
+    } catch (error) {}
+  };
+
   useEffect(() => {
     const userInfo = localStorage.getItem("userInfo");
 
@@ -61,6 +83,8 @@ export default function Home() {
 
   useEffect(() => {
     getMyModules();
+    getMyFriends();
+    console.log("friends", friends);
   }, []);
 
   const theme = useTheme();
@@ -278,7 +302,14 @@ export default function Home() {
                   <CardContent>
                     <Box component="form" noValidate sx={{ mt: 0 }}>
                       <Box sx={{ display: "flex", flexDirection: "column" }}>
-                        <Button
+                        {friends.map((friends) => (
+                          <ProfileButton
+                            firstName={friends.firstName}
+                            lastName={friends.lastName}
+                            username={friends.username}
+                          />
+                        ))}
+                        {/* <Button
                           size="large"
                           sx={{
                             color: "#000000",
@@ -376,7 +407,7 @@ export default function Home() {
                               User 3
                             </Typography>
                           </Box>
-                        </Button>
+                        </Button> */}
                         <Button
                           type="submit"
                           fullWidth
