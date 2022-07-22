@@ -1,4 +1,6 @@
-import * as React from "react";
+import React, { useState, useEffect } from "react";
+
+import axios from "axios";
 
 import { styled } from "@mui/material/styles";
 import MuiAppBar from "@mui/material/AppBar";
@@ -20,6 +22,7 @@ import { Home, Logout, ViewModule } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 
 import logo from "../../img/logo.png";
+import ProfileAvatar from "../profile/ProfileAvatar";
 
 const drawerWidth = 240;
 
@@ -53,6 +56,32 @@ export default function TopDrawer({ open, handleDrawerOpen, isHomePage }) {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  const userInfo = localStorage.getItem("userInfo");
+  const userInfoJSON = JSON.parse(userInfo);
+  const userId = userInfoJSON._id;
+  const [profilePic, setProfilePic] = useState("");
+
+  const getUserProfile = async (e) => {
+    try {
+      console.log("get user profile called");
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+        },
+      };
+      const { data } = await axios.get(
+        `/api/profile/getprofile/${userId}`,
+        { userId },
+        config
+      );
+      setProfilePic(data.profilePic || "");
+    } catch (err) {}
+  };
+
+  useEffect(() => {
+    getUserProfile();
+  }, [profilePic]);
 
   return (
     <AppBar position="fixed" open={open}>
@@ -131,7 +160,12 @@ export default function TopDrawer({ open, handleDrawerOpen, isHomePage }) {
                       aria-haspopup="true"
                       aria-expanded={openProfile ? "true" : undefined}
                     >
-                      <Avatar sx={{ width: 32, height: 32 }}>M</Avatar>
+                      {profilePic && (
+                        <ProfileAvatar profilePic={profilePic} width={32} />
+                      )}
+                      {!profilePic && (
+                        <Avatar sx={{ width: 32, height: 32 }}>M</Avatar>
+                      )}
                     </IconButton>
                   </Tooltip>
                 </Box>
@@ -175,7 +209,15 @@ export default function TopDrawer({ open, handleDrawerOpen, isHomePage }) {
                       navigate("/myprofile");
                     }}
                   >
-                    <Avatar /> Profile
+                    {!profilePic && <Avatar />}
+                    {profilePic && (
+                      <ProfileAvatar
+                        profilePic={profilePic}
+                        width={32}
+                        sx={{ mr: 1 }}
+                      />
+                    )}
+                    Profile
                   </MenuItem>
                   <MenuItem
                     onClick={() => {

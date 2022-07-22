@@ -11,6 +11,7 @@ const {
   getFollowing,
   getUserIdFromUsername,
   checkFollowUser,
+  uploadProfilePic,
 } = require("../controllers/profileControllers");
 const { protect } = require("../middlewares/authMiddleware");
 const router = express.Router();
@@ -27,5 +28,5 @@ router.route("/unfollowuser").put(protect, unfollowUser);
 router.route("/getfollowing/:userId").get(protect, getFollowing);
 router.route("/getuserid/:username").get(getUserIdFromUsername);
 router.route("/checkfollowuser").get(checkFollowUser);
-
+router.route("/uploadprofilepic").post(uploadProfilePic);
 module.exports = router;

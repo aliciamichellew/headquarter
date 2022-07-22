@@ -8,9 +8,13 @@ import {
   DialogTitle,
   Typography,
   Box,
+  Avatar,
+  Input,
+  IconButton,
 } from "@mui/material";
-import { Edit } from "@mui/icons-material";
+import { Edit, PhotoCamera } from "@mui/icons-material";
 import axios from "axios";
+import ProfileAvatar from "./ProfileAvatar";
 
 const EditProfileModal = ({ userInfo, handleEditProfile }) => {
   // const userInfo = localStorage.getItem("userInfo");
@@ -29,6 +33,7 @@ const EditProfileModal = ({ userInfo, handleEditProfile }) => {
   const [instagram, setInstagram] = useState("");
   const [website, setWebsite] = useState("");
   const [github, setGithub] = useState("");
+  const [image, setImage] = useState("");
 
   const getUserProfile = async (e) => {
     try {
@@ -48,6 +53,7 @@ const EditProfileModal = ({ userInfo, handleEditProfile }) => {
       setFirstName(data.firstName || "");
       setLastName(data.lastName || "");
       setProfilePic(data.profilePic || "");
+      // setImage(data.profilePic || "");
       setBio(data.bio || "");
       setTwitter(data.social.twitter || "");
       setFacebook(data.social.facebook || "");
@@ -71,6 +77,24 @@ const EditProfileModal = ({ userInfo, handleEditProfile }) => {
 
   const handleClose = () => {
     setOpen(false);
+  };
+
+  function previewFiles(file) {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+
+    reader.onloadend = () => {
+      setImage(reader.result);
+      console.log(image);
+    };
+  }
+
+  const handleChange = (e) => {
+    const file = e.target.files[0];
+    console.log(file);
+    setProfilePic(file);
+    console.log(profilePic);
+    previewFiles(file);
   };
 
   return (
@@ -100,6 +124,29 @@ const EditProfileModal = ({ userInfo, handleEditProfile }) => {
         <DialogContent
           sx={{ display: "flex", flexDirection: "column", width: "500px" }}
         >
+          {image && (
+            <Avatar
+              alt="Remy Sharp"
+              src={image}
+              sx={{ mr: 2, width: 150, height: 150 }}
+            />
+          )}
+          {!image && <ProfileAvatar profilePic={profilePic} width={150} />}
+          <label htmlFor="icon-button-file">
+            <Input
+              accept="image/*"
+              id="icon-button-file"
+              type="file"
+              onChange={(e) => handleChange(e)}
+            />
+            {/* <IconButton
+              color="primary"
+              aria-label="upload picture"
+              component="span"
+            >
+              <PhotoCamera />
+            </IconButton> */}
+          </label>
           <Box sx={{ display: "flex", flexDirection: "column" }}>
             <Typography sx={{ fontSize: 20 }}>First Name</Typography>
             <TextField
@@ -201,6 +248,7 @@ const EditProfileModal = ({ userInfo, handleEditProfile }) => {
                 _id,
                 firstName,
                 lastName,
+                image,
                 bio,
                 twitter,
                 facebook,

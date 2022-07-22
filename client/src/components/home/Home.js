@@ -310,105 +310,6 @@ export default function Home() {
                           />
                         ))}
                         {/* <Button
-                          size="large"
-                          sx={{
-                            color: "#000000",
-                            ":hover": {
-                              bgcolor: "#FFCE26",
-                            },
-                          }}
-                          style={{ justifyContent: "flex-start" }}
-                        >
-                          <Box
-                            sx={{
-                              display: "flex",
-                              flexDirection: "row",
-                              alignItems: "center",
-                            }}
-                          >
-                            <Avatar
-                              alt="Remy Sharp"
-                              src="/static/images/avatar/1.jpg"
-                              sx={{ mr: 2 }}
-                            />
-                            <Typography
-                              sx={{
-                                alignContent: "center",
-                                justifyContent: "center",
-                              }}
-                              fontFamily={"Berlin Sans FB"}
-                            >
-                              User 1
-                            </Typography>
-                          </Box>
-                        </Button>
-                        <Button
-                          size="large"
-                          sx={{
-                            color: "#000000",
-                            ":hover": {
-                              bgcolor: "#FFCE26",
-                            },
-                          }}
-                          style={{ justifyContent: "flex-start" }}
-                        >
-                          <Box
-                            sx={{
-                              display: "flex",
-                              flexDirection: "row",
-                              alignItems: "center",
-                            }}
-                          >
-                            <Avatar
-                              alt="Bemy Sharp"
-                              src="/static/images/avatar/1.jpg"
-                              sx={{ mr: 2 }}
-                            />
-                            <Typography
-                              sx={{
-                                alignContent: "center",
-                                justifyContent: "center",
-                              }}
-                              fontFamily={"Berlin Sans FB"}
-                            >
-                              User 2
-                            </Typography>
-                          </Box>
-                        </Button>
-                        <Button
-                          size="large"
-                          sx={{
-                            color: "#000000",
-                            ":hover": {
-                              bgcolor: "#FFCE26",
-                            },
-                          }}
-                          style={{ justifyContent: "flex-start" }}
-                        >
-                          <Box
-                            sx={{
-                              display: "flex",
-                              flexDirection: "row",
-                              alignItems: "center",
-                            }}
-                          >
-                            <Avatar
-                              alt="Aemy Sharp"
-                              src="/static/images/avatar/1.jpg"
-                              sx={{ mr: 2 }}
-                            />
-                            <Typography
-                              sx={{
-                                alignContent: "center",
-                                justifyContent: "center",
-                              }}
-                              fontFamily={"Berlin Sans FB"}
-                            >
-                              User 3
-                            </Typography>
-                          </Box>
-                        </Button> */}
-                        <Button
                           type="submit"
                           fullWidth
                           variant="contained"
@@ -422,7 +323,7 @@ export default function Home() {
                           <Typography fontFamily={"Berlin Sans FB"}>
                             View All My Friends
                           </Typography>
-                        </Button>
+                        </Button> */}
                       </Box>
                     </Box>
                   </CardContent>

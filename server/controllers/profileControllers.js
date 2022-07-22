@@ -2,6 +2,7 @@ const asyncHandler = require("express-async-handler");
 const Profile = require("../models/profileModel");
 const User = require("../models/userModel");
 const axios = require("axios");
+const cloudinary = require("../cloudinary/cloudinary");
 
 const editFollowingList = async (id, op, key, value) => {
   await Profile.updateOne(
@@ -68,6 +69,7 @@ const updateUserProfile = asyncHandler(async (req, res) => {
 
     res.status(200).send({ message: "Update status success" });
   } catch (err) {
+    console.log(error);
     res.status(400).send({ message: "Error occured when updating user" });
   }
 });
@@ -357,6 +359,30 @@ const checkFollowUser = async (req, res) => {
   }
 };
 
+const uploadProfilePic = async (req, res) => {
+  const { image } = req.body;
+  const uploadedImage = await cloudinary.uploader.upload(
+    image,
+    {
+      upload_preset: "headquarter_profile",
+      // public_id: `avatar`,
+      allowed_formats: ["png", "jpg", "jpeg", "svg", "ico", "jfif", "webp"],
+    },
+    function (error, result) {
+      if (error) {
+        console.log(error);
+      }
+      console.log(result);
+    }
+  );
+  try {
+    res.status(200).json(uploadedImage);
+  } catch (error) {
+    console.log(error);
+  }
+  // res.status(200).json(result);
+};
+
 module.exports = {
   getUserProfile,
   updateUserProfile,
@@ -369,4 +395,5 @@ module.exports = {
   getFollowing,
   getUserIdFromUsername,
   checkFollowUser,
+  uploadProfilePic,
 };

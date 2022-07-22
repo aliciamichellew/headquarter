@@ -36,6 +36,7 @@ import ModuleButton from "../modules/ModuleButton";
 import axios from "axios";
 import EditProfileModal from "./EditProfileModal";
 import ProfileButton from "./ProfileButton";
+import ProfileAvatar from "./ProfileAvatar";
 // import { getUserProfile } from "../../../../server/controllers/profileControllers";
 
 const DrawerHeader = styled("div")(({ theme }) => ({
@@ -206,6 +207,7 @@ export default function MyProfilePage() {
     _id,
     firstName,
     lastName,
+    image,
     bio,
     twitter,
     facebook,
@@ -217,6 +219,14 @@ export default function MyProfilePage() {
     event.preventDefault();
 
     try {
+      const result = await axios.post("/api/profile/uploadprofilepic", {
+        image: image,
+      });
+      const uploadedImg = result.data.public_id;
+      console.log("uploaded img", uploadedImg);
+      setProfilePic(uploadedImg);
+      console.log("profile pic", profilePic);
+
       const config = {
         headers: {
           "Content-type": "application/json",
@@ -230,6 +240,7 @@ export default function MyProfilePage() {
           profile: {
             firstName: firstName,
             lastName: lastName,
+            profilePic: uploadedImg,
             bio: bio,
             social: {
               twitter: twitter,
@@ -306,11 +317,21 @@ export default function MyProfilePage() {
                 }}
               >
                 <Box sx={{ display: "flex", flexDirection: "row" }}>
-                  <img
-                    src={profile}
-                    alt="profile"
-                    style={{ width: 150, marginRight: 5, borderRadius: "50%" }}
-                  />
+                  {!profilePic && (
+                    <img
+                      src={profile}
+                      alt="profile"
+                      style={{
+                        width: 150,
+                        marginRight: 5,
+                        borderRadius: "50%",
+                      }}
+                    />
+                  )}
+                  {profilePic && (
+                    <ProfileAvatar profilePic={profilePic} width={150} />
+                  )}
+
                   <Box
                     sx={{
                       display: "flex",
