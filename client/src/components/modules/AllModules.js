@@ -33,15 +33,6 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 }));
 
 export default function AllModules() {
-  let navigate = useNavigate();
-  useEffect(() => {
-    const userInfo = localStorage.getItem("userInfo");
-
-    if (!userInfo) {
-      navigate("/");
-    }
-  });
-
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
 
@@ -72,7 +63,7 @@ export default function AllModules() {
   }, []);
 
   const [searchQuery, setSearchQuery] = useState("");
-  const handleSubmit = async (e) => {
+  const handleSubmit = async e => {
     e.preventDefault();
     try {
       const config = {
@@ -119,17 +110,16 @@ export default function AllModules() {
         handleDrawerClose={handleDrawerClose}
         theme={theme}
       />
-      <Box component="main" sx={{ flexGrow: 1, pt: 3 }}>
+      <Box component='main' sx={{ flexGrow: 1, pt: 3 }}>
         <Grid
           container
-          component="main"
+          component='main'
           sx={{
             minHeight: "100vh",
             backgroundColor: "#FFCE26",
             display: "flex",
             alignContent: "flex-start",
-          }}
-        >
+          }}>
           <DrawerHeader />
           <Box
             sx={{
@@ -140,55 +130,50 @@ export default function AllModules() {
               width: "100%",
               gap: 2,
               overflow: "auto",
-            }}
-          >
+            }}>
             <Box
               sx={{
                 display: "flex",
                 flexDirection: "row",
                 justifyContent: "space-between",
-              }}
-            >
+              }}>
               <Typography
                 fontFamily={"Berlin Sans FB"}
                 fontSize={50}
                 sx={{ mx: 0, mt: 0 }}
-                align={"left"}
-              >
+                align={"left"}>
                 View All Modules
               </Typography>
               {loading && <CircularProgress />}
               <Box
-                component="form"
+                component='form'
                 noValidate
                 onSubmit={handleSubmit}
                 sx={{
                   display: "flex",
                   justifyContent: "flex-end",
-                }}
-              >
+                }}>
                 <Box
                   sx={{
                     display: "flex",
                     alignItems: "center",
                     justifyItems: "center",
                     width: 250,
-                  }}
-                >
+                  }}>
                   <Search sx={{ color: "action.active", mr: 1, my: 0.5 }} />
                   <TextField
-                    id="searchQuery"
-                    label="Search by Module Code"
-                    variant="standard"
+                    id='searchQuery'
+                    label='Search by Module Code'
+                    variant='standard'
                     sx={{ width: 200 }}
                     value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onChange={e => setSearchQuery(e.target.value)}
                   />
                 </Box>
                 <Button
-                  type="submit"
+                  type='submit'
                   fullWidth
-                  variant="contained"
+                  variant='contained'
                   sx={{
                     mt: 2,
                     mb: 0,
@@ -196,8 +181,7 @@ export default function AllModules() {
                     backgroundColor: "#1E2328",
                     width: 150,
                     height: 40,
-                  }}
-                >
+                  }}>
                   <Typography fontFamily={"Berlin Sans FB"}>Search</Typography>
                 </Button>
               </Box>
@@ -214,8 +198,7 @@ export default function AllModules() {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-              }}
-            >
+              }}>
               <Pagination
                 count={count}
                 page={page}

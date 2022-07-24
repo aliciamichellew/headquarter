@@ -1,13 +1,20 @@
-import React from "react";
+import React, { useContext } from "react";
 
 import { Box, Card, CardActions, CardContent, Typography } from "@mui/material";
 import UserCard from "../components/users/UserCard";
 import DeletePostModal from "./DeletePostModal";
+import { UserContext } from "../App";
 
-const CommentCard = ({ postId, comment, userInfo, handleDeleteComment }) => {
-  const owner = userInfo._id === comment.user._id;
+const CommentCard = ({ postId, comment, handleDeleteComment }) => {
+  const { userInfo } = useContext(UserContext);
+  const userId = userInfo ? userInfo._id : null;
+  const owner = userId === comment.user._id;
 
   const post = { postId: postId, comment: comment };
+
+  if (!userId) {
+    return <></>;
+  }
 
   return (
     <Box>
@@ -20,8 +27,7 @@ const CommentCard = ({ postId, comment, userInfo, handleDeleteComment }) => {
               justifyContent: "space-between",
               flexDirection: "row",
               mb: 2,
-            }}
-          >
+            }}>
             <UserCard
               users={
                 comment.isAnonymous

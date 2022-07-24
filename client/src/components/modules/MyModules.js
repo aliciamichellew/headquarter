@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import { useNavigate } from "react-router-dom";
 
@@ -22,6 +22,7 @@ import ModuleCard from "./ModuleCard";
 import usePagination from "../utils/Pagination";
 
 import axios from "axios";
+import { UserContext } from "../../App";
 
 const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
@@ -34,22 +35,13 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 
 export default function MyModules() {
   const navigate = useNavigate();
-  const userInfo = localStorage.getItem("userInfo");
-  const userInfoJSON = JSON.parse(userInfo);
-  const userId = userInfoJSON._id;
+  const { userInfo } = useContext(UserContext);
+  const userId = userInfo ? userInfo._id : null;
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
   const [moduleList, setModuleList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-
-  useEffect(() => {
-    const userInfo = localStorage.getItem("userInfo");
-
-    if (!userInfo) {
-      navigate("/");
-    }
-  });
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -60,7 +52,7 @@ export default function MyModules() {
   };
 
   useEffect(() => {
-    const fetchModules = async () => {
+    const fetchModules = async userId => {
       setLoading(true);
       const config = {
         headers: {
@@ -75,10 +67,15 @@ export default function MyModules() {
       setModuleList(data);
       setLoading(false);
     };
-    fetchModules();
-  }, []);
 
-  const handleSubmit = async (e) => {
+    if (userId) {
+      fetchModules(userId);
+    } else {
+      navigate("/");
+    }
+  }, [userId, navigate]);
+
+  const handleSubmit = async e => {
     e.preventDefault();
     try {
       const config = {
@@ -98,7 +95,6 @@ export default function MyModules() {
       setLoading(false);
     } catch (error) {
       throw error.message;
-      setLoading(false);
     }
   };
 
@@ -113,6 +109,11 @@ export default function MyModules() {
     _DATA.jump(p);
   };
 
+  if (!userId || !userInfo) {
+    navigate("/");
+    return <></>;
+  }
+
   return (
     <Box sx={{ display: "flex" }}>
       <TopDrawer
@@ -125,17 +126,16 @@ export default function MyModules() {
         handleDrawerClose={handleDrawerClose}
         theme={theme}
       />
-      <Box component="main" sx={{ flexGrow: 1, pt: 3 }}>
+      <Box component='main' sx={{ flexGrow: 1, pt: 3 }}>
         <Grid
           container
-          component="main"
+          component='main'
           sx={{
             minHeight: "100vh",
             backgroundColor: "#FFCE26",
             display: "flex",
             alignContent: "flex-start",
-          }}
-        >
+          }}>
           <DrawerHeader />
           <Box
             sx={{
@@ -146,55 +146,50 @@ export default function MyModules() {
               width: "100%",
               gap: 2,
               overflow: "auto",
-            }}
-          >
+            }}>
             <Box
               sx={{
                 display: "flex",
                 flexDirection: "row",
                 justifyContent: "space-between",
-              }}
-            >
+              }}>
               <Typography
                 fontFamily={"Berlin Sans FB"}
                 fontSize={50}
                 sx={{ mx: 0, mt: 0 }}
-                align={"left"}
-              >
+                align={"left"}>
                 View My Modules
               </Typography>
               {loading && <CircularProgress />}
               <Box
-                component="form"
+                component='form'
                 noValidate
                 onSubmit={handleSubmit}
                 sx={{
                   display: "flex",
                   justifyContent: "flex-end",
-                }}
-              >
+                }}>
                 <Box
                   sx={{
                     display: "flex",
                     alignItems: "center",
                     justifyItems: "center",
                     width: 250,
-                  }}
-                >
+                  }}>
                   <Search sx={{ color: "action.active", mr: 1, my: 0.5 }} />
                   <TextField
-                    id="searchQuery"
-                    label="Search by Module Code"
-                    variant="standard"
+                    id='searchQuery'
+                    label='Search by Module Code'
+                    variant='standard'
                     sx={{ width: 200 }}
                     value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onChange={e => setSearchQuery(e.target.value)}
                   />
                 </Box>
                 <Button
-                  type="submit"
+                  type='submit'
                   fullWidth
-                  variant="contained"
+                  variant='contained'
                   sx={{
                     mt: 2,
                     mb: 0,
@@ -202,8 +197,7 @@ export default function MyModules() {
                     backgroundColor: "#1E2328",
                     width: 150,
                     height: 40,
-                  }}
-                >
+                  }}>
                   <Typography fontFamily={"Berlin Sans FB"}>Search</Typography>
                 </Button>
               </Box>
@@ -220,8 +214,7 @@ export default function MyModules() {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-              }}
-            >
+              }}>
               <Pagination
                 count={count}
                 page={page}

@@ -14,10 +14,7 @@ import {
 import { Edit } from "@mui/icons-material";
 
 const EditPostModal = ({ post, handleSubmit }) => {
-  const userInfo = localStorage.getItem("userInfo");
-
   const [open, setOpen] = useState(false);
-  const _id = JSON.parse(userInfo)._id;
   const [isAnonymous, setIsAnonymous] = useState(post.content.isAnonymous);
   const [text, setText] = useState(post.content.text);
   const [title, setTitle] = useState(post.content.title);
@@ -31,7 +28,7 @@ const EditPostModal = ({ post, handleSubmit }) => {
     setOpen(false);
   };
 
-  const handleChange = (e) => {
+  const handleChange = e => {
     setIsAnonymous(e.target.checked);
   };
 
@@ -48,8 +45,7 @@ const EditPostModal = ({ post, handleSubmit }) => {
         }}
         style={{ justifyContent: "center" }}
         onClick={handleClickOpen}
-        startIcon={<Edit />}
-      >
+        startIcon={<Edit />}>
         <Box sx={{ display: "flex", flexDirection: "column" }}>
           <Typography>Edit</Typography>
         </Box>
@@ -57,41 +53,39 @@ const EditPostModal = ({ post, handleSubmit }) => {
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Edit Post</DialogTitle>
         <DialogContent
-          sx={{ display: "flex", flexDirection: "column", width: "500px" }}
-        >
+          sx={{ display: "flex", flexDirection: "column", width: "500px" }}>
           <Typography sx={{ fontSize: 20 }}>Title</Typography>
           <TextField
-            id="outlined-textarea"
+            id='outlined-textarea'
             maxRows={5}
             sx={{ my: 1 }}
             value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            onChange={e => setTitle(e.target.value)}
           />
           <Typography sx={{ fontSize: 20 }}>Post</Typography>
           <TextField
-            id="outlined-textarea"
+            id='outlined-textarea'
             maxRows={5}
             multiline
             sx={{ my: 1 }}
             value={text}
-            onChange={(e) => setText(e.target.value)}
+            onChange={e => setText(e.target.value)}
           />
           <FormControlLabel
             control={<Checkbox checked={isAnonymous} onChange={handleChange} />}
-            label="Anonymous"
+            label='Anonymous'
           />
         </DialogContent>
         <DialogActions>
           <Box
-            component="form"
+            component='form'
             noValidate
-            onSubmit={(event) => {
+            onSubmit={event => {
               handleSubmit(event, postId, isAnonymous, text, title);
               handleClose();
-            }}
-          >
+            }}>
             <Button onClick={handleClose}>Cancel</Button>
-            <Button type="submit">Submit</Button>
+            <Button type='submit'>Submit</Button>
           </Box>
         </DialogActions>
       </Dialog>

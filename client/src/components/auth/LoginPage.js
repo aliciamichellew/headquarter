@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Button,
   CssBaseline,
@@ -22,6 +22,7 @@ import setAuthToken from "../utils/setAuthToken";
 import axios from "axios";
 
 import { Link as RouterLink, useNavigate } from "react-router-dom";
+import { UserContext } from "../../App";
 
 const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
@@ -68,16 +69,9 @@ export default function LoginSide() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
+  const { setUserInfo } = useContext(UserContext);
 
   let navigate = useNavigate();
-
-  useEffect(() => {
-    const userInfo = localStorage.getItem("userInfo");
-
-    if (userInfo) {
-      navigate("/home");
-    }
-  });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -96,9 +90,11 @@ export default function LoginSide() {
         config
       );
 
-      localStorage.setItem("userInfo", JSON.stringify(data));
+      setUserInfo(data);
+      // localStorage.setItem("userInfo", JSON.stringify(data));
       setAuthToken(data.token);
       setLoading(false);
+      navigate("/home");
     } catch (error) {
       setError(error.response.data.message);
       setLoading(false);

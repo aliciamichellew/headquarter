@@ -14,8 +14,6 @@ const DeleteExperiencedModuleModal = ({
   moduleCode,
   handleRemoveExperienced,
 }) => {
-  const userInfo = localStorage.getItem("userInfo");
-
   const [open, setOpen] = useState(false);
 
   const handleClickOpen = () => {
@@ -40,8 +38,7 @@ const DeleteExperiencedModuleModal = ({
         }}
         startIcon={<Check />}
         style={{ justifyContent: "center" }}
-        onClick={handleClickOpen}
-      >
+        onClick={handleClickOpen}>
         <Box sx={{ display: "flex", flexDirection: "column" }}>
           <Typography>Module Taken</Typography>
         </Box>
@@ -49,23 +46,21 @@ const DeleteExperiencedModuleModal = ({
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Remove from Module Taken</DialogTitle>
         <DialogContent
-          sx={{ display: "flex", flexDirection: "column", width: "500px" }}
-        >
+          sx={{ display: "flex", flexDirection: "column", width: "500px" }}>
           <Typography sx={{ fontSize: 20 }}>
             Are you sure you want to remove it?
           </Typography>
         </DialogContent>
         <DialogActions>
           <Box
-            component="form"
+            component='form'
             noValidate
-            onSubmit={(event) => {
+            onSubmit={event => {
               submitRequest(event, moduleCode);
               handleClose();
-            }}
-          >
+            }}>
             <Button onClick={handleClose}>Cancel</Button>
-            <Button type="submit">Submit</Button>
+            <Button type='submit'>Submit</Button>
           </Box>
         </DialogActions>
       </Dialog>

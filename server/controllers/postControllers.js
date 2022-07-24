@@ -3,7 +3,7 @@ const Modules = require("../models/moduleModel");
 const Post = require("../models/questionModel");
 const { getUserIdFromToken } = require("../middlewares/authMiddleware");
 
-const formatToken = (previous) => {
+const formatToken = previous => {
   return previous.split(" ")[1];
 };
 
@@ -52,7 +52,7 @@ const getPostReturnFormat = (user, post, comments) => {
   return data;
 };
 
-const getAllComments = async (answers) => {
+const getAllComments = async answers => {
   const comments = [];
   for (let i of answers) {
     const commentUser = await User.findOne({ _id: i.author });
@@ -490,8 +490,7 @@ const getPostsByModuleCode = async (req, res) => {
       moduleCode: moduleCode.toUpperCase(),
     });
     if (!findModule) {
-      res.status(400).send({ message: "Module does not exist" });
-      return;
+      res.status(200).json([]);
     }
 
     const posts = [];
