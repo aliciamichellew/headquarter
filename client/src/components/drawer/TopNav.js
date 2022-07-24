@@ -23,7 +23,7 @@ import { useNavigate } from "react-router-dom";
 
 import logo from "../../img/logo.png";
 import ProfileAvatar from "../profile/ProfileAvatar";
-import { checkTokenValid, logout } from "../../utils/logout";
+// import { checkTokenValid, logout } from "../../utils/logout";
 
 const drawerWidth = 240;
 
@@ -232,7 +232,7 @@ export default function TopDrawer({ open, handleDrawerOpen, isHomePage }) {
                   <Divider />
                   <MenuItem
                     onClick={() => {
-                      logout();
+                      localStorage.removeItem("userInfo");
                       navigate("/");
                     }}
                   >
