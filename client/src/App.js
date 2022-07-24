@@ -44,6 +44,10 @@ export default function App() {
           <Route path="/profile/:username" element={<ProfilePage />} />
           <Route path="/modules/:moduleCode" element={<ModulePage />} />
           <Route path="/commentpage/:postId" element={<CommentPage />} />
+           <Route path="/allinternship" element={<AllInternship />} />
+          <Route path="/myinternship" element={<MyInternship />} />
+          <Route path="/internships/:internshipId" element={<InternshipPage />} />
+           <Route path="/chats/" element={<ChatPage />} />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>
