@@ -455,6 +455,18 @@ export default function MyProfilePage() {
                           <Box
                             sx={{ display: "flex", flexDirection: "column" }}
                           >
+                            {modules.length == 0 && (
+                              <Box
+                                sx={{
+                                  display: "flex",
+                                  justifyContent: "center",
+                                }}
+                              >
+                                <Typography fontSize={20}>
+                                  You have not taken any module.
+                                </Typography>
+                              </Box>
+                            )}
                             {modules.map((modules) => (
                               <ModuleButton
                                 moduleCode={modules.moduleCode}
@@ -478,6 +490,18 @@ export default function MyProfilePage() {
                           <Box
                             sx={{ display: "flex", flexDirection: "column" }}
                           >
+                            {modules.length == 0 && (
+                              <Box
+                                sx={{
+                                  display: "flex",
+                                  justifyContent: "center",
+                                }}
+                              >
+                                <Typography fontSize={40}>
+                                  No Modules Found
+                                </Typography>
+                              </Box>
+                            )}
                             {modules.map((modules) => (
                               <Button
                                 size="large"
@@ -512,6 +536,18 @@ export default function MyProfilePage() {
                           <Box
                             sx={{ display: "flex", flexDirection: "column" }}
                           >
+                            {friends.length == 0 && (
+                              <Box
+                                sx={{
+                                  display: "flex",
+                                  justifyContent: "center",
+                                }}
+                              >
+                                <Typography fontSize={20}>
+                                  You have not added any friends.
+                                </Typography>
+                              </Box>
+                            )}
                             {friends.map((friends) => (
                               <ProfileButton
                                 firstName={friends.firstName}

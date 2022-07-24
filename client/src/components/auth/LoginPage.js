@@ -15,7 +15,7 @@ import {
 import { createTheme, ThemeProvider, styled } from "@mui/material/styles";
 
 import logo from "../../img/logo.png";
-import TopDrawer from "../../components/drawer/TopNav";
+import TopDrawer from "../../components/drawer/TopNavSignIn";
 import ErrorMessage from "../ErrorMessage";
 import setAuthToken from "../utils/setAuthToken";
 
@@ -108,11 +108,7 @@ export default function LoginSide() {
   return (
     <ThemeProvider theme={theme}>
       <Box sx={{ display: "flex" }}>
-        <TopDrawer
-          open={open}
-          handleDrawerOpen={handleDrawerOpen}
-          isHomePage={true}
-        />
+        <TopDrawer open={open} handleDrawerOpen={handleDrawerOpen} />
         <Box component="main" sx={{ flexGrow: 1, p: 0 }}>
           <Grid container component="main" sx={{ height: "100vh" }}>
             <CssBaseline />

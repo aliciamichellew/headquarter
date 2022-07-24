@@ -43,7 +43,7 @@ const PostCard = ({
   const [isPostReady, setIsPostReady] = useState(false);
   const navigate = useNavigate();
 
-  const owner = userInfoJSON._id === posts.user[0]._id;
+  const owner = userInfoJSON._id === posts.user._id;
 
   useEffect(() => {
     var checkdata = {
@@ -149,7 +149,7 @@ const PostCard = ({
               <UserCard
                 users={
                   posts.content.isAnonymous
-                    ? [{ name: "Anonymous", _id: posts.user._id }]
+                    ? { name: "Anonymous", _id: posts.user._id }
                     : posts.user
                 }
                 content={posts.content.date}

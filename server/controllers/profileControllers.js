@@ -1,6 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const Profile = require("../models/profileModel");
 const User = require("../models/userModel");
+const Modules = require("../models/moduleModel");
 const axios = require("axios");
 const cloudinary = require("../cloudinary/cloudinary");
 
@@ -13,6 +14,18 @@ const editFollowingList = async (id, op, key, value) => {
       [op]: { [key]: value },
     }
   );
+};
+
+const addExperiencedtoModule = async (moduleId, info) => {
+  const moduleUpdated = await Modules.updateOne(
+    {
+      _id: moduleId,
+    },
+    {
+      $push: { experiencedUser: info },
+    }
+  );
+  return moduleUpdated;
 };
 
 const getUserProfile = async (req, res) => {
@@ -169,8 +182,25 @@ const experiencedModule = async (req, res) => {
       { user: userId },
       { $push: { moduleTaken: moduleData } }
     );
+
+    const moduleExists = await Modules.findOne({ moduleCode });
+
+    const experiencedData = {
+      user: userId,
+      acadYear: acadYear,
+      semester: semester,
+    };
+    if (!moduleExists) {
+      const newModule = await Modules.create({
+        moduleCode: moduleCode,
+      });
+      await addExperiencedtoModule(newModule._id, experiencedData);
+    } else {
+      await addExperiencedtoModule(moduleExists._id, experiencedData);
+    }
     res.status(200).send({ message: "Experienced module success" });
   } catch (error) {
+    console.log(error);
     res
       .status(400)
       .send({ message: "Error occured when adding module to experienced" });

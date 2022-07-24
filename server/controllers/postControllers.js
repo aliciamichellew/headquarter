@@ -32,13 +32,11 @@ const editPostField = async (id, op, key, value) => {
 
 const getPostReturnFormat = (user, post, comments) => {
   const data = {
-    user: [
-      {
-        _id: user._id,
-        name: user.firstName + " " + user.lastName,
-        username: user.username,
-      },
-    ],
+    user: {
+      _id: user._id,
+      name: user.firstName + " " + user.lastName,
+      username: user.username,
+    },
     content: {
       _id: post._id,
       title: post.title,
@@ -60,12 +58,11 @@ const getAllComments = async (answers) => {
     const commentUser = await User.findOne({ _id: i.author });
     let commentData = {
       _id: i._id,
-      user: [
-        {
-          _id: commentUser._id,
-          name: commentUser.firstName + " " + commentUser.lastName,
-        },
-      ],
+      user: {
+        _id: commentUser._id,
+        name: commentUser.firstName + " " + commentUser.lastName,
+        username: commentUser.username,
+      },
       text: i.text,
       date: i.date,
       isAnonymous: i.isAnonymous,
@@ -508,7 +505,7 @@ const getPostsByModuleCode = async (req, res) => {
         }
 
         const findUser = await User.findOne({ _id: findPost.user });
-        if (!findPost) {
+        if (!findUser) {
           res.status(400).send({ message: "User does not exist" });
           return;
         }

@@ -8,6 +8,7 @@ const {
   findModuleSearchQueryMyModules,
   userExperiencedModule,
   getModuleTaken,
+  getExperiencedUser,
 } = require("../controllers/moduleControllers");
 
 const router = express.Router();
@@ -23,5 +24,6 @@ router.route("/allmodules/:searchQuery").get(findModule);
 router
   .route("/mymodules/search/:userId/:searchQuery")
   .get(findModuleSearchQueryMyModules);
+router.route("/getexperiencedusers/:moduleCode").get(getExperiencedUser);
 
 module.exports = router;

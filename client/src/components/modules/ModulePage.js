@@ -34,6 +34,7 @@ import usePagination from "../utils/Pagination";
 import ModuleButton from "./ModuleButton";
 import ExperiencedModuleModal from "./ExperiencedModuleModal";
 import DeleteExperiencedModuleModal from "./DeleteExperiencedModuleModal";
+import ProfileAvatar from "../profile/ProfileAvatar";
 
 const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
@@ -59,19 +60,28 @@ export default function ModulePage(module) {
   const [follow, setFollow] = useState();
   const userId = userInfoJSON._id;
   const [experienced, setExperienced] = useState();
+  const [profilePic, setProfilePic] = useState("");
+  const [experiencedUserList, setExperiencedUserlist] = useState([]);
 
   const checkFollow = async () => {
-    const config = {
-      headers: {
-        "Content-type": "application/json",
-      },
-      params: {
-        moduleCode: moduleCode,
-        userId: userInfoJSON._id,
-      },
-    };
-    const { data } = await axios.get(`/api/modules/checkfollowmodule`, config);
-    setFollow(data);
+    try {
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+        },
+        params: {
+          moduleCode: moduleCode,
+          userId: userInfoJSON._id,
+        },
+      };
+      const { data } = await axios.get(
+        `/api/modules/checkfollowmodule`,
+        config
+      );
+      setFollow(data);
+    } catch (err) {
+      // checkTokenValid(err, navigate);
+    }
   };
 
   const checkExperienced = async () => {
@@ -123,6 +133,43 @@ export default function ModulePage(module) {
     setLoading(false);
   };
 
+  const getExperiencedUser = async () => {
+    setLoading(true);
+    const config = {
+      headers: {
+        "Content-type": "application/json",
+      },
+    };
+    const { data } = await axios.get(
+      `/api/modules/getexperiencedusers/${moduleCode}`,
+      { moduleCode },
+      config
+    );
+    console.log("data", data);
+    setExperiencedUserlist(data);
+    console.log(experiencedUserList);
+    setLoading(false);
+  };
+
+  const getUserProfile = async (e) => {
+    try {
+      console.log("get user profile called");
+      setLoading(false);
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+        },
+      };
+      const { data } = await axios.get(
+        `/api/profile/getprofile/${userId}`,
+        { userId },
+        config
+      );
+      setProfilePic(data.profilePic || "");
+      setLoading(false);
+    } catch (err) {}
+  };
+
   useEffect(() => {
     const userInfo = localStorage.getItem("userInfo");
 
@@ -136,6 +183,7 @@ export default function ModulePage(module) {
     checkFollow();
     checkExperienced();
     getPosts();
+    getExperiencedUser();
   }, [moduleCode]);
 
   const [page, setPage] = useState(1);
@@ -196,6 +244,7 @@ export default function ModulePage(module) {
       setLoading(false);
     };
     fetchModules();
+    getUserProfile();
   }, []);
 
   const [searchQuery, setSearchQuery] = useState("");
@@ -222,7 +271,7 @@ export default function ModulePage(module) {
     }
   };
 
-  let users = [{ name: "User 1" }, { name: "User 2" }, { name: "User 3" }];
+  // let users = [{ name: "User 1" }, { name: "User 2" }, { name: "User 3" }];
 
   const handleCreatePost = async (
     event,
@@ -613,17 +662,23 @@ export default function ModulePage(module) {
                       flexDirection: "row",
                       m: 2,
                       width: "100%",
+                      gap: 1,
                     }}
                   >
-                    <img
-                      src={profile}
-                      alt="profile"
-                      style={{
-                        width: 40,
-                        marginRight: 10,
-                        borderRadius: "50%",
-                      }}
-                    />
+                    {!profilePic && (
+                      <img
+                        src={profile}
+                        alt="profile"
+                        style={{
+                          width: 40,
+                          marginRight: 5,
+                          borderRadius: "50%",
+                        }}
+                      />
+                    )}
+                    {profilePic && (
+                      <ProfileAvatar profilePic={profilePic} width={40} />
+                    )}
                     <AddPostModal
                       moduleCode={moduleCode}
                       handleSubmit={handleCreatePost}
@@ -671,7 +726,12 @@ export default function ModulePage(module) {
                 <Typography sx={{ fontSize: 30, mb: 3 }}>
                   Experienced Users
                 </Typography>
-                <UserCard users={users} content="AY2021/2022 Semester 2" />
+                {experiencedUserList.map((users) => (
+                  <UserCard
+                    users={users.user}
+                    content={`${users.acadYear}Semester ${users.semester}`}
+                  />
+                ))}
               </Box>
             </Box>
           </Box>

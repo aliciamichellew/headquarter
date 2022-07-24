@@ -84,7 +84,8 @@ const authUser = asyncHandler(async (request, response) => {
   try {
     const { email, password } = request.body;
     const user = await User.findOne({ email });
-
+    console.log("masuk login");
+    console.log("user = ", user);
     if (user && (await user.matchPassword(password))) {
       response.json({
         _id: user._id,

@@ -36,6 +36,7 @@ import TopDrawer from "../../components/drawer/TopNav";
 import SideDrawer from "../../components/drawer/SideNav";
 import profile from "../../img/profile.png";
 import ModuleButton from "../modules/ModuleButton";
+import ProfileAvatar from "./ProfileAvatar";
 import axios from "axios";
 
 const DrawerHeader = styled("div")(({ theme }) => ({
@@ -301,11 +302,20 @@ export default function ProfilePage() {
                 }}
               >
                 <Box sx={{ display: "flex", flexDirection: "row" }}>
-                  <img
-                    src={profile}
-                    alt="profile"
-                    style={{ width: 150, marginRight: 5, borderRadius: "50%" }}
-                  />
+                  {!profilePic && (
+                    <img
+                      src={profile}
+                      alt="profile"
+                      style={{
+                        width: 150,
+                        marginRight: 5,
+                        borderRadius: "50%",
+                      }}
+                    />
+                  )}
+                  {profilePic && (
+                    <ProfileAvatar profilePic={profilePic} width={150} />
+                  )}
                   <Box
                     sx={{
                       display: "flex",
@@ -463,6 +473,18 @@ export default function ProfilePage() {
                           <Box
                             sx={{ display: "flex", flexDirection: "column" }}
                           >
+                            {modules.length == 0 && (
+                              <Box
+                                sx={{
+                                  display: "flex",
+                                  justifyContent: "center",
+                                }}
+                              >
+                                <Typography fontSize={20}>
+                                  User has not taken any modules.
+                                </Typography>
+                              </Box>
+                            )}
                             {modules.map((modules) => (
                               <ModuleButton
                                 moduleCode={modules.moduleCode}
@@ -486,6 +508,18 @@ export default function ProfilePage() {
                           <Box
                             sx={{ display: "flex", flexDirection: "column" }}
                           >
+                            {modules.length == 0 && (
+                              <Box
+                                sx={{
+                                  display: "flex",
+                                  justifyContent: "center",
+                                }}
+                              >
+                                <Typography fontSize={20}>
+                                  No Modules Found
+                                </Typography>
+                              </Box>
+                            )}
                             {modules.map((modules) => (
                               <Button
                                 size="large"

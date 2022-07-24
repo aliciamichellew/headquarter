@@ -1,6 +1,8 @@
 const asyncHandler = require("express-async-handler");
 const axios = require("axios");
 const Profile = require("../models/profileModel");
+const User = require("../models/userModel");
+const Modules = require("../models/moduleModel");
 const { response } = require("express");
 // const { default: Profile } = require("../../client/src/components/Profile");
 
@@ -154,6 +156,47 @@ const userExperiencedModule = async (req, res) => {
   }
 };
 
+const getExperiencedUser = async (req, res) => {
+  try {
+    const { moduleCode } = req.params;
+    const module = await Modules.findOne({
+      moduleCode: moduleCode,
+    });
+
+    const users = [];
+
+    if (!module) {
+      res.status(200).json(users);
+    }
+    console.log(module);
+    const experiencedUsers = module.experiencedUser;
+    console.log(experiencedUsers);
+
+    if (experiencedUsers.length !== 0) {
+      for (var item of experiencedUsers) {
+        const findUser = await User.findOne({ _id: item.user });
+        if (!findUser) {
+          res.status(400).send({ message: "User does not exist" });
+          return;
+        }
+
+        const data = {
+          user: findUser,
+          acadYear: item.acadYear,
+          semester: item.semester,
+        };
+        users.push(data);
+      }
+    }
+    res.status(200).json(users);
+  } catch (err) {
+    console.log(err);
+    res
+      .status(400)
+      .send({ message: "Error occured when getting experienced user" });
+  }
+};
+
 module.exports = {
   findModule,
   getModulefromNUSMODS,
@@ -163,4 +206,5 @@ module.exports = {
   findModuleSearchQueryMyModules,
   userExperiencedModule,
   getModuleTaken,
+  getExperiencedUser,
 };

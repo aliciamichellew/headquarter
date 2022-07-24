@@ -23,6 +23,7 @@ import { useNavigate } from "react-router-dom";
 
 import logo from "../../img/logo.png";
 import ProfileAvatar from "../profile/ProfileAvatar";
+import { checkTokenValid, logout } from "../../utils/logout";
 
 const drawerWidth = 240;
 
@@ -59,7 +60,7 @@ export default function TopDrawer({ open, handleDrawerOpen, isHomePage }) {
 
   const userInfo = localStorage.getItem("userInfo");
   const userInfoJSON = JSON.parse(userInfo);
-  const userId = userInfoJSON._id;
+  const userId = userInfoJSON._id || "";
   const [profilePic, setProfilePic] = useState("");
 
   const getUserProfile = async (e) => {
@@ -76,7 +77,9 @@ export default function TopDrawer({ open, handleDrawerOpen, isHomePage }) {
         config
       );
       setProfilePic(data.profilePic || "");
-    } catch (err) {}
+    } catch (err) {
+      // checkTokenValid(err, navigate);
+    }
   };
 
   useEffect(() => {
@@ -229,7 +232,7 @@ export default function TopDrawer({ open, handleDrawerOpen, isHomePage }) {
                   <Divider />
                   <MenuItem
                     onClick={() => {
-                      localStorage.removeItem("userInfo");
+                      logout();
                       navigate("/");
                     }}
                   >

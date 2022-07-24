@@ -5,7 +5,7 @@ import UserCard from "../components/users/UserCard";
 import DeletePostModal from "./DeletePostModal";
 
 const CommentCard = ({ postId, comment, userInfo, handleDeleteComment }) => {
-  const owner = userInfo._id === comment.user[0]._id;
+  const owner = userInfo._id === comment.user._id;
 
   const post = { postId: postId, comment: comment };
 
@@ -25,7 +25,7 @@ const CommentCard = ({ postId, comment, userInfo, handleDeleteComment }) => {
             <UserCard
               users={
                 comment.isAnonymous
-                  ? [{ name: "Anonymous", _id: comment.user._id }]
+                  ? { name: "Anonymous", _id: comment.user._id }
                   : comment.user
               }
               content={comment.date}
