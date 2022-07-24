@@ -13,6 +13,10 @@ const {
   upvoteExist,
   downvoteExist,
   getPostByPostId,
+  createPostforInternship,
+  editPostInternship,
+  deletePostInternship,
+  getPostsByInternshipCompanyandPosition, 
 } = require("../controllers/postControllers");
 const { protect } = require("../middlewares/authMiddleware");
 const router = express.Router();
@@ -30,5 +34,10 @@ router.route("/comment").put(protect, comment);
 router.route("/deletecomment").put(protect, deleteComment);
 router.route("/getpostbymodulecode/:moduleCode").get(getPostsByModuleCode);
 router.route("/getpostbypostid/:postId").get(getPostByPostId);
+router.route("/add2").post(protect, createPostforInternship);
+router.route("/edit2").put(protect,  editPostInternship);
+router.route("/delete2").put(protect, deletePostInternship);
+router.route("/getpostbymodulecode/:moduleCode").get(getPostsByModuleCode);
+router.route("/getpostbyinternshipCompanyandPosition/").get(getPostsByInternshipCompanyandPosition);
 
 module.exports = router;

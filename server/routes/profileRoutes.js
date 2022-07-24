@@ -12,6 +12,10 @@ const {
   getUserIdFromUsername,
   checkFollowUser,
   uploadProfilePic,
+  followInternship,
+  unfollowInternship,
+  experiencedInternship,
+  unexperiencedInternship,
 } = require("../controllers/profileControllers");
 const { protect } = require("../middlewares/authMiddleware");
 const router = express.Router();
@@ -29,4 +33,8 @@ router.route("/getfollowing/:userId").get(protect, getFollowing);
 router.route("/getuserid/:username").get(getUserIdFromUsername);
 router.route("/checkfollowuser").get(checkFollowUser);
 router.route("/uploadprofilepic").post(uploadProfilePic);
+router.route("/followinternship").put(protect, followInternship);
+router.route("/unfollowinternship").put(protect, unfollowInternship);
+router.route("/experiencedinternship").put(protect, experiencedInternship);
+router.route("/unexperiencedinternship").put(protect, unexperiencedInternship);
 module.exports = router;

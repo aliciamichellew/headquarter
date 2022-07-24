@@ -7,10 +7,14 @@ const userRoutes = require("./routes/userRoutes");
 const moduleRoutes = require("./routes/moduleRoutes");
 const profileRoutes = require("./routes/profileRoutes");
 const postRoutes = require("./routes/postRoutes");
+const messageRoutes = require("./route/messageRoutes");
+const internshipRoutes = require("./routes/Internshiproutes");
+const chatRoutes = require("./routes/chatRoutes")
 const cors = require("cors");
 var bodyParser = require("body-parser");
 const { notFound, errorHandler } = require("./middlewares/errorMiddleware");
 const cloudinary = require("./cloudinary/cloudinary");
+const socketIO = require("socket.io");
 
 const app = express();
 
@@ -44,10 +48,13 @@ app.use(
 //   })
 // );
 app.use(cors());
+app.use("/api/internships", internshipRoutes);
+app.use("/api/chat", chatRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/modules", moduleRoutes);
 app.use("/api/profile", profileRoutes);
 app.use("/api/post", postRoutes);
+app.use("/api/message", messageRoutes);
 app.use(notFound);
 app.use(errorHandler);
 
@@ -58,3 +65,40 @@ app.listen(port, () => {
 });
 
 app.post("/", async (req, res) => {});
+
+const io = socketIO(5000, {
+  pingTimeout: 60000,
+  cors: {
+    origin: "http://localhost:3000",
+  },
+});
+
+io.on("connection", (socket) => {
+  socket.on("setup", (userData) => {
+    socket.join(userData._id);
+
+    socket.emit("connected");
+  });
+  socket.on("join-chat", (room) => {
+    socket.join(room);
+  });
+
+  socket.on("typing", (room) => socket.in(room).emit("typing"));
+  socket.on("stop-typing", (room) => socket.in(room).emit("stop-typing"));
+
+  socket.on("new-message", (newMessageReceived) => {
+    let chat = newMessageReceived.chat;
+
+    if (!chat.users) return console.log(`chat.users not defined`);
+
+    chat.users.forEach((user) => {
+      if (user._id === newMessageReceived.sender._id) return;
+
+      socket.in(user._id).emit("message-received", newMessageReceived);
+    });
+  });
+
+  socket.off("setup", () => {
+    socket.leave(userData._id);
+  });
+});
