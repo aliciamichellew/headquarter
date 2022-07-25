@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 
 import { styled, useTheme } from "@mui/material/styles";
 import {
@@ -38,6 +38,7 @@ import profile from "../../img/profile.png";
 import ModuleButton from "../modules/ModuleButton";
 import ProfileAvatar from "./ProfileAvatar";
 import axios from "axios";
+import { UserContext } from "../../App";
 
 const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
@@ -53,12 +54,11 @@ function TabPanel(props) {
 
   return (
     <div
-      role="tabpanel"
+      role='tabpanel'
       hidden={value !== index}
       id={`simple-tabpanel-${index}`}
       aria-labelledby={`simple-tab-${index}`}
-      {...other}
-    >
+      {...other}>
       {value === index && (
         <Box sx={{ mx: 3, mb: 3 }}>
           <Typography>{children}</Typography>
@@ -95,8 +95,7 @@ export default function ProfilePage() {
   const [modules, setModules] = useState([]);
   const [internships, setInternships] = useState([]);
   const [loading, setLoading] = useState(false);
-  const userInfo = localStorage.getItem("userInfo");
-  const userInfoJSON = JSON.parse(userInfo);
+  const { userInfo } = useContext(UserContext);
   const [userId, setUserId] = useState("");
   const [userProfile, setUserProfile] = useState();
   const [profilePic, setProfilePic] = useState("");
@@ -115,16 +114,15 @@ export default function ProfilePage() {
         "Content-type": "application/json",
       },
       params: {
-        userId: userInfoJSON._id,
+        userId: userInfo._id,
         userIdFollow: userId,
       },
     };
     const { data } = await axios.get(`/api/profile/checkfollowuser`, config);
-    console.log(data);
     setFollow(data);
   };
 
-  const getUserId = async (e) => {
+  const getUserId = async e => {
     try {
       setLoading(true);
       const config = {
@@ -142,7 +140,7 @@ export default function ProfilePage() {
     } catch (error) {}
   };
 
-  const getProfile = async (e) => {
+  const getProfile = async e => {
     try {
       setLoading(true);
       const config = {
@@ -168,7 +166,7 @@ export default function ProfilePage() {
     } catch (error) {}
   };
 
-  const getMyModules = async (e) => {
+  const getMyModules = async e => {
     try {
       setLoading(false);
       const config = {
@@ -185,21 +183,14 @@ export default function ProfilePage() {
       setLoading(false);
     } catch (error) {}
   };
-  useEffect(() => {
-    const userInfo = localStorage.getItem("userInfo");
 
-    if (!userInfo) {
-      navigate("/");
-    }
-  });
-
-  const handleChangeFollow = async (e) => {
+  const handleChangeFollow = async e => {
     if (!follow) {
       await axios({
         method: "put",
         url: "/api/profile/followuser",
         data: {
-          userId: userInfoJSON._id,
+          userId: userInfo._id,
           userIdFollow: userId,
         },
       });
@@ -209,7 +200,7 @@ export default function ProfilePage() {
         method: "put",
         url: "/api/profile/unfollowuser",
         data: {
-          userId: userInfoJSON._id,
+          userId: userInfo._id,
           userIdFollow: userId,
         },
       });
@@ -273,6 +264,11 @@ export default function ProfilePage() {
     setValue(newValue);
   };
 
+  if (!userInfo) {
+    navigate("/");
+    return <></>;
+  }
+
   return (
     <Box sx={{ display: "flex" }}>
       <TopDrawer
@@ -285,17 +281,16 @@ export default function ProfilePage() {
         handleDrawerClose={handleDrawerClose}
         theme={theme}
       />
-      <Box component="main" sx={{ flexGrow: 1, pt: 0 }}>
+      <Box component='main' sx={{ flexGrow: 1, pt: 0 }}>
         <Grid
           container
-          component="main"
+          component='main'
           sx={{
             minHeight: "100vh",
             backgroundColor: "#FFCE26",
             display: "flex",
             alignContent: "flex-start",
-          }}
-        >
+          }}>
           <DrawerHeader />
           <Box
             sx={{
@@ -306,8 +301,7 @@ export default function ProfilePage() {
               flexDirection: "column",
               width: "100%",
               alignItems: "center",
-            }}
-          >
+            }}>
             <Card
               sx={{
                 display: "flex",
@@ -316,8 +310,7 @@ export default function ProfilePage() {
                 alignItems: "center",
                 backgroundColor: "#1E2328",
                 flexDirection: "column",
-              }}
-            >
+              }}>
               <Box
                 sx={{
                   mt: 5,
@@ -327,13 +320,12 @@ export default function ProfilePage() {
                   flexDirection: "column",
                   width: "100%",
                   alignItems: "center",
-                }}
-              >
+                }}>
                 <Box sx={{ display: "flex", flexDirection: "row" }}>
                   {!profilePic && (
                     <img
                       src={profile}
-                      alt="profile"
+                      alt='profile'
                       style={{
                         width: 150,
                         marginRight: 5,
@@ -350,8 +342,7 @@ export default function ProfilePage() {
                       flexDirection: "column",
                       justifyContent: "center",
                       ml: 5,
-                    }}
-                  >
+                    }}>
                     <Typography sx={{ fontSize: 40, color: "#FFCE26" }}>
                       {userProfile && userProfile.firstName.toUpperCase()}{" "}
                       {userProfile && userProfile.lastName.toUpperCase()}
@@ -392,7 +383,7 @@ export default function ProfilePage() {
                   />
                   <Button
                     fullWidth
-                    variant="contained"
+                    variant='contained'
                     sx={{
                       mt: 2,
                       mb: 0,
@@ -401,8 +392,7 @@ export default function ProfilePage() {
                       backgroundColor: "#FFCE26",
                       width: 150,
                       height: 40,
-                    }}
-                  >
+                    }}>
                     <Chat sx={{ mr: 1 }} />
                     Chat
                   </Button>
@@ -471,13 +461,12 @@ export default function ProfilePage() {
                   <Tabs
                     value={value}
                     onChange={handleChange}
-                    aria-label="basic tabs example"
-                    orientation="vertical"
-                    TabIndicatorProps={{ style: { background: "#FFCE26" } }}
-                  >
-                    <Tab label="Modules" {...a11yProps(0)} style={styles.tab} />
+                    aria-label='basic tabs example'
+                    orientation='vertical'
+                    TabIndicatorProps={{ style: { background: "#FFCE26" } }}>
+                    <Tab label='Modules' {...a11yProps(0)} style={styles.tab} />
                     <Tab
-                      label="Internships"
+                      label='Internships'
                       {...a11yProps(1)}
                       style={styles.tab}
                     />
@@ -491,29 +480,26 @@ export default function ProfilePage() {
                         fontSize: 25,
                         justifyContent: "center",
                         color: "#FFCE26",
-                      }}
-                    >
+                      }}>
                       Modules Taken
                     </Typography>
                     <Card sx={{ mx: 0, mt: 3 }}>
                       <CardContent>
-                        <Box component="form" noValidate sx={{ mt: 0 }}>
+                        <Box component='form' noValidate sx={{ mt: 0 }}>
                           <Box
-                            sx={{ display: "flex", flexDirection: "column" }}
-                          >
+                            sx={{ display: "flex", flexDirection: "column" }}>
                             {modules.length == 0 && (
                               <Box
                                 sx={{
                                   display: "flex",
                                   justifyContent: "center",
-                                }}
-                              >
+                                }}>
                                 <Typography fontSize={20}>
                                   User has not taken any modules.
                                 </Typography>
                               </Box>
                             )}
-                            {modules.map((modules) => (
+                            {modules.map(modules => (
                               <ModuleButton
                                 moduleCode={modules.moduleCode}
                                 moduleTitle={modules.title}
@@ -532,25 +518,23 @@ export default function ProfilePage() {
                     </Typography>
                     <Card sx={{ mx: 0, mt: 3 }}>
                       <CardContent>
-                        <Box component="form" noValidate sx={{ mt: 0 }}>
+                        <Box component='form' noValidate sx={{ mt: 0 }}>
                           <Box
-                            sx={{ display: "flex", flexDirection: "column" }}
-                          >
+                            sx={{ display: "flex", flexDirection: "column" }}>
                             {modules.length == 0 && (
                               <Box
                                 sx={{
                                   display: "flex",
                                   justifyContent: "center",
-                                }}
-                              >
+                                }}>
                                 <Typography fontSize={20}>
                                   No Modules Found
                                 </Typography>
                               </Box>
                             )}
-                            {modules.map((modules) => (
+                            {modules.map(modules => (
                               <Button
-                                size="large"
+                                size='large'
                                 sx={{
                                   color: "#000000",
                                   ":hover": {
@@ -558,8 +542,7 @@ export default function ProfilePage() {
                                   },
                                   textAlign: "left",
                                 }}
-                                style={{ justifyContent: "flex-start" }}
-                              >
+                                style={{ justifyContent: "flex-start" }}>
                                 <Typography>
                                   {modules.moduleCode} {modules.title}
                                 </Typography>

@@ -65,13 +65,13 @@ const { selectedChat, setSelectedChat, user, notification, setNotification } = u
 
     socket.on("typing", () => setIsTyping(true));
     socket.on("stop-typing", () => setIsTyping(false));
-  }, [user]);
+  }, []);
 
   useEffect(() => {
     fetchMessages();
 
     selectedChatCompare = selectedChat;
-  }, [fetchMessages, selectedChat]);
+  }, [selectedChat]);
 
   useEffect(() => {
     socket.on("message-received", (newMessageReceived) => {
@@ -121,7 +121,7 @@ const { selectedChat, setSelectedChat, user, notification, setNotification } = u
         gap: 0,
         overflow: "auto",
         flexFlow: "wrap",
-        ml: 0,
+        ml: 3,
       }}>
       <Card sx={{ width: 350, height: 550, display: "flex" }}>
       {selectedChat ? (
@@ -186,7 +186,7 @@ const { selectedChat, setSelectedChat, user, notification, setNotification } = u
             <Box
             display="flex"
             alignItems="center"
-            justifyContent={"center"}
+            justifyContent="center"
             h="100%"
             >
               <Typography fontSize="3xl" pb={1} fontFamily="Poppins">

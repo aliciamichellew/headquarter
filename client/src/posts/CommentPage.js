@@ -24,7 +24,6 @@ export default function CommentPage() {
   const { postId } = useParams();
   const [loading, setLoading] = useState(false);
   const [post, setPost] = useState();
-  const userInfo = localStorage.getItem("userInfo");
   const navigate = useNavigate();
 
   const getPost = async () => {
@@ -143,14 +142,6 @@ export default function CommentPage() {
   };
 
   useEffect(() => {
-    const userInfo = localStorage.getItem("userInfo");
-
-    if (!userInfo) {
-      navigate("/");
-    }
-  });
-
-  useEffect(() => {
     getPost();
   }, []);
 
@@ -178,17 +169,16 @@ export default function CommentPage() {
           handleDrawerClose={handleDrawerClose}
           theme={theme}
         />
-        <Box component="main" sx={{ flexGrow: 1, pt: 3 }}>
+        <Box component='main' sx={{ flexGrow: 1, pt: 3 }}>
           <Grid
             container
-            component="main"
+            component='main'
             sx={{
               minHeight: "100vh",
               backgroundColor: "#FFCE26",
               display: "flex",
               alignContent: "flex-start",
-            }}
-          >
+            }}>
             <DrawerHeader />
             <Box
               sx={{
@@ -199,11 +189,10 @@ export default function CommentPage() {
                 width: "100%",
                 gap: 2,
                 overflow: "auto",
-              }}
-            >
+              }}>
               {post && (
                 <Button
-                  size="large"
+                  size='large'
                   sx={{
                     color: "#1E2328",
                     my: 0.5,
@@ -216,8 +205,7 @@ export default function CommentPage() {
                   onClick={() => {
                     navigate(`/modules/${post.content.moduleCode}`);
                   }}
-                  startIcon={<ArrowBack />}
-                >
+                  startIcon={<ArrowBack />}>
                   <Box sx={{ display: "flex", flexDirection: "column" }}>
                     <Typography fontSize={20}>Back</Typography>
                   </Box>
@@ -226,7 +214,6 @@ export default function CommentPage() {
               {post && (
                 <PostCard
                   posts={post}
-                  userInfo={userInfo}
                   handleAddComment={handleAddComment}
                   handleEditPost={handleEditPost}
                   handleDeletePost={handleDeletePost}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import {
   Box,
@@ -27,10 +27,10 @@ import EditPostModal from "./EditPostModal";
 import DeletePostModal from "./DeletePostModal";
 import CommentCard from "./CommentCard";
 import { useNavigate, useParams } from "react-router-dom";
+import { UserContext } from "../App";
 
 const PostCard = ({
   posts,
-  userInfo,
   handleAddComment,
   handleEditPost,
   handleDeletePost,
@@ -39,17 +39,18 @@ const PostCard = ({
 }) => {
   const [upvote, setUpvote] = useState();
   const [downvote, setDownvote] = useState();
-  const userInfoJSON = JSON.parse(userInfo);
+  const { userInfo } = useContext(UserContext);
+  const userId = userInfo ? userInfo._id : null;
   const [isPostReady, setIsPostReady] = useState(false);
   const navigate = useNavigate();
 
-  const owner = userInfoJSON._id === posts.user._id;
+  const owner = userId === posts.user._id;
 
   useEffect(() => {
     var checkdata = {
       post: {
         _id: posts.content._id,
-        userId: userInfoJSON._id,
+        userId: userId,
       },
     };
 
@@ -60,7 +61,7 @@ const PostCard = ({
         },
         params: {
           postId: posts.content._id,
-          userId: userInfoJSON._id,
+          userId: userId,
         },
       };
       const { data } = await axios.get(`/api/post/upvoteexist`, config);
@@ -74,7 +75,7 @@ const PostCard = ({
         },
         params: {
           postId: posts.content._id,
-          userId: userInfoJSON._id,
+          userId: userId,
         },
       };
       const { data } = await axios.get(`/api/post/downvoteexist`, config);
@@ -86,13 +87,13 @@ const PostCard = ({
     checkDownvote();
   }, []);
 
-  const handleChangeUpvote = async (e) => {
+  const handleChangeUpvote = async e => {
     if (!upvote) {
       const { res } = await axios({
         method: "put",
         url: "/api/post/upvote",
         data: {
-          post: { _id: posts.content._id, userId: userInfoJSON._id },
+          post: { _id: posts.content._id, userId: userId },
         },
       });
       setUpvote(true);
@@ -102,20 +103,20 @@ const PostCard = ({
         method: "put",
         url: "/api/post/unupvote",
         data: {
-          post: { _id: posts.content._id, userId: userInfoJSON._id },
+          post: { _id: posts.content._id, userId: userId },
         },
       });
       setUpvote(false);
     }
   };
 
-  const handleChangeDownvote = async (e) => {
+  const handleChangeDownvote = async e => {
     if (!downvote) {
       const { res } = await axios({
         method: "put",
         url: "/api/post/downvote",
         data: {
-          post: { _id: posts.content._id, userId: userInfoJSON._id },
+          post: { _id: posts.content._id, userId: userId },
         },
       });
       setUpvote(false);
@@ -125,12 +126,17 @@ const PostCard = ({
         method: "put",
         url: "/api/post/undownvote",
         data: {
-          post: { _id: posts.content._id, userId: userInfoJSON._id },
+          post: { _id: posts.content._id, userId: userId },
         },
       });
       setDownvote(false);
     }
   };
+
+  if (!userId) {
+    navigate("/");
+    return <></>;
+  }
 
   return (
     <Box sx={{ width: "100%" }}>
@@ -144,8 +150,7 @@ const PostCard = ({
                 justifyContent: "space-between",
                 flexDirection: "row",
                 mb: 2,
-              }}
-            >
+              }}>
               <UserCard
                 users={
                   posts.content.isAnonymous
@@ -163,11 +168,10 @@ const PostCard = ({
               <Typography sx={{ mb: 1 }}>{posts.content.text}</Typography>
             </Box>
             {showComment &&
-              posts.comments.map((comment) => (
+              posts.comments.map(comment => (
                 <CommentCard
                   postId={posts.content._id}
                   comment={comment}
-                  userInfo={userInfoJSON}
                   handleDeleteComment={handleDeleteComment}
                 />
               ))}
@@ -215,8 +219,7 @@ const PostCard = ({
                     onClick={() => {
                       navigate(`/commentpage/${posts.content._id}`);
                     }}
-                    startIcon={<CommentOutlined />}
-                  >
+                    startIcon={<CommentOutlined />}>
                     <Box sx={{ display: "flex", flexDirection: "column" }}>
                       <Typography>Comment</Typography>
                     </Box>

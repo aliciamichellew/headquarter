@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Button,
   TextField,
@@ -14,10 +14,7 @@ import {
 } from "@mui/material";
 
 const NewInternship = ({ handleSubmit }) => {
-  const userInfo = localStorage.getItem("userInfo");
-
   const [open, setOpen] = useState(false);
-  const _id = JSON.parse(userInfo)._id;
   const [isAnonymous, setIsAnonymous] = useState(false);
   const [company, setCompany] = useState("");
   const [position, setPosition] = useState("");
@@ -30,22 +27,21 @@ const NewInternship = ({ handleSubmit }) => {
     setOpen(false);
   };
 
-  const handleChange = (e) => {
+  const handleChange = e => {
     setIsAnonymous(e.target.checked);
   };
 
   return (
     <Box sx={{ width: "100%" }}>
       <Button
-        variant="contained"
+        variant='contained'
         sx={{
           backgroundColor: "#000000",
           color: "#ffce26",
           height: 40,
           width: "100%",
         }}
-        onClick={handleClickOpen}
-      >
+        onClick={handleClickOpen}>
         Add A New Internship
       </Button>
       <Dialog open={open} onClose={handleClose}>
@@ -56,35 +52,34 @@ const NewInternship = ({ handleSubmit }) => {
         <Box component="form" noValidate onSubmit={handleSubmit} sx={{display:"flex", justifyContent:"flex-end"}}>
           <Typography sx={{ fontSize: 20 }}>company</Typography>
           <TextField
-            id="outlined-textarea"
+            id='outlined-textarea'
             maxRows={5}
             sx={{ my: 1 }}
             value={company}
-            onChange={(e) => setCompany(e.target.value)}
+            onChange={e => setCompany(e.target.value)}
           />
           <Typography sx={{ fontSize: 20 }}>position</Typography>
           <TextField
-            id="outlined-textarea"
+            id='outlined-textarea'
             maxRows={5}
             sx={{ my: 1 }}
             value={position}
-            onChange={(e) => setPosition(e.target.value)}
+            onChange={e => setPosition(e.target.value)}
           />
           </Box>
           <FormControlLabel
             control={<Checkbox checked={isAnonymous} onChange={handleChange} />}
-            label="Anonymous"
+            label='Anonymous'
           />
         </DialogContent>
         <DialogActions>
           <Box
-            component="form"
+            component='form'
             noValidate
-            onSubmit={(event) => {
+            onSubmit={event => {
               handleSubmit(company, position, isAnonymous);
               handleClose();
-            }}
-          >
+            }}>
             <Button onClick={handleClose}>Cancel</Button>
             <Button type="submit" onClick={handleClose}>Submit</Button>
           </Box>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 
 import axios from "axios";
 
@@ -23,12 +23,13 @@ import { useNavigate } from "react-router-dom";
 
 import logo from "../../img/logo.png";
 import ProfileAvatar from "../profile/ProfileAvatar";
-//import { checkTokenValid, logout } from "../../utils/logout";
+import { UserContext } from "../../App";
+import { useAppContext } from "../chat/ChatProvider";
 
 const drawerWidth = 240;
 
 const AppBar = styled(MuiAppBar, {
-  shouldForwardProp: (prop) => prop !== "open",
+  shouldForwardProp: prop => prop !== "open",
 })(({ theme, open }) => ({
   zIndex: theme.zIndex.drawer + 1,
   transition: theme.transitions.create(["width", "margin"], {
@@ -51,81 +52,82 @@ export default function TopDrawer({ open, handleDrawerOpen, isHomePage }) {
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const openProfile = Boolean(anchorEl);
-  const handleClick = (event) => {
+  const handleClick = event => {
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
     setAnchorEl(null);
   };
 
-  const userInfo = localStorage.getItem("userInfo");
-  const userInfoJSON = JSON.parse(userInfo);
-  const userId = userInfoJSON._id || "";
+  const { user, setUser } = useAppContext();
   const [profilePic, setProfilePic] = useState("");
 
-  const getUserProfile = async (e) => {
-    try {
-      console.log("get user profile called");
-      const config = {
-        headers: {
-          "Content-type": "application/json",
-        },
-      };
-      const { data } = await axios.get(
-        `/api/profile/getprofile/${userId}`,
-        { userId },
-        config
-      );
-      setProfilePic(data.profilePic || "");
-    } catch (err) {
-      //checkTokenValid(err, navigate);
-    }
-  };
-
   useEffect(() => {
-    getUserProfile();
-  }, [profilePic]);
+    const getUserProfile = async userId => {
+      try {
+        const config = {
+          headers: {
+            "Content-type": "application/json",
+          },
+        };
+        const { data } = await axios.get(
+          `/api/profile/getprofile/${userId}`,
+          { userId },
+          config
+        );
+
+        setProfilePic(data.profilePic || "");
+      } catch (err) {}
+    };
+
+    if (user) {
+      getUserProfile(user._id);
+    } else {
+      navigate("/");
+    }
+  }, [user, navigate]);
+
+  if (!user) {
+    navigate("/");
+    return <></>;
+  }
 
   return (
-    <AppBar position="fixed" open={open}>
+    <AppBar position='fixed' open={open}>
       <Toolbar
         sx={{
           display: "flex",
           flexDirection: "row",
           justifyContent: "space-between",
           // width: "95%",
-        }}
-      >
+        }}>
         <Box
           sx={{
             display: "flex",
             flexDirection: "row",
             justifyContent: "space-between",
             width: "100%",
-          }}
-        >
+          }}>
           <Box
             sx={{
               display: "flex",
               flexDirection: "row",
               justifyContent: "center",
-            }}
-          >
+            }}>
             {!isHomePage && (
               <IconButton
                 style={{ color: "#FFCE26" }}
-                aria-label="open drawer"
+                aria-label='open drawer'
                 onClick={handleDrawerOpen}
-                edge="start"
+                edge='start'
                 sx={{
                   marginRight: 5,
                   ...(open && { display: "none" }),
-                }}
-              >
+                }}>
                 <Home />
               </IconButton>
             )}
-            <img src={logo} alt="logo" style={{ width: 40, marginRight: 40 }} />
+            <img src={logo} alt='logo' style={{ width: 40, marginRight: 40 }} />
             <Typography
               fontFamily={"Berlin Sans FB"}
               fontSize={20}
@@ -134,8 +136,7 @@ export default function TopDrawer({ open, handleDrawerOpen, isHomePage }) {
                 justifyItems: "center",
                 color: "#FFCE26",
                 alignItems: "center",
-              }}
-            >
+              }}>
               headquarter
             </Typography>
           </Box>
@@ -143,8 +144,7 @@ export default function TopDrawer({ open, handleDrawerOpen, isHomePage }) {
             sx={{
               display: "flex",
               justifyContent: "flex-end",
-            }}
-          >
+            }}>
             {!isHomePage && (
               <React.Fragment>
                 <Box
@@ -152,17 +152,15 @@ export default function TopDrawer({ open, handleDrawerOpen, isHomePage }) {
                     display: "flex",
                     alignItems: "center",
                     textAlign: "center",
-                  }}
-                >
-                  <Tooltip title="Account settings">
+                  }}>
+                  <Tooltip title='Account settings'>
                     <IconButton
                       onClick={handleClick}
-                      size="small"
+                      size='small'
                       sx={{ ml: 2 }}
                       aria-controls={openProfile ? "account-menu" : undefined}
-                      aria-haspopup="true"
-                      aria-expanded={openProfile ? "true" : undefined}
-                    >
+                      aria-haspopup='true'
+                      aria-expanded={openProfile ? "true" : undefined}>
                       {profilePic && (
                         <ProfileAvatar profilePic={profilePic} width={32} />
                       )}
@@ -174,7 +172,7 @@ export default function TopDrawer({ open, handleDrawerOpen, isHomePage }) {
                 </Box>
                 <Menu
                   anchorEl={anchorEl}
-                  id="account-menu"
+                  id='account-menu'
                   open={openProfile}
                   onClose={handleClose}
                   onClick={handleClose}
@@ -205,13 +203,11 @@ export default function TopDrawer({ open, handleDrawerOpen, isHomePage }) {
                     },
                   }}
                   transformOrigin={{ horizontal: "right", vertical: "top" }}
-                  anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
-                >
+                  anchorOrigin={{ horizontal: "right", vertical: "bottom" }}>
                   <MenuItem
                     onClick={() => {
                       navigate("/myprofile");
-                    }}
-                  >
+                    }}>
                     {!profilePic && <Avatar />}
                     {profilePic && (
                       <ProfileAvatar
@@ -225,33 +221,30 @@ export default function TopDrawer({ open, handleDrawerOpen, isHomePage }) {
                   <MenuItem
                     onClick={() => {
                       navigate("/mymodules");
-                    }}
-                  >
+                    }}>
                     <ViewModule sx={{ mr: 1 }} /> My Modules
                   </MenuItem>
                   <MenuItem
                     onClick={() => {
                       navigate("/myinternship");
-                    }}
-                  >
+                    }}>
                     <Work sx={{ mr: 1 }} /> My Internships
                   </MenuItem>
                   <MenuItem
                     onClick={() => {
                       navigate("/chats");
-                    }}
-                  >
+                    }}>
                     <Chat sx={{ mr: 1 }} /> Chats
                   </MenuItem>
                   <Divider />
                   <MenuItem
                     onClick={() => {
+                      setUser(null);
                       localStorage.removeItem("userInfo");
                       navigate("/");
-                    }}
-                  >
+                    }}>
                     <ListItemIcon>
-                      <Logout fontSize="small" />
+                      <Logout fontSize='small' />
                     </ListItemIcon>
                     Logout
                   </MenuItem>

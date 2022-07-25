@@ -7,7 +7,6 @@ const sendMessage = async (req, res) => {
   const { message, chatId } = req.body;
 
   if (!message || !chatId) {
-    console.log("Please Provide All Fields To send Message");
     res.sendStatus(451);
   }
 

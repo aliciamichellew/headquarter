@@ -29,7 +29,7 @@ const findModule = asyncHandler(async (request, response) => {
     throw new Error("Fetch Failed!");
   }
 
-  const module = data.data.filter((x) =>
+  const module = data.data.filter(x =>
     x.moduleCode.includes(searchQuery.toUpperCase())
   );
 
@@ -118,7 +118,7 @@ const findModuleSearchQueryMyModules = async (req, res) => {
       throw new Error("Fetch Failed!");
     }
 
-    const module = data.filter((x) =>
+    const module = data.filter(x =>
       x.moduleCode.includes(searchQuery.toUpperCase())
     );
 
@@ -168,9 +168,7 @@ const getExperiencedUser = async (req, res) => {
     if (!module) {
       res.status(200).json(users);
     }
-    console.log(module);
     const experiencedUsers = module.experiencedUser;
-    console.log(experiencedUsers);
 
     if (experiencedUsers.length !== 0) {
       for (var item of experiencedUsers) {
@@ -190,7 +188,6 @@ const getExperiencedUser = async (req, res) => {
     }
     res.status(200).json(users);
   } catch (err) {
-    console.log(err);
     res
       .status(400)
       .send({ message: "Error occured when getting experienced user" });

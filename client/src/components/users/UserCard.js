@@ -15,28 +15,28 @@ const UserCard = ({ users, content, loading }) => {
   const [profilePic, setProfilePic] = useState("");
   const [name, setName] = useState("");
 
-  const getUserProfile = async (e) => {
-    try {
-      console.log("get user profile called");
-      const config = {
-        headers: {
-          "Content-type": "application/json",
-        },
-      };
-      const { data } = await axios.get(
-        `/api/profile/getprofile/${userId}`,
-        { userId },
-        config
-      );
-      setProfilePic(data.profilePic || "");
-      const name = data.firstName + " " + data.lastName;
-      setName(name);
-    } catch (err) {}
-  };
-
   useEffect(() => {
-    getUserProfile();
-  }, [profilePic]);
+    const getUserProfile = async userId => {
+      try {
+        const config = {
+          headers: {
+            "Content-type": "application/json",
+          },
+        };
+        const { data } = await axios.get(
+          `/api/profile/getprofile/${userId}`,
+          { userId },
+          config
+        );
+        setProfilePic(data.profilePic || "");
+        const name = data.firstName + " " + data.lastName;
+        setName(name);
+      } catch (err) {}
+    };
+    if (userId) {
+      getUserProfile(userId);
+    }
+  }, [userId]);
 
   return (
     <Box
@@ -46,18 +46,16 @@ const UserCard = ({ users, content, loading }) => {
         alignItems: "flex-start",
         padding: 0,
         gap: 3,
-      }}
-    >
+      }}>
       {/* {users.map((users) => ( */}
       <Card
-        sx={{ width: 275, backgroundColor: "transparent", boxShadow: "none" }}
-      >
+        sx={{ width: 275, backgroundColor: "transparent", boxShadow: "none" }}>
         <Box sx={{ display: "flex", flexDirection: "row" }}>
           <Box>
             {!profilePic && (
               <img
                 src={profile}
-                alt="profile"
+                alt='profile'
                 style={{ width: 50, borderRadius: "50%" }}
               />
             )}
@@ -73,8 +71,7 @@ const UserCard = ({ users, content, loading }) => {
             <Typography
               onClick={() => {
                 navigate(`/profile/${users.username}`);
-              }}
-            >
+              }}>
               {name}
             </Typography>
             {/* <Link href="#" underline="none" color="inherit">

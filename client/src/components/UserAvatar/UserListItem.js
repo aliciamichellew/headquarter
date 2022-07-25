@@ -2,14 +2,12 @@ import { Avatar, Box, Typography } from '@mui/material';
 import React from 'react'
 import { useNavigate } from 'react-router-dom';
 import ChatLoading from '../chat/ChatLoading';
+import { useAppContext } from '../chat/ChatProvider';
 
-const UserListItem = ({ user, handleFunction, loading}) => {
+const UserListItem = ({ handleFunction}) => {
     const navigate = useNavigate();
+    const {user} = useAppContext();
 
-    if(loading) {
-        <ChatLoading/>
-    }
-    
     return (
         <Box
       onClick={handleFunction}
@@ -33,7 +31,7 @@ const UserListItem = ({ user, handleFunction, loading}) => {
         size="sm"
         cursor="pointer"
         name={user.username}
-        src={user.avatar}
+        //src={user.avatar}
       />
       <Box>
         <Typography>{user.username}</Typography>

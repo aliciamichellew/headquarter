@@ -75,6 +75,9 @@ const io = socketIO(server, {
 
 io.on("connection", (socket) => {
   console.log("Connected to socket.io");
+  socket.on("connect_error", (err) => {
+  console.log(`connect_error due to ${err.message}`);
+});
   socket.on("setup", (userData) => {
     socket.join(userData._id);
 

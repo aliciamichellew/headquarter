@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { styled, useTheme } from "@mui/material/styles";
 import {
   Box,
@@ -17,6 +17,8 @@ import ModuleButton from "../modules/ModuleButton";
 import axios from "axios";
 import ProfileButton from "../profile/ProfileButton";
 import InternshipButton from "../internship/internshipButton";
+import { UserContext } from "../../App";
+import { useAppContext } from "../chat/ChatProvider";
 
 const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
@@ -33,81 +35,72 @@ export default function Home() {
   const [internships, setInternships] = useState([]);
   const [friends, setFriends] = useState([]);
   const [loading, setLoading] = useState(false);
-  const userInfo = localStorage.getItem("userInfo");
-  const userInfoJSON = JSON.parse(userInfo);
-  const userId = userInfoJSON._id;
-  const getMyModules = async (e) => {
-    try {
-      setLoading(false);
-      const config = {
-        headers: {
-          "Content-type": "application/json",
-        },
-      };
-      const { data } = await axios.get(
-        `/api/modules/mymodules/${userId}`,
-        { userId },
-        config
-      );
-
-      setModules(data);
-      setLoading(false);
-    } catch (error) {}
-  };
-
-   const getMyInternships = async (e) => {
-    try {
-      setLoading(false);
-      const config = {
-        headers: {
-          "Content-type": "application/json",
-        },
-      };
-      const { data } = await axios.get(
-        `/api/internships/myinternship/${userId}`,
-        { userId },
-        config
-      );
-
-      setInternships(data);
-      setLoading(false);
-    } catch (error) {}
-  };
-
-  const getMyFriends = async (e) => {
-    try {
-      setLoading(true);
-      const config = {
-        headers: {
-          "Content-type": "application/json",
-        },
-      };
-      const { data } = await axios.get(
-        `/api/profile/getfollowing/${userId}`,
-        { userId },
-        config
-      );
-
-      setFriends(data);
-      console.log(friends);
-      setLoading(false);
-    } catch (error) {}
-  };
+  const { user } = useAppContext;
 
   useEffect(() => {
-    const userInfo = localStorage.getItem("userInfo");
+    const getMyModules = async userId => {
+      try {
+        setLoading(false);
+        const config = {
+          headers: {
+            "Content-type": "application/json",
+          },
+        };
+        const { data } = await axios.get(
+          `/api/modules/mymodules/${userId}`,
+          { userId },
+          config
+        );
 
-    if (!userInfo) {
+        setModules(data);
+        setLoading(false);
+      } catch (error) {}
+    };
+    const getMyInternships = async userId => {
+      try {
+        setLoading(false);
+        const config = {
+          headers: {
+            "Content-type": "application/json",
+          },
+        };
+        const { data } = await axios.get(
+          `/api/internships/myinternship/${userId}`,
+          { userId },
+          config
+        );
+
+        setInternships(data);
+        setLoading(false);
+      } catch (error) {}
+    };
+    const getMyFriends = async userId => {
+      try {
+        setLoading(true);
+        const config = {
+          headers: {
+            "Content-type": "application/json",
+          },
+        };
+        const { data } = await axios.get(
+          `/api/profile/getfollowing/${userId}`,
+          { userId },
+          config
+        );
+
+        setFriends(data);
+        setLoading(false);
+      } catch (error) {}
+    };
+
+    if (user) {
+      getMyModules(user._id);
+      getMyFriends(user._id);
+      getMyInternships(user._id);
+    } else {
       navigate("/");
     }
-  });
-
-  useEffect(() => {
-    getMyInternships();
-    getMyModules();
-    getMyFriends();
-    console.log("friends", friends);
-  }, []);
+  }, [user, navigate]);
 
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
@@ -119,6 +112,11 @@ export default function Home() {
   const handleDrawerClose = () => {
     setOpen(false);
   };
+
+  if (!user) {
+    navigate("/");
+    return <></>;
+  }
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -132,17 +130,16 @@ export default function Home() {
         handleDrawerClose={handleDrawerClose}
         theme={theme}
       />
-      <Box component="main" sx={{ flexGrow: 1, pt: 0 }}>
+      <Box component='main' sx={{ flexGrow: 1, pt: 0 }}>
         <Grid
           container
-          component="main"
+          component='main'
           sx={{
             minHeight: "100vh",
             backgroundColor: "#FFCE26",
             display: "flex",
             alignContent: "flex-start",
-          }}
-        >
+          }}>
           <DrawerHeader />
           <Box
             sx={{
@@ -152,26 +149,22 @@ export default function Home() {
               display: "flex",
               flexDirection: "column",
               width: "100%",
-            }}
-          >
+            }}>
             <Box
-              sx={{ justifyContent: "flex-start", alignItems: "flex-start" }}
-            >
+              sx={{ justifyContent: "flex-start", alignItems: "flex-start" }}>
               <Typography
                 fontFamily={"Berlin Sans FB"}
                 fontSize={30}
                 sx={{ mx: 0 }}
-                align={"left"}
-              >
+                align={"left"}>
                 Welcome Back,
               </Typography>
               <Typography
                 fontFamily={"Berlin Sans FB"}
                 fontSize={50}
                 sx={{ mx: 0, mt: 0 }}
-                align={"left"}
-              >
-                {JSON.parse(userInfo).firstName.toUpperCase()}
+                align={"left"}>
+                {user.firstName.toUpperCase()}
               </Typography>
             </Box>
 
@@ -181,32 +174,29 @@ export default function Home() {
                 flexDirection: "row",
                 alignItems: "flex-start",
                 justifyContent: "center",
-              }}
-            >
+              }}>
               <Box
-                sx={{ display: "flex", flexDirection: "column", width: "33%" }}
-              >
+                sx={{ display: "flex", flexDirection: "column", width: "33%" }}>
                 <Typography
                   fontFamily={"Berlin Sans FB"}
                   fontSize={30}
-                  sx={{ my: 3, display: "flex", justifyContent: "center" }}
-                >
+                  sx={{ my: 3, display: "flex", justifyContent: "center" }}>
                   My Modules
                 </Typography>
                 <Card sx={{ mx: 5 }}>
                   <CardContent>
-                    <Box component="form" noValidate sx={{ mt: 0 }}>
+                    <Box component='form' noValidate sx={{ mt: 0 }}>
                       <Box sx={{ display: "flex", flexDirection: "column" }}>
-                        {modules.map((modules) => (
+                        {modules.map(modules => (
                           <ModuleButton
                             moduleCode={modules.moduleCode}
                             moduleTitle={modules.title}
                           />
                         ))}
                         <Button
-                          type="submit"
+                          type='submit'
                           fullWidth
-                          variant="contained"
+                          variant='contained'
                           sx={{
                             mt: 2,
                             mb: 0,
@@ -215,8 +205,7 @@ export default function Home() {
                           }}
                           onClick={() => {
                             navigate("/mymodules");
-                          }}
-                        >
+                          }}>
                           <Typography fontFamily={"Berlin Sans FB"}>
                             View All My Modules
                           </Typography>
@@ -232,32 +221,30 @@ export default function Home() {
                   display: "flex",
                   flexDirection: "column",
                   width: "33%",
-                }}
-              >
+                }}>
                 <Typography
                   fontFamily={"Berlin Sans FB"}
                   fontSize={30}
-                  sx={{ my: 3, display: "flex", justifyContent: "center" }}
-                >
+                  sx={{ my: 3, display: "flex", justifyContent: "center" }}>
                   My Internships
                 </Typography>
                 <Card sx={{ mx: 5 }}>
                   <CardContent>
-                    <Box component="form" noValidate sx={{ mt: 0 }}>
+                    <Box component='form' noValidate sx={{ mt: 0 }}>
                       <Box sx={{ display: "flex", flexDirection: "column" }}>
-                      {internships.map((internships) => (
-                        <InternshipButton
-                        company={internships.company}
-                        position={internships.position}
-                        internshipId={internships._id}
-                        />
+                        {internships.map(internships => (
+                          <InternshipButton
+                            company={internships.company}
+                            position={internships.position}
+                            internshipId={internships._id}
+                          />
                         ))}
                         <Button
-                        type="submit"
-                        fullWidth
-                        variant="contained"
-                          size="large"
-                           sx={{
+                          type='submit'
+                          fullWidth
+                          variant='contained'
+                          size='large'
+                          sx={{
                             mt: 2,
                             mb: 0,
                             color: "#000000",
@@ -265,8 +252,7 @@ export default function Home() {
                           }}
                           onClick={() => {
                             navigate("/myinternship");
-                          }}
-                        >
+                          }}>
                           <Typography fontFamily={"Berlin Sans FB"}>
                             View All My Internships
                           </Typography>
@@ -277,20 +263,18 @@ export default function Home() {
                 </Card>
               </Box>
               <Box
-                sx={{ display: "flex", flexDirection: "column", width: "33%" }}
-              >
+                sx={{ display: "flex", flexDirection: "column", width: "33%" }}>
                 <Typography
                   fontFamily={"Berlin Sans FB"}
                   fontSize={30}
-                  sx={{ my: 3, display: "flex", justifyContent: "center" }}
-                >
+                  sx={{ my: 3, display: "flex", justifyContent: "center" }}>
                   My Friends
                 </Typography>
                 <Card sx={{ mx: 5 }}>
                   <CardContent>
-                    <Box component="form" noValidate sx={{ mt: 0 }}>
+                    <Box component='form' noValidate sx={{ mt: 0 }}>
                       <Box sx={{ display: "flex", flexDirection: "column" }}>
-                        {friends.map((friends) => (
+                        {friends.map(friends => (
                           <ProfileButton
                             firstName={friends.firstName}
                             lastName={friends.lastName}

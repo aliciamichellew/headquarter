@@ -30,17 +30,17 @@ export default function ChatCard() {
 
   const [search, setSearch] = useState("");
   const [searchResult, setSearchResult] = useState([]);
+  const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [loadingChat, setLoadingChat] = useState(false);
   const navigate = useNavigate();
   const {
     setSelectedChat,
     user,
-    notification,
-    setNotification,
     chats,
     setChats,
   } = useAppContext();
+
 
   const handleSearch = async () => {
     if (!search) {
@@ -50,7 +50,7 @@ export default function ChatCard() {
     try {
       setLoading(true);
 
-      const { data } = await api.get(`/api/profile/fetchprofile/${search}`, {search});
+      const { data } = await api.get(`/api/profile/fetchprofile/${search}`);
 
       setLoading(false);
       setSearchResult(data);
@@ -60,10 +60,11 @@ export default function ChatCard() {
   };
 
   const accessChat = async (userId) => {
+    console.log(userId);
     try {
       setLoadingChat(true);
 
-      const { data } = await api.get(`/api/chat/${userId}`, { userId });
+      const { data } = await api.get(`/api/chat/${userId}`);
 
       if (!chats.find((c) => c._id === data._id)) setChats([data, ...chats]);
       setSelectedChat(data);
@@ -117,26 +118,15 @@ export default function ChatCard() {
               </Button>
               </Stack>
             </ThemeProvider>
-            {loading ? (
-              <ChatLoading />
-            ) : (
-              searchResult?.map((user) => (
-                <UserListItem
-                  key={user._id}
-                  user={user}
-                  handleFunction={() => accessChat(user._id)}
-                />
-              ))
-            )}
-        </Box>
-        {loading ? <ChatLoading /> : 
-        (
+        {loading ? (<ChatLoading /> 
+        ):( 
           searchResult?.map(user => (
             <UserListItem
             key={user._id}
             user={user}
             handleFunction={()=>accessChat(user._id)}
             />)))}
+            </Box>
         </CardContent>
       </Card>
     </Box>

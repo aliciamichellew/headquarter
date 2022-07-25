@@ -4,7 +4,7 @@ const Profile = require("../models/profileModel");
 const generateToken = require("../utils/generateToken");
 const { buildErrorObject } = require("../middlewares/errorMiddleware");
 
-const findUserById = async (userId) => {
+const findUserById = async userId => {
   return new Promise((resolve, reject) => {
     User.findById(userId, (err, item) => {
       itemNotFound(err, item, reject, "USER_DOES_NOT_EXIST");
@@ -84,8 +84,6 @@ const authUser = asyncHandler(async (request, response) => {
   try {
     const { email, password } = request.body;
     const user = await User.findOne({ email });
-    console.log("masuk login");
-    console.log("user = ", user);
     if (user && (await user.matchPassword(password))) {
       response.json({
         _id: user._id,

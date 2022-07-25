@@ -10,11 +10,11 @@ import { Box, Card, Stack, Typography } from "@mui/material";
 const MyChats = ({ fetchAgain }) => {
   const [loggedUser, setLoggedUser] = useState();
 
-  const { selectedChat, setSelectedChat, chats, setChats } = useAppContext();
+  const { user, selectedChat, setSelectedChat, chats, setChats } = useAppContext();
 
   const fetchChats = async () => {
     try {
-      const { data } = await api.get("/api/chat");
+      const { data } = await api.get(`/api/chat/${user._id}`);
 
       setChats(data);
     } catch (error) {
@@ -46,6 +46,7 @@ const MyChats = ({ fetchAgain }) => {
         display="flex"
         w="100%"
         justifyContent="space-between"
+        alignItems="center"
       >
         My Chats
       </Typography>
@@ -76,7 +77,16 @@ const MyChats = ({ fetchAgain }) => {
               >
                 <Typography>
                   {getSender(loggedUser, chat?.users)}
+                  
+                  </Typography>
+                  {chat.latestMessage && (
+                  <Typography fontSize="xs">
+                    <b>{chat.latestMessage.sender.name} : </b>
+                    {chat.latestMessage.content.length > 50
+                      ? chat.latestMessage.content.substring(0, 51) + "..."
+                      : chat.latestMessage.content}
                 </Typography>
+             ) }
               </Box>
             ))}
           </Stack>

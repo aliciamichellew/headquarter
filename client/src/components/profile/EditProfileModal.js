@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Button,
   TextField,
@@ -10,18 +10,16 @@ import {
   Box,
   Avatar,
   Input,
-  IconButton,
 } from "@mui/material";
-import { Edit, PhotoCamera } from "@mui/icons-material";
+import { Edit } from "@mui/icons-material";
 import axios from "axios";
 import ProfileAvatar from "./ProfileAvatar";
+import { UserContext } from "../../App";
 
-const EditProfileModal = ({ userInfo, handleEditProfile }) => {
-  // const userInfo = localStorage.getItem("userInfo");
-  // console.log(profile);
-
+const EditProfileModal = ({ handleEditProfile }) => {
   const [open, setOpen] = useState(false);
-  const _id = JSON.parse(userInfo)._id;
+  const { userInfo } = useContext(UserContext);
+  const userId = userInfo ? userInfo._id : null;
   const [profile, setProfile] = useState();
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState();
@@ -35,9 +33,8 @@ const EditProfileModal = ({ userInfo, handleEditProfile }) => {
   const [github, setGithub] = useState("");
   const [image, setImage] = useState("");
 
-  const getUserProfile = async (e) => {
+  const getUserProfile = async e => {
     try {
-      console.log("get user profile called");
       // setLoading(false);
       const config = {
         headers: {
@@ -45,8 +42,8 @@ const EditProfileModal = ({ userInfo, handleEditProfile }) => {
         },
       };
       const { data } = await axios.get(
-        `/api/profile/getprofile/${_id}`,
-        { _id },
+        `/api/profile/getprofile/${userId}`,
+        { userId },
         config
       );
       setProfile(data);
@@ -66,10 +63,7 @@ const EditProfileModal = ({ userInfo, handleEditProfile }) => {
 
   useEffect(() => {
     getUserProfile();
-    console.log(profile);
   }, []);
-
-  console.log("edit profile", profile);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -85,23 +79,24 @@ const EditProfileModal = ({ userInfo, handleEditProfile }) => {
 
     reader.onloadend = () => {
       setImage(reader.result);
-      console.log(image);
     };
   }
 
-  const handleChange = (e) => {
+  const handleChange = e => {
     const file = e.target.files[0];
-    console.log(file);
     setProfilePic(file);
-    console.log(profilePic);
     previewFiles(file);
   };
+
+  if (!userId || !userInfo) {
+    return <></>;
+  }
 
   return (
     <div>
       <Button
         fullWidth
-        variant="contained"
+        variant='contained'
         sx={{
           mt: 2,
           mb: 0,
@@ -113,8 +108,7 @@ const EditProfileModal = ({ userInfo, handleEditProfile }) => {
         }}
         style={{ justifyContent: "center" }}
         onClick={handleClickOpen}
-        startIcon={<Edit />}
-      >
+        startIcon={<Edit />}>
         <Box sx={{ display: "flex", flexDirection: "column" }}>
           <Typography>Edit</Typography>
         </Box>
@@ -122,22 +116,21 @@ const EditProfileModal = ({ userInfo, handleEditProfile }) => {
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Edit Profile</DialogTitle>
         <DialogContent
-          sx={{ display: "flex", flexDirection: "column", width: "500px" }}
-        >
+          sx={{ display: "flex", flexDirection: "column", width: "500px" }}>
           {image && (
             <Avatar
-              alt="Remy Sharp"
+              alt='Remy Sharp'
               src={image}
               sx={{ mr: 2, width: 150, height: 150 }}
             />
           )}
           {!image && <ProfileAvatar profilePic={profilePic} width={150} />}
-          <label htmlFor="icon-button-file">
+          <label htmlFor='icon-button-file'>
             <Input
-              accept="image/*"
-              id="icon-button-file"
-              type="file"
-              onChange={(e) => handleChange(e)}
+              accept='image/*'
+              id='icon-button-file'
+              type='file'
+              onChange={e => handleChange(e)}
             />
             {/* <IconButton
               color="primary"
@@ -150,102 +143,102 @@ const EditProfileModal = ({ userInfo, handleEditProfile }) => {
           <Box sx={{ display: "flex", flexDirection: "column" }}>
             <Typography sx={{ fontSize: 20 }}>First Name</Typography>
             <TextField
-              id="outlined-textarea"
+              id='outlined-textarea'
               maxRows={5}
               sx={{ my: 1 }}
               value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
+              onChange={e => setFirstName(e.target.value)}
             />
           </Box>
           <Box sx={{ display: "flex", flexDirection: "column" }}>
             <Typography sx={{ fontSize: 20 }}>Last Name</Typography>
             <TextField
-              id="outlined-textarea"
+              id='outlined-textarea'
               maxRows={5}
               sx={{ my: 1 }}
               value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
+              onChange={e => setLastName(e.target.value)}
             />
           </Box>
           <Box sx={{ display: "flex", flexDirection: "column" }}>
             <Typography sx={{ fontSize: 20 }}>Bio</Typography>
             <TextField
-              id="outlined-textarea"
+              id='outlined-textarea'
               maxRows={5}
               sx={{ my: 1 }}
               value={bio}
-              onChange={(e) => setBio(e.target.value)}
+              onChange={e => setBio(e.target.value)}
             />
           </Box>
           <Box sx={{ display: "flex", flexDirection: "column" }}>
             <Typography sx={{ fontSize: 20 }}>Twitter</Typography>
             <TextField
-              id="outlined-textarea"
+              id='outlined-textarea'
               maxRows={5}
               sx={{ my: 1 }}
               value={twitter}
-              onChange={(e) => setTwitter(e.target.value)}
+              onChange={e => setTwitter(e.target.value)}
             />
           </Box>
           <Box sx={{ display: "flex", flexDirection: "column" }}>
             <Typography sx={{ fontSize: 20 }}>Facebook</Typography>
             <TextField
-              id="outlined-textarea"
+              id='outlined-textarea'
               maxRows={5}
               sx={{ my: 1 }}
               value={facebook}
-              onChange={(e) => setFacebook(e.target.value)}
+              onChange={e => setFacebook(e.target.value)}
             />
           </Box>
           <Box sx={{ display: "flex", flexDirection: "column" }}>
             <Typography sx={{ fontSize: 20 }}>LinkedIn</Typography>
             <TextField
-              id="outlined-textarea"
+              id='outlined-textarea'
               maxRows={5}
               sx={{ my: 1 }}
               value={linkedIn}
-              onChange={(e) => setLinkedIn(e.target.value)}
+              onChange={e => setLinkedIn(e.target.value)}
             />
           </Box>
           <Box sx={{ display: "flex", flexDirection: "column" }}>
             <Typography sx={{ fontSize: 20 }}>Instagram</Typography>
             <TextField
-              id="outlined-textarea"
+              id='outlined-textarea'
               maxRows={5}
               sx={{ my: 1 }}
               value={instagram}
-              onChange={(e) => setInstagram(e.target.value)}
+              onChange={e => setInstagram(e.target.value)}
             />
           </Box>
           <Box sx={{ display: "flex", flexDirection: "column" }}>
             <Typography sx={{ fontSize: 20 }}>Website</Typography>
             <TextField
-              id="outlined-textarea"
+              id='outlined-textarea'
               maxRows={5}
               sx={{ my: 1 }}
               value={website}
-              onChange={(e) => setWebsite(e.target.value)}
+              onChange={e => setWebsite(e.target.value)}
             />
           </Box>
           <Box sx={{ display: "flex", flexDirection: "column" }}>
             <Typography sx={{ fontSize: 20 }}>GitHub</Typography>
             <TextField
-              id="outlined-textarea"
+              id='outlined-textarea'
               maxRows={5}
               sx={{ my: 1 }}
               value={github}
-              onChange={(e) => setGithub(e.target.value)}
+              onChange={e => setGithub(e.target.value)}
             />
           </Box>
         </DialogContent>
         <DialogActions>
           <Box
-            component="form"
+            component='form'
             noValidate
-            onSubmit={(event) => {
+            onSubmit={event => {
               handleEditProfile(
                 event,
-                _id,
+                userId,
                 firstName,
                 lastName,
                 image,
@@ -258,10 +251,9 @@ const EditProfileModal = ({ userInfo, handleEditProfile }) => {
                 github
               );
               handleClose();
-            }}
-          >
+            }}>
             <Button onClick={handleClose}>Cancel</Button>
-            <Button type="submit">Submit</Button>
+            <Button type='submit'>Submit</Button>
           </Box>
         </DialogActions>
       </Dialog>
