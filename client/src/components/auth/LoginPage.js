@@ -36,14 +36,13 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 function Copyright(props) {
   return (
     <Typography
-      variant="body2"
-      color="text.secondary"
-      align="center"
+      variant='body2'
+      color='text.secondary'
+      align='center'
       fontFamily={"Berlin Sans FB"}
-      {...props}
-    >
+      {...props}>
       {"Copyright © "}
-      <Link color="inherit" href="https://mui.com/">
+      <Link color='inherit' href='https://mui.com/'>
         headquarter
       </Link>{" "}
       {new Date().getFullYear()}
@@ -73,7 +72,7 @@ export default function LoginSide() {
 
   let navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async e => {
     e.preventDefault();
     try {
       const config = {
@@ -91,7 +90,7 @@ export default function LoginSide() {
       );
 
       setUserInfo(data);
-      // localStorage.setItem("userInfo", JSON.stringify(data));
+      localStorage.setItem("userInfo", JSON.stringify(data));
       setAuthToken(data.token);
       setLoading(false);
       navigate("/home");
@@ -105,8 +104,8 @@ export default function LoginSide() {
     <ThemeProvider theme={theme}>
       <Box sx={{ display: "flex" }}>
         <TopDrawer open={open} handleDrawerOpen={handleDrawerOpen} />
-        <Box component="main" sx={{ flexGrow: 1, p: 0 }}>
-          <Grid container component="main" sx={{ height: "100vh" }}>
+        <Box component='main' sx={{ flexGrow: 1, p: 0 }}>
+          <Grid container component='main' sx={{ height: "100vh" }}>
             <CssBaseline />
             <Grid
               item
@@ -120,8 +119,7 @@ export default function LoginSide() {
                 flexDirection: "column",
                 alignItems: "center",
                 justifyContent: "center",
-              }}
-            >
+              }}>
               <Box
                 sx={{
                   my: 8,
@@ -130,17 +128,15 @@ export default function LoginSide() {
                   flexDirection: "column",
                   alignItems: "center",
                   justifyContent: "center",
-                }}
-              >
-                <img src={logo} alt="logo" style={{ width: 300 }} />
+                }}>
+                <img src={logo} alt='logo' style={{ width: 300 }} />
                 <Typography fontFamily={"Berlin Sans FB"} fontSize={60}>
                   headquarter
                 </Typography>
                 <Typography
                   fontFamily={"Berlin Sans FB"}
                   fontSize={20}
-                  sx={{ mx: 10 }}
-                >
+                  sx={{ mx: 10 }}>
                   headquarter students to their dreams.
                 </Typography>
               </Box>
@@ -157,8 +153,7 @@ export default function LoginSide() {
                 flexDirection: "column",
                 alignItems: "center",
                 justifyContent: "center",
-              }}
-            >
+              }}>
               <Box
                 sx={{
                   my: 8,
@@ -166,13 +161,11 @@ export default function LoginSide() {
                   display: "flex",
                   flexDirection: "column",
                   alignItems: "center",
-                }}
-              >
+                }}>
                 <Typography
                   fontFamily={"Berlin Sans FB"}
                   fontSize={50}
-                  sx={{ my: 5 }}
-                >
+                  sx={{ my: 5 }}>
                   Log In
                 </Typography>
                 <Card
@@ -182,40 +175,38 @@ export default function LoginSide() {
                     alignContent: "center",
                     flexDirection: "column",
                     justifyContent: "center",
-                  }}
-                >
+                  }}>
                   <CardContent>
                     {error && <ErrorMessage> {error} </ErrorMessage>}
                     {loading && <CircularProgress />}
                     <Box
-                      component="form"
+                      component='form'
                       noValidate
                       onSubmit={handleSubmit}
-                      sx={{ mt: 0 }}
-                    >
+                      sx={{ mt: 0 }}>
                       <TextField
-                        margin="normal"
+                        margin='normal'
                         required
                         fullWidth
-                        id="email"
-                        label="Email Address"
-                        name="email"
-                        autoComplete="email"
+                        id='email'
+                        label='Email Address'
+                        name='email'
+                        autoComplete='email'
                         autoFocus
                         value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        onChange={e => setEmail(e.target.value)}
                       />
                       <TextField
-                        margin="normal"
+                        margin='normal'
                         required
                         fullWidth
-                        name="password"
-                        label="Password"
-                        type="password"
-                        id="password"
-                        autoComplete="current-password"
+                        name='password'
+                        label='Password'
+                        type='password'
+                        id='password'
+                        autoComplete='current-password'
                         value={password}
-                        onChange={(e) => setPassword(e.target.value)}
+                        onChange={e => setPassword(e.target.value)}
                       />
                     </Box>
                   </CardContent>
@@ -225,10 +216,9 @@ export default function LoginSide() {
                       alignContent: "center",
                       flexDirection: "column",
                       justifyContent: "center",
-                    }}
-                  >
+                    }}>
                     <Box
-                      component="form"
+                      component='form'
                       noValidate
                       onSubmit={handleSubmit}
                       sx={{
@@ -236,41 +226,38 @@ export default function LoginSide() {
                         display: "flex",
                         alignContent: "center",
                         flexDirection: "column",
-                      }}
-                    >
+                      }}>
                       <Button
-                        type="submit"
+                        type='submit'
                         fullWidth
-                        variant="contained"
+                        variant='contained'
                         sx={{
                           mt: 2,
                           mb: 0,
                           color: "#000000",
                           backgroundColor: "#FFCE26",
-                        }}
-                      >
+                        }}>
                         <Typography fontFamily={"Berlin Sans FB"}>
                           Log In
                         </Typography>
                       </Button>
                       <Button
-                        type="submit"
+                        type='submit'
                         fullWidth
-                        variant="contained"
+                        variant='contained'
                         sx={{
                           mt: 3,
                           mb: 2,
                           color: "#000000",
                           backgroundColor: "#FFCE26",
-                        }}
-                      >
+                        }}>
                         <Typography fontFamily={"Berlin Sans FB"}>
                           Continue with Google
                         </Typography>
                       </Button>
                       <Grid container>
                         <Grid item xs>
-                          <Link href="#" variant="body2">
+                          <Link href='#' variant='body2'>
                             <Typography fontFamily={"Berlin Sans FB"}>
                               Forgot password?
                             </Typography>
@@ -279,9 +266,8 @@ export default function LoginSide() {
                         <Grid item>
                           <Link
                             component={RouterLink}
-                            to="/signup"
-                            variant="body2"
-                          >
+                            to='/signup'
+                            variant='body2'>
                             <Typography fontFamily={"Berlin Sans FB"}>
                               {"Don't have an account? Sign Up"}
                             </Typography>

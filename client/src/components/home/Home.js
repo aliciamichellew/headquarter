@@ -35,10 +35,9 @@ export default function Home() {
   const [friends, setFriends] = useState([]);
   const [loading, setLoading] = useState(false);
   const { userInfo } = useContext(UserContext);
-  console.log("user info = ", userInfo);
 
   useEffect(() => {
-    const getMyModules = async (userId) => {
+    const getMyModules = async userId => {
       try {
         setLoading(false);
         const config = {
@@ -56,7 +55,7 @@ export default function Home() {
         setLoading(false);
       } catch (error) {}
     };
-    const getMyInternships = async (userId) => {
+    const getMyInternships = async userId => {
       try {
         setLoading(false);
         const config = {
@@ -74,7 +73,7 @@ export default function Home() {
         setLoading(false);
       } catch (error) {}
     };
-    const getMyFriends = async (userId) => {
+    const getMyFriends = async userId => {
       try {
         setLoading(true);
         const config = {
@@ -130,17 +129,16 @@ export default function Home() {
         handleDrawerClose={handleDrawerClose}
         theme={theme}
       />
-      <Box component="main" sx={{ flexGrow: 1, pt: 0 }}>
+      <Box component='main' sx={{ flexGrow: 1, pt: 0 }}>
         <Grid
           container
-          component="main"
+          component='main'
           sx={{
             minHeight: "100vh",
             backgroundColor: "#FFCE26",
             display: "flex",
             alignContent: "flex-start",
-          }}
-        >
+          }}>
           <DrawerHeader />
           <Box
             sx={{
@@ -150,25 +148,21 @@ export default function Home() {
               display: "flex",
               flexDirection: "column",
               width: "100%",
-            }}
-          >
+            }}>
             <Box
-              sx={{ justifyContent: "flex-start", alignItems: "flex-start" }}
-            >
+              sx={{ justifyContent: "flex-start", alignItems: "flex-start" }}>
               <Typography
                 fontFamily={"Berlin Sans FB"}
                 fontSize={30}
                 sx={{ mx: 0 }}
-                align={"left"}
-              >
+                align={"left"}>
                 Welcome Back,
               </Typography>
               <Typography
                 fontFamily={"Berlin Sans FB"}
                 fontSize={50}
                 sx={{ mx: 0, mt: 0 }}
-                align={"left"}
-              >
+                align={"left"}>
                 {userInfo.firstName.toUpperCase()}
               </Typography>
             </Box>
@@ -179,32 +173,29 @@ export default function Home() {
                 flexDirection: "row",
                 alignItems: "flex-start",
                 justifyContent: "center",
-              }}
-            >
+              }}>
               <Box
-                sx={{ display: "flex", flexDirection: "column", width: "33%" }}
-              >
+                sx={{ display: "flex", flexDirection: "column", width: "33%" }}>
                 <Typography
                   fontFamily={"Berlin Sans FB"}
                   fontSize={30}
-                  sx={{ my: 3, display: "flex", justifyContent: "center" }}
-                >
+                  sx={{ my: 3, display: "flex", justifyContent: "center" }}>
                   My Modules
                 </Typography>
                 <Card sx={{ mx: 5 }}>
                   <CardContent>
-                    <Box component="form" noValidate sx={{ mt: 0 }}>
+                    <Box component='form' noValidate sx={{ mt: 0 }}>
                       <Box sx={{ display: "flex", flexDirection: "column" }}>
-                        {modules.map((modules) => (
+                        {modules.map(modules => (
                           <ModuleButton
                             moduleCode={modules.moduleCode}
                             moduleTitle={modules.title}
                           />
                         ))}
                         <Button
-                          type="submit"
+                          type='submit'
                           fullWidth
-                          variant="contained"
+                          variant='contained'
                           sx={{
                             mt: 2,
                             mb: 0,
@@ -213,8 +204,7 @@ export default function Home() {
                           }}
                           onClick={() => {
                             navigate("/mymodules");
-                          }}
-                        >
+                          }}>
                           <Typography fontFamily={"Berlin Sans FB"}>
                             View All My Modules
                           </Typography>
@@ -230,20 +220,18 @@ export default function Home() {
                   display: "flex",
                   flexDirection: "column",
                   width: "33%",
-                }}
-              >
+                }}>
                 <Typography
                   fontFamily={"Berlin Sans FB"}
                   fontSize={30}
-                  sx={{ my: 3, display: "flex", justifyContent: "center" }}
-                >
+                  sx={{ my: 3, display: "flex", justifyContent: "center" }}>
                   My Internships
                 </Typography>
                 <Card sx={{ mx: 5 }}>
                   <CardContent>
-                    <Box component="form" noValidate sx={{ mt: 0 }}>
+                    <Box component='form' noValidate sx={{ mt: 0 }}>
                       <Box sx={{ display: "flex", flexDirection: "column" }}>
-                        {internships.map((internships) => (
+                        {internships.map(internships => (
                           <InternshipButton
                             company={internships.company}
                             position={internships.position}
@@ -251,10 +239,10 @@ export default function Home() {
                           />
                         ))}
                         <Button
-                          type="submit"
+                          type='submit'
                           fullWidth
-                          variant="contained"
-                          size="large"
+                          variant='contained'
+                          size='large'
                           sx={{
                             mt: 2,
                             mb: 0,
@@ -263,8 +251,7 @@ export default function Home() {
                           }}
                           onClick={() => {
                             navigate("/myinternship");
-                          }}
-                        >
+                          }}>
                           <Typography fontFamily={"Berlin Sans FB"}>
                             View All My Internships
                           </Typography>
@@ -275,20 +262,18 @@ export default function Home() {
                 </Card>
               </Box>
               <Box
-                sx={{ display: "flex", flexDirection: "column", width: "33%" }}
-              >
+                sx={{ display: "flex", flexDirection: "column", width: "33%" }}>
                 <Typography
                   fontFamily={"Berlin Sans FB"}
                   fontSize={30}
-                  sx={{ my: 3, display: "flex", justifyContent: "center" }}
-                >
+                  sx={{ my: 3, display: "flex", justifyContent: "center" }}>
                   My Friends
                 </Typography>
                 <Card sx={{ mx: 5 }}>
                   <CardContent>
-                    <Box component="form" noValidate sx={{ mt: 0 }}>
+                    <Box component='form' noValidate sx={{ mt: 0 }}>
                       <Box sx={{ display: "flex", flexDirection: "column" }}>
-                        {friends.map((friends) => (
+                        {friends.map(friends => (
                           <ProfileButton
                             firstName={friends.firstName}
                             lastName={friends.lastName}

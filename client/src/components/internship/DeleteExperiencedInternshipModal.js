@@ -15,8 +15,6 @@ const DeleteExperiencedInternshipModal = ({
   position,
   handleRemoveExperienced,
 }) => {
-  const userInfo = localStorage.getItem("userInfo");
-
   const [open, setOpen] = useState(false);
 
   const handleClickOpen = () => {
@@ -41,8 +39,7 @@ const DeleteExperiencedInternshipModal = ({
         }}
         startIcon={<Check />}
         style={{ justifyContent: "center" }}
-        onClick={handleClickOpen}
-      >
+        onClick={handleClickOpen}>
         <Box sx={{ display: "flex", flexDirection: "column" }}>
           <Typography>Internship Taken</Typography>
         </Box>
@@ -50,23 +47,21 @@ const DeleteExperiencedInternshipModal = ({
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Remove from Internship Taken</DialogTitle>
         <DialogContent
-          sx={{ display: "flex", flexDirection: "column", width: "500px" }}
-        >
+          sx={{ display: "flex", flexDirection: "column", width: "500px" }}>
           <Typography sx={{ fontSize: 20 }}>
             Are you sure you want to remove it?
           </Typography>
         </DialogContent>
         <DialogActions>
           <Box
-            component="form"
+            component='form'
             noValidate
-            onSubmit={(event) => {
+            onSubmit={event => {
               submitRequest(event, company, position);
               handleClose();
-            }}
-          >
+            }}>
             <Button onClick={handleClose}>Cancel</Button>
-            <Button type="submit">Submit</Button>
+            <Button type='submit'>Submit</Button>
           </Box>
         </DialogActions>
       </Dialog>

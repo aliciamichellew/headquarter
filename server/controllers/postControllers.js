@@ -47,6 +47,9 @@ const getPostReturnFormat = (user, post, comments) => {
       moduleCode: post.moduleCode,
       date: post.date,
       isAnonymous: post.isAnonymous,
+      company: post.company,
+      position: post.position,
+      internshipId: post.internshipId,
     },
     comments: comments,
   };
@@ -272,6 +275,39 @@ const unupvote = async (req, res) => {
     res.status(200).send({ message: "Unupvoting post success" });
   } catch (error) {
     res.status(400).send({ message: "Error occured when unupvoting post" });
+  }
+};
+
+const upvoteExistInternship = async (req, res) => {
+  try {
+    const upvotePost = req.query;
+
+    const postExist = await Post.findOne({
+      _id: upvotePost.postId,
+    });
+
+    if (!postExist) {
+      res.status(400).send({ message: "Post does not exist" });
+      return;
+    }
+
+    const upvoteExist = await Post.findOne({
+      _id: upvotePost.postId,
+      upvote: upvotePost.userId,
+    });
+
+    let upvoted = false;
+    if (upvoteExist) {
+      upvoted = true;
+    } else {
+      upvoted = false;
+    }
+
+    res.json(upvoted);
+  } catch (error) {
+    res
+      .status(400)
+      .send({ message: "Error occured when checking upvote post" });
   }
 };
 
@@ -568,7 +604,7 @@ const getPostReturn = (user, post, comments) => {
       {
         _id: user._id,
         name: user.firstName + " " + user.lastName,
-        username:user.username,
+        username: user.username,
       },
     ],
     content: {
@@ -587,7 +623,7 @@ const getPostReturn = (user, post, comments) => {
   return data;
 };
 
-const getAllReviews = async (answers) => {
+const getAllReviews = async answers => {
   const comments = [];
   for (let i of answers) {
     const commentUser = await User.findOne({ _id: i.author });
@@ -617,12 +653,13 @@ const createPostforInternship = async (req, res) => {
       title: req.body.title,
       company: req.body.company,
       position: req.body.position,
+      internshipId: req.body.internshipId,
       date: Date.now(),
     });
-   
-   const company = req.body.company;
-   const position = req.body.position;
-   const internshipExists = await Internship.findOne({ company, position });
+
+    const company = req.body.company;
+    const position = req.body.position;
+    const internshipExists = await Internship.findOne({ company, position });
     const postId = post._id;
 
     if (!internshipExists) {
@@ -635,9 +672,8 @@ const createPostforInternship = async (req, res) => {
       await addPostInternship(internshipExists._id, postId);
     }
 
-    const findUser = await User.find({ _id: post.user });
+    const findUser = await User.findOne({ _id: post.user });
     const returnFormat = getPostReturn(findUser, post, []);
-
     if (post) {
       res.status(201).json(returnFormat);
     } else {
@@ -738,10 +774,9 @@ const deletePostInternship = async (req, res) => {
 
 const getPostsByInternshipId = async (req, res) => {
   try {
-    const { _id } = req.params;
-
+    const { internshipId } = req.params;
     const findInternship = await Internship.findOne({
-      _id
+      _id: internshipId,
     });
     if (!findInternship) {
       res.status(400).send({ message: "Internship does not exist" });
@@ -794,5 +829,6 @@ module.exports = {
   createPostforInternship,
   editPostInternship,
   deletePostInternship,
-  getPostsByInternshipId, 
+  getPostsByInternshipId,
+  upvoteExistInternship,
 };

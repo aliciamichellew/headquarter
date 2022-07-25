@@ -145,29 +145,8 @@ export default function ModulePage(module) {
       { moduleCode },
       config
     );
-    console.log("data", data);
     setExperiencedUserlist(data);
-    console.log(experiencedUserList);
     setLoading(false);
-  };
-
-  const getUserProfile = async e => {
-    try {
-      console.log("get user profile called");
-      setLoading(false);
-      const config = {
-        headers: {
-          "Content-type": "application/json",
-        },
-      };
-      const { data } = await axios.get(
-        `/api/profile/getprofile/${userId}`,
-        { userId },
-        config
-      );
-      setProfilePic(data.profilePic || "");
-      setLoading(false);
-    } catch (err) {}
   };
 
   useEffect(() => {
@@ -220,7 +199,7 @@ export default function ModulePage(module) {
   };
 
   useEffect(() => {
-    const fetchModules = async () => {
+    const fetchModules = async userId => {
       setLoading(true);
       const config = {
         headers: {
@@ -235,9 +214,28 @@ export default function ModulePage(module) {
       setModuleList(data);
       setLoading(false);
     };
-    fetchModules();
-    getUserProfile();
-  }, []);
+    const getUserProfile = async userId => {
+      try {
+        setLoading(false);
+        const config = {
+          headers: {
+            "Content-type": "application/json",
+          },
+        };
+        const { data } = await axios.get(
+          `/api/profile/getprofile/${userId}`,
+          { userId },
+          config
+        );
+        setProfilePic(data.profilePic || "");
+        setLoading(false);
+      } catch (err) {}
+    };
+    if (userId) {
+      fetchModules(userId);
+      getUserProfile(userId);
+    }
+  }, [userId]);
 
   const [searchQuery, setSearchQuery] = useState("");
   const handleSubmit = async e => {

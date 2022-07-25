@@ -1,44 +1,44 @@
 const asyncHandler = require("express-async-handler");
 const Profile = require("../models/profileModel");
 const { response } = require("express");
-const Internship = require('../models/InternshipModel');
+const Internship = require("../models/InternshipModel");
 // const { default: Profile } = require("../../client/src/components/Profile");
 
 const createInternship = asyncHandler(async (req, res) => {
-      const {company, position}= req.body;
+  const { company, position } = req.body;
 
-      if(!company || !position) {
-        res.status(401);
-        throw new Error("Please Enter all the Fields");
-      }
+  if (!company || !position) {
+    res.status(401);
+    throw new Error("Please Enter all the Fields");
+  }
 
-      const InternshipExists = await Internship.findOne({company, position});
+  const InternshipExists = await Internship.findOne({ company, position });
 
-      if(InternshipExists) {
-        res.status(402);
-        throw new Error("Internship already exists");
-      }
+  if (InternshipExists) {
+    res.status(402);
+    throw new Error("Internship already exists");
+  }
 
-      const internship = await Internship.create({
-        company,
-        position,
-      });
+  const internship = await Internship.create({
+    company,
+    position,
+  });
 
-      if(internship) {
-        res.status(403).json({
-          _id: Internship._id,
-          company:Internship.company,
-          position: Internship.position,
-        });
-      } else {
-        res.status(404);
-        throw new Error("Failed to create the Internship");
-      }
+  if (internship) {
+    res.status(403).json({
+      _id: Internship._id,
+      company: Internship.company,
+      position: Internship.position,
     });
+  } else {
+    res.status(404);
+    throw new Error("Failed to create the Internship");
+  }
+});
 
 const fetchInternship = asyncHandler(async (req, res) => {
-    const internships = await Internship.find({}).sort({createdAt: -1});
-      res.status(200).json(internships);
+  const internships = await Internship.find({}).sort({ createdAt: -1 });
+  res.status(200).json(internships);
 });
 /*const addInternship = async (internshipId, postId) => {
   const internshipUpdated = await Internship.updateOne(
@@ -53,38 +53,39 @@ const fetchInternship = asyncHandler(async (req, res) => {
 };*/
 
 const findInternshipbyCompanyorPosition = asyncHandler(async (req, res) => {
-  const keyword = req.query.search ? {
-    $or: [
-      {company: {$regex: req.query.search, $options: "i"}},
-      {position: {$regex: req.query.search, $options: "i"}}
-    ],
-  }
-  : {};
+  const keyword = req.query.search
+    ? {
+        $or: [
+          { company: { $regex: req.query.search, $options: "i" } },
+          { position: { $regex: req.query.search, $options: "i" } },
+        ],
+      }
+    : {};
 
   const internships = await Internship.find(keyword);
   res.send(internships);
 });
 
 const findInternshipbyCompanyandPosition = asyncHandler(async (req, res) => {
-  const keyword = req.query.search ? {
-    $and: [
-      {company: {$regex: req.query.search, $options: "i"}},
-      {position: {$regex: req.query.search, $options: "i"}}
-    ],
-  }
-  : {};
+  const keyword = req.query.search
+    ? {
+        $and: [
+          { company: { $regex: req.query.search, $options: "i" } },
+          { position: { $regex: req.query.search, $options: "i" } },
+        ],
+      }
+    : {};
 
   const internships = await Internship.find(keyword);
   res.send(internships);
 });
 
 const findInternshipbyId = asyncHandler(async (req, res) => {
-  const { id } = req.params 
+  const { id } = req.params;
 
-  const internship = await Internship.findOne({id});
-
-  if(!internship) {
-    return res.status(404).json({error: "Internship does not exist"})
+  const internship = await Internship.findOne({ _id: id });
+  if (!internship) {
+    return res.status(404).json({ error: "Internship does not exist" });
   }
 
   res.status(200).json(internship);
@@ -96,13 +97,12 @@ const getMyInternship = async (req, res) => {
     const profile = await Profile.findOne({ user: userId });
     if (!profile) {
       res.status(200).send({ message: "User not found!" });
-    } 
+    }
     res.json(profile.myInternships);
-   }catch (error) {
-    // console.log(profile);
-    
-    console.log(error);
-    res.status(400).send({ message: "Error occured when getting my internship" });
+  } catch (error) {
+    res
+      .status(400)
+      .send({ message: "Error occured when getting my internship" });
   }
 };
 
@@ -119,25 +119,23 @@ const findInternshipSearchQueryMyInternships = async (req, res) => {
       throw new Error("Fetch Failed!");
     }
 
-    //console.log(findSearchQuery);
-    //console.log(findSearchQuery.searchQuery);
-    searchQuery = req.query.search ? {
-    $or: [
-      {company: {$regex: req.query.search, $options: "i"}},
-      {position: {$regex: req.query.search, $options: "i"}}
-    ],
-  }
-  : {};
+    searchQuery = req.query.search
+      ? {
+          $or: [
+            { company: { $regex: req.query.search, $options: "i" } },
+            { position: { $regex: req.query.search, $options: "i" } },
+          ],
+        }
+      : {};
 
-  const internships = await Internship.find(searchQuery);
-  res.send(internships);
+    const internships = await Internship.find(searchQuery);
+    res.send(internships);
   } catch (error) {
-    console.log(error);
     res
       .status(400)
       .send({ message: "Error occured when doing search query my internship" });
   }
-}; 
+};
 
 const userExperiencedInternship = async (req, res) => {
   try {
@@ -159,13 +157,13 @@ const userExperiencedInternship = async (req, res) => {
     }
     res.json(experienced);
   } catch (error) {
-    res
-      .status(400)
-      .send({ message: "Error occured when checking user experience internship" });
+    res.status(400).send({
+      message: "Error occured when checking user experience internship",
+    });
   }
 };
 const getInternshipTaken = async (req, res) => {
-try {
+  try {
     const { userId } = req.params;
     const profile = await Profile.findOne({ user: userId });
     if (!profile) {
@@ -186,12 +184,18 @@ const userFollowInternship = async (req, res) => {
     const profile = await Profile.findOne({ user: checkFollow.userId });
     if (!profile) {
       res.status(200).send({ message: "User not found!" });
+      return;
     }
 
     let followed = false;
     const findInternshipFollowed = await Profile.findOne({
       user: checkFollow.userId,
-      myInternships: { $elemMatch: { companyName: checkFollow.companyName, jobTitle: checkFollow.jobTitle } },
+      myInternships: {
+        $elemMatch: {
+          companyName: checkFollow.companyName,
+          jobTitle: checkFollow.jobTitle,
+        },
+      },
     });
 
     if (findInternshipFollowed) {
@@ -223,4 +227,3 @@ module.exports = {
   findInternshipSearchQueryMyInternships,
   getMyInternship */
 };
-

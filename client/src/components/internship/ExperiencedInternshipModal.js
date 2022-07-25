@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   Button,
   TextField,
@@ -12,12 +12,16 @@ import {
   InputLabel,
 } from "@mui/material";
 import { Add } from "@mui/icons-material";
+import { UserContext } from "../../App";
 
-const ExperiencedInternshipModal = ({ company, position, handleExperienced }) => {
-  const userInfo = localStorage.getItem("userInfo");
-
+const ExperiencedInternshipModal = ({
+  company,
+  position,
+  handleExperienced,
+}) => {
+  const userInfo = useContext(UserContext);
+  const userId = userInfo._id;
   const [open, setOpen] = useState(false);
-  const userId = JSON.parse(userInfo)._id;
   const [startDate, setstartDate] = useState("");
   const [endDate, setendDate] = useState("");
 
@@ -29,9 +33,13 @@ const ExperiencedInternshipModal = ({ company, position, handleExperienced }) =>
     setOpen(false);
   };
 
-  const handleChangeDate = (event) => {
+  const handleChangeDate = event => {
     setendDate(event.target.value);
   };
+
+  if (!userInfo) {
+    return <></>;
+  }
 
   return (
     <Box sx={{ width: "100%" }}>
@@ -46,8 +54,7 @@ const ExperiencedInternshipModal = ({ company, position, handleExperienced }) =>
         }}
         startIcon={<Add />}
         style={{ justifyContent: "center" }}
-        onClick={handleClickOpen}
-      >
+        onClick={handleClickOpen}>
         <Box sx={{ display: "flex", flexDirection: "column" }}>
           <Typography>Add to Internship Taken</Typography>
         </Box>
@@ -55,40 +62,44 @@ const ExperiencedInternshipModal = ({ company, position, handleExperienced }) =>
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Add to Internship Taken</DialogTitle>
         <DialogContent
-          sx={{ display: "flex", flexDirection: "column", width: "500px" }}
-        >
+          sx={{ display: "flex", flexDirection: "column", width: "500px" }}>
           <Typography sx={{ fontSize: 20 }}>
-            company: {company},
-            position: {position},
+            company: {company}, position: {position},
           </Typography>
           <Typography sx={{ fontSize: 20 }}>Start Date</Typography>
           <TextField
-            id="outlined-textarea"
+            id='outlined-textarea'
             maxRows={5}
             sx={{ my: 1 }}
             value={startDate}
-            onChange={(e) => setstartDate(e.target.value)}
+            onChange={e => setstartDate(e.target.value)}
           />
           <Typography sx={{ fontSize: 20 }}>End Date</Typography>
           <TextField
-            id="outlined-textarea"
+            id='outlined-textarea'
             maxRows={5}
             sx={{ my: 1 }}
             value={endDate}
-            onChange={(e) => setendDate(e.target.value)}
+            onChange={e => setendDate(e.target.value)}
           />
         </DialogContent>
         <DialogActions>
           <Box
-            component="form"
+            component='form'
             noValidate
-            onSubmit={(event) => {
-              handleExperienced(event, userId, company, position, startDate, endDate);
+            onSubmit={event => {
+              handleExperienced(
+                event,
+                userId,
+                company,
+                position,
+                startDate,
+                endDate
+              );
               handleClose();
-            }}
-          >
+            }}>
             <Button onClick={handleClose}>Cancel</Button>
-            <Button type="submit">Submit</Button>
+            <Button type='submit'>Submit</Button>
           </Box>
         </DialogActions>
       </Dialog>

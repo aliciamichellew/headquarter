@@ -23,7 +23,7 @@ import { useNavigate } from "react-router-dom";
 
 const drawerWidth = 240;
 
-const openedMixin = (theme) => ({
+const openedMixin = theme => ({
   width: drawerWidth,
   transition: theme.transitions.create("width", {
     easing: theme.transitions.easing.sharp,
@@ -32,7 +32,7 @@ const openedMixin = (theme) => ({
   overflowX: "hidden",
 });
 
-const closedMixin = (theme) => ({
+const closedMixin = theme => ({
   transition: theme.transitions.create("width", {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
@@ -55,7 +55,7 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 }));
 
 const Drawer = styled(MuiDrawer, {
-  shouldForwardProp: (prop) => prop !== "open",
+  shouldForwardProp: prop => prop !== "open",
 })(({ theme, open }) => ({
   width: drawerWidth,
   flexShrink: 0,
@@ -75,22 +75,20 @@ export default function SideDrawer({ open, handleDrawerClose, theme }) {
   const navigate = useNavigate();
   return (
     <Drawer
-      variant="permanent"
+      variant='permanent'
       open={open}
       PaperProps={{
         sx: {
           backgroundColor: "#1E2328",
           color: "#FFCE26",
         },
-      }}
-    >
+      }}>
       <DrawerHeader>
         <IconButton
           onClick={() => {
             handleDrawerClose();
           }}
-          sx={{ color: "#FFCE26" }}
-        >
+          sx={{ color: "#FFCE26" }}>
           {theme.direction === "rtl" ? <ChevronRight /> : <ChevronLeft />}
         </IconButton>
       </DrawerHeader>
@@ -103,25 +101,21 @@ export default function SideDrawer({ open, handleDrawerClose, theme }) {
           fontFamily={"Berlin Sans FB"}
           onClick={() => {
             navigate("/home");
-          }}
-        >
+          }}>
           <ListItemButton
             sx={{
               minHeight: 48,
               justifyContent: open ? "initial" : "center",
               px: 2.5,
               color: "#FFCE26",
-            }}
-            onClick={() => console.log("test")}
-          >
+            }}>
             <ListItemIcon
               sx={{
                 minWidth: 0,
                 mr: open ? 3 : "auto",
                 justifyContent: "center",
                 color: "#FFCE26",
-              }}
-            >
+              }}>
               <Home />
             </ListItemIcon>
             <ListItemText
@@ -137,24 +131,21 @@ export default function SideDrawer({ open, handleDrawerClose, theme }) {
           sx={{ display: "block", color: "#FFCE26" }}
           onClick={() => {
             navigate("/allmodules");
-          }}
-        >
+          }}>
           <ListItemButton
             sx={{
               minHeight: 48,
               justifyContent: open ? "initial" : "center",
               px: 2.5,
               color: "#FFCE26",
-            }}
-          >
+            }}>
             <ListItemIcon
               sx={{
                 minWidth: 0,
                 mr: open ? 3 : "auto",
                 justifyContent: "center",
                 color: "#FFCE26",
-              }}
-            >
+              }}>
               <ViewModule />
             </ListItemIcon>
             <ListItemText
@@ -168,26 +159,23 @@ export default function SideDrawer({ open, handleDrawerClose, theme }) {
           key={"Internships"}
           disablePadding
           sx={{ display: "block", color: "#FFCE26" }}
-           onClick={() => {
+          onClick={() => {
             navigate("/allinternship");
-          }}
-        >
+          }}>
           <ListItemButton
             sx={{
               minHeight: 48,
               justifyContent: open ? "initial" : "center",
               px: 2.5,
               color: "#FFCE26",
-            }}
-          >
+            }}>
             <ListItemIcon
               sx={{
                 minWidth: 0,
                 mr: open ? 3 : "auto",
                 justifyContent: "center",
                 color: "#FFCE26",
-              }}
-            >
+              }}>
               <Work />
             </ListItemIcon>
             <ListItemText
@@ -202,25 +190,22 @@ export default function SideDrawer({ open, handleDrawerClose, theme }) {
           disablePadding
           sx={{ display: "block", color: "#FFCE26" }}
           onClick={() => {
-            navigate("/profilepage");
-          }}
-        >
+            navigate("/myprofile");
+          }}>
           <ListItemButton
             sx={{
               minHeight: 48,
               justifyContent: open ? "initial" : "center",
               px: 2.5,
               color: "#FFCE26",
-            }}
-          >
+            }}>
             <ListItemIcon
               sx={{
                 minWidth: 0,
                 mr: open ? 3 : "auto",
                 justifyContent: "center",
                 color: "#FFCE26",
-              }}
-            >
+              }}>
               <AccountBox />
             </ListItemIcon>
             <ListItemText
@@ -237,24 +222,21 @@ export default function SideDrawer({ open, handleDrawerClose, theme }) {
           onClick={() => {
             localStorage.removeItem("userInfo");
             navigate("/");
-          }}
-        >
+          }}>
           <ListItemButton
             sx={{
               minHeight: 48,
               justifyContent: open ? "initial" : "center",
               px: 2.5,
               color: "#FFCE26",
-            }}
-          >
+            }}>
             <ListItemIcon
               sx={{
                 minWidth: 0,
                 mr: open ? 3 : "auto",
                 justifyContent: "center",
                 color: "#FFCE26",
-              }}
-            >
+              }}>
               <Logout />
             </ListItemIcon>
             <ListItemText

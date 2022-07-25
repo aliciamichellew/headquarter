@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import { styled, useTheme } from "@mui/material/styles";
 
@@ -34,6 +34,7 @@ import usePagination from "../utils/Pagination";
 import InternshipButton from "./internshipButton";
 import ExperiencedInternshipModal from "./ExperiencedInternshipModal";
 import DeleteExperiencedInternshipModal from "./DeleteExperiencedInternshipModal";
+import { UserContext } from "../../App";
 
 const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
@@ -44,54 +45,21 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   ...theme.mixins.toolbar,
 }));
 
-export default function InternshipPage(internship) {
-  const {id } = useParams();
+export default function InternshipPage() {
+  const { internshipId } = useParams();
   const [company, setCompany] = useState("");
   const [position, setPosition] = useState("");
   const [posts, setPosts] = useState([]);
   const theme = useTheme();
   const [open, setOpen] = useState(false);
-  const userInfo = localStorage.getItem("userInfo");
   const [sort, setSort] = useState("");
   const [loading, setLoading] = useState(false);
   const [internshipList, setInternshipList] = useState([]);
   const navigate = useNavigate();
-  const userInfoJSON = JSON.parse(userInfo);
   const [follow, setFollow] = useState();
-  const userId = userInfoJSON._id;
+  const { userInfo } = useContext(UserContext);
+  const userId = userInfo ? userInfo._id : null;
   const [experienced, setExperienced] = useState();
-
-  const checkFollow = async () => {
-    const config = {
-      headers: {
-        "Content-type": "application/json",
-      },
-      params: {
-        company:company,
-        postion: position,
-        userId: userInfoJSON._id,
-      },
-    };
-    const { data } = await axios.get(`/api/internships/checkinternship/${userId}`, {userId}, config);
-    setFollow(data);
-  };
-
-  const checkExperienced = async () => {
-    const config = {
-      headers: {
-        "Content-type": "application/json",
-      },
-      params: {
-        id: id,
-        userId: userInfoJSON._id,
-      },
-    };
-    const { data } = await axios.get(
-      `/api/internships/experiencedinterns`,
-      config
-    );
-    setExperienced(data);
-  };
 
   const getPosts = async () => {
     setLoading(true);
@@ -100,53 +68,83 @@ export default function InternshipPage(internship) {
         "Content-type": "application/json",
       },
       params: {
-        id: id,
-        userId: userInfoJSON._id,
+        id: internshipId,
+        userId: userId,
       },
     };
     const { data } = await axios.get(
-      `/api/post/getpostbyinternshipId/${id}`,
-      { id },
+      `/api/post/getpostbyinternshipId/${internshipId}`,
+      { internshipId },
       config
     );
     setPosts(data);
     setLoading(false);
   };
 
-  const getInternshipInfo = async (id) => {
-    setLoading(true);
-    const config = {
-      headers: {
-        "Content-type": "application/json",
-      },
-       params: {
-        id: id,
-      },
+  useEffect(() => {
+    const getInternshipInfo = async id => {
+      setLoading(true);
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+        },
+      };
+      const { data } = await axios.get(
+        `/api/internships/fetchInternship/${id}`,
+        { id },
+        config
+      );
+      setCompany(data.company);
+      setPosition(data.position);
+      setLoading(false);
     };
-    const { data } = await axios.get(
-      `/api/interships/fetchInternship/${id}`,
-      {id},
-      config
-    );
-    setCompany(data.company);
-    setPosition(data.position);
-    setLoading(false);
-  };
-
-  useEffect(() => {
-    const userInfo = localStorage.getItem("userInfo");
-
-    if (!userInfo) {
-      navigate("/");
+    if (internshipId) {
+      getInternshipInfo(internshipId);
     }
-  });
+  }, [internshipId]);
 
   useEffect(() => {
-    getInternshipInfo();
-    checkFollow();
-    checkExperienced();
-    getPosts();
-  }, [id]);
+    const checkFollow = async userId => {
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+        },
+        params: {
+          company: company,
+          postion: position,
+          userId: userId,
+        },
+      };
+      const { data } = await axios.get(
+        `/api/internships/checkinternship/${userId}`,
+        { userId },
+        config
+      );
+      setFollow(data);
+    };
+    const checkExperienced = async (id, userId) => {
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+        },
+        params: {
+          id: id,
+          userId: userId,
+        },
+      };
+      const { data } = await axios.get(
+        `/api/internships/experiencedinterns`,
+        config
+      );
+      setExperienced(data);
+    };
+
+    if (internshipId && userId) {
+      checkExperienced(internshipId, userId);
+      checkFollow(userId);
+      getPosts();
+    }
+  }, [internshipId, userId]);
 
   const [page, setPage] = useState(1);
   const PER_PAGE = 10;
@@ -161,18 +159,18 @@ export default function InternshipPage(internship) {
     setOpen(false);
   };
 
-  const handleChange = (event) => {
+  const handleChange = event => {
     setSort(event.target.value);
   };
 
-  const handleChangeFollow = async (e) => {
+  const handleChangeFollow = async e => {
     if (!follow) {
       await axios({
         method: "put",
         url: "/api/profile/followinternship",
         data: {
-          id: id,
-          userId: userInfoJSON._id,
+          id: internshipId,
+          userId: userId,
         },
       });
       setFollow(true);
@@ -181,8 +179,8 @@ export default function InternshipPage(internship) {
         method: "put",
         url: "/api/profile/unfollowinternship",
         data: {
-          id: id,
-          userId: userInfoJSON._id,
+          id: internshipId,
+          userId: userId,
         },
       });
       setFollow(false);
@@ -190,7 +188,7 @@ export default function InternshipPage(internship) {
   };
 
   useEffect(() => {
-    const fetchInternships = async () => {
+    const fetchInternships = async userId => {
       setLoading(true);
       const config = {
         headers: {
@@ -205,11 +203,13 @@ export default function InternshipPage(internship) {
       setInternshipList(data);
       setLoading(false);
     };
-    fetchInternships();
-  }, [id]);
+    if (userId) {
+      fetchInternships(userId);
+    }
+  }, [userId]);
 
   const [searchQuery, setSearchQuery] = useState("");
-  const handleSubmit = async (e) => {
+  const handleSubmit = async e => {
     e.preventDefault();
     try {
       const config = {
@@ -234,17 +234,8 @@ export default function InternshipPage(internship) {
 
   let users = [{ name: "User 1" }, { name: "User 2" }, { name: "User 3" }];
 
-  const handleCreatePost = async (
-    event,
-    _id,
-    isAnonymous,
-    text,
-    title,
-    company, 
-    position
-  ) => {
+  const handleCreatePost = async (event, _id, isAnonymous, text, title) => {
     event.preventDefault();
-
     try {
       const config = {
         headers: {
@@ -255,7 +246,7 @@ export default function InternshipPage(internship) {
       const currentPosts = [...posts];
       const { data } = await axios.post(
         "/api/post/add2",
-        { _id, isAnonymous, text, title, company, position },
+        { _id, isAnonymous, text, title, company, position, internshipId },
         config
       );
       currentPosts.push(data);
@@ -372,8 +363,8 @@ export default function InternshipPage(internship) {
       method: "put",
       url: "/api/profile/experiencedinternship",
       data: {
-        id: id,
-        userId: userInfoJSON._id,
+        id: internshipId,
+        userId: userId,
         startDate: startDate,
         endDate: endDate,
       },
@@ -386,8 +377,8 @@ export default function InternshipPage(internship) {
       method: "put",
       url: "/api/profile/unexperiencedinternship",
       data: {
-        id:id,
-        userId: userInfoJSON._id,
+        id: internshipId,
+        userId: userId,
       },
     });
     setExperienced(false);
@@ -397,6 +388,11 @@ export default function InternshipPage(internship) {
     setPage(p);
     _DATA.jump(p);
   };
+
+  if (!userInfo) {
+    navigate("/");
+    return <></>;
+  }
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -410,17 +406,16 @@ export default function InternshipPage(internship) {
         handleDrawerClose={handleDrawerClose}
         theme={theme}
       />
-      <Box component="main" sx={{ flexGrow: 1, pt: 0 }}>
+      <Box component='main' sx={{ flexGrow: 1, pt: 0 }}>
         <Grid
           container
-          component="main"
+          component='main'
           sx={{
             minHeight: "100vh",
             backgroundColor: "#FFCE26",
             display: "flex",
             alignContent: "flex-start",
-          }}
-        >
+          }}>
           <DrawerHeader />
           <Box
             sx={{
@@ -430,8 +425,7 @@ export default function InternshipPage(internship) {
               display: "flex",
               flexDirection: "column",
               width: "100%",
-            }}
-          >
+            }}>
             <Card sx={{ backgroundColor: "#1E2328", pl: 2, pt: 1, pb: 1 }}>
               <Box
                 sx={{
@@ -439,14 +433,13 @@ export default function InternshipPage(internship) {
                   flexDirection: "row",
                   justifyContent: "space-between",
                   width: "100%",
-                }}
-              >
+                }}>
                 <Box sx={{ display: "flex", flexDirection: "column" }}>
                   <Typography sx={{ fontSize: 40, color: "#FFCE26" }}>
-                    {setCompany}
+                    {company}
                   </Typography>
                   <Typography sx={{ fontSize: 40, color: "#FFCE26" }}>
-                    {setPosition}
+                    {position}
                   </Typography>
                 </Box>
                 <Box
@@ -456,8 +449,7 @@ export default function InternshipPage(internship) {
                     justifyContent: "flex-end",
                     justifyItems: "center",
                     alignItems: "center",
-                  }}
-                >
+                  }}>
                   {!experienced && (
                     <ExperiencedInternshipModal
                       company={company}
@@ -481,23 +473,25 @@ export default function InternshipPage(internship) {
                         onChange={handleChangeFollow}
                       />
                     }
-                    label={follow ? "Added to My Internships" : "Add to My Internships"}
+                    label={
+                      follow
+                        ? "Added to My Internships"
+                        : "Add to My Internships"
+                    }
                     sx={{ color: "#FFCE26" }}
                   />
                   <FormControl
-                    sx={{ mx: 2, minWidth: 120, borderColor: "#FFCE26" }}
-                  >
+                    sx={{ mx: 2, minWidth: 120, borderColor: "#FFCE26" }}>
                     <InputLabel
-                      id="demo-simple-select-helper-label"
-                      sx={{ color: "#FFCE26", borderColor: "#FFCE26" }}
-                    >
+                      id='demo-simple-select-helper-label'
+                      sx={{ color: "#FFCE26", borderColor: "#FFCE26" }}>
                       Sort
                     </InputLabel>
                     <Select
-                      labelId="demo-simple-select-helper-label"
-                      id="demo-simple-select-helper"
+                      labelId='demo-simple-select-helper-label'
+                      id='demo-simple-select-helper'
                       value={sort}
-                      label="Sort"
+                      label='Sort'
                       onChange={handleChange}
                       sx={{
                         border: "1px solid #FFCE26",
@@ -505,9 +499,8 @@ export default function InternshipPage(internship) {
                         "& .MuiSvgIcon-root": {
                           color: "#FFCE26",
                         },
-                      }}
-                    >
-                      <MenuItem value="">{/* <em>Latest</em> */}</MenuItem>
+                      }}>
+                      <MenuItem value=''>{/* <em>Latest</em> */}</MenuItem>
                       <MenuItem value={"latest"}>Latest</MenuItem>
                       <MenuItem value={"mostliked"}>Most Liked</MenuItem>
                     </Select>
@@ -519,15 +512,14 @@ export default function InternshipPage(internship) {
             <Box sx={{ display: "flex", flexDirection: "row", gap: 5, mt: 3 }}>
               <Box sx={{ width: "25%" }}>
                 <Box
-                  component="form"
+                  component='form'
                   noValidate
                   onSubmit={handleSubmit}
                   sx={{
                     display: "flex",
                     justifyContent: "flex-start",
                     flexDirection: "row",
-                  }}
-                >
+                  }}>
                   <Box
                     sx={{
                       display: "flex",
@@ -535,32 +527,30 @@ export default function InternshipPage(internship) {
                       justifyItems: "center",
                       width: "70%",
                       mr: 1,
-                    }}
-                  >
+                    }}>
                     <SearchIcon
                       sx={{ color: "action.active", mr: 1, my: 0.5 }}
                     />
                     <TextField
-                      id="searchQuery"
-                      label="Search by company or position"
-                      variant="standard"
+                      id='searchQuery'
+                      label='Search by company or position'
+                      variant='standard'
                       sx={{ width: "100%" }}
                       value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
+                      onChange={e => setSearchQuery(e.target.value)}
                     />
                   </Box>
                   <Button
-                    type="submit"
+                    type='submit'
                     fullWidth
-                    variant="contained"
+                    variant='contained'
                     sx={{
                       mb: 0,
                       color: "#FFCE26",
                       backgroundColor: "#1E2328",
                       width: "30%",
                       height: 40,
-                    }}
-                  >
+                    }}>
                     <Typography fontFamily={"Berlin Sans FB"}>
                       Search
                     </Typography>
@@ -573,9 +563,8 @@ export default function InternshipPage(internship) {
                     alignItems: "flex-start",
                     mt: 3,
                     width: "100%",
-                  }}
-                >
-                  {internshipList.slice(0, 10).map((internships) => (
+                  }}>
+                  {internshipList.slice(0, 10).map(internships => (
                     <InternshipButton
                       company={internships.company}
                       position={internships.position}
@@ -585,9 +574,9 @@ export default function InternshipPage(internship) {
                 </Box>
                 <Box>
                   <Button
-                    type="submit"
+                    type='submit'
                     fullWidth
-                    variant="contained"
+                    variant='contained'
                     sx={{
                       mt: 2,
                       mb: 0,
@@ -598,8 +587,7 @@ export default function InternshipPage(internship) {
                     }}
                     onClick={() => {
                       navigate("/myinternship");
-                    }}
-                  >
+                    }}>
                     <Typography fontFamily={"Berlin Sans FB"}>
                       View All My Internships
                     </Typography>
@@ -612,27 +600,24 @@ export default function InternshipPage(internship) {
                   flexDirection: "column",
                   alignItems: "center",
                   width: "50%",
-                }}
-              >
+                }}>
                 <Card
                   sx={{
                     display: "flex",
                     flexDirection: "row",
                     mb: 3,
                     width: "100%",
-                  }}
-                >
+                  }}>
                   <Box
                     sx={{
                       display: "flex",
                       flexDirection: "row",
                       m: 2,
                       width: "100%",
-                    }}
-                  >
+                    }}>
                     <img
                       src={profile}
-                      alt="profile"
+                      alt='profile'
                       style={{
                         width: 40,
                         marginRight: 10,
@@ -640,8 +625,8 @@ export default function InternshipPage(internship) {
                       }}
                     />
                     <AddPostModal
-                      company= {company}
-                      position= {position}
+                      company={company}
+                      position={position}
                       handleSubmit={handleCreatePost}
                     />
                   </Box>
@@ -654,13 +639,11 @@ export default function InternshipPage(internship) {
                     padding: 0,
                     gap: 3,
                     width: "100%",
-                  }}
-                >
+                  }}>
                   {loading && <CircularProgress />}
-                  {_DATA.currentData().map((posts) => (
+                  {_DATA.currentData().map(posts => (
                     <PostCard
                       posts={posts}
-                      userInfo={userInfo}
                       handleAddComment={handleAddComment}
                       handleEditPost={handleEditPost}
                       handleDeletePost={handleDeletePost}
@@ -682,12 +665,11 @@ export default function InternshipPage(internship) {
                 />
               </Box>
               <Box
-                sx={{ display: "flex", flexDirection: "column", width: "25%" }}
-              >
+                sx={{ display: "flex", flexDirection: "column", width: "25%" }}>
                 <Typography sx={{ fontSize: 30, mb: 3 }}>
                   Experienced Users
                 </Typography>
-                <UserCard users={users}/>
+                <UserCard users={users} />
               </Box>
             </Box>
           </Box>

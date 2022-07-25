@@ -44,23 +44,23 @@ export default function App() {
     <ThemeProvider theme={theme}>
       <UserContext.Provider value={{ userInfo, setUserInfo }}>
         <Routes>
-          <Route exact path="/" element={<Landing />} />
-          <Route path="/home" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<SignUp />} />
-          <Route path="/myprofile" element={<MyProfilePage />} />
-          <Route path="/allmodules" element={<AllModules />} />
-          <Route path="/mymodules" element={<MyModules />} />
-          <Route path="/profile/:username" element={<ProfilePage />} />
-          <Route path="/modules/:moduleCode" element={<ModulePage />} />
-          <Route path="/commentpage/:postId" element={<CommentPage />} />
-          <Route path="/allinternship" element={<AllInternship />} />
-          <Route path="/myinternship" element={<MyInternship />} />
+          <Route exact path='/' element={<Landing />} />
+          <Route path='/home' element={<Home />} />
+          <Route path='/login' element={<Login />} />
+          <Route path='/signup' element={<SignUp />} />
+          <Route path='/myprofile' element={<MyProfilePage />} />
+          <Route path='/allmodules' element={<AllModules />} />
+          <Route path='/mymodules' element={<MyModules />} />
+          <Route path='/profile/:username' element={<ProfilePage />} />
+          <Route path='/modules/:moduleCode' element={<ModulePage />} />
+          <Route path='/commentpage/:postId' element={<CommentPage />} />
+          <Route path='/allinternship' element={<AllInternship />} />
+          <Route path='/myinternship' element={<MyInternship />} />
           <Route
-            path="/internships/:internshipId"
+            path='/internships/:internshipId'
             element={<InternshipPage />}
           />
-          <Route path="/chats" element={<ChatPage />} />
+          <Route path='/chats' element={<ChatPage />} />
         </Routes>
       </UserContext.Provider>
     </ThemeProvider>
