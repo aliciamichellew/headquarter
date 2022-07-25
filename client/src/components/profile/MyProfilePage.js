@@ -202,6 +202,7 @@ export default function MyProfilePage() {
     getUserProfile();
     getMyModules();
     getMyFriends();
+    getMyInternships();
   }, []);
 
   const theme = useTheme();
