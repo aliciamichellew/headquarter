@@ -9,7 +9,7 @@ const profileRoutes = require("./routes/profileRoutes");
 const postRoutes = require("./routes/postRoutes");
 const messageRoutes = require("./routes/messageRoutes");
 const internshipRoutes = require("./routes/Internshiproutes");
-const chatRoutes = require("./routes/chatRoutes")
+const chatRoutes = require("./routes/chatRoutes");
 const cors = require("cors");
 var bodyParser = require("body-parser");
 const { notFound, errorHandler } = require("./middlewares/errorMiddleware");
@@ -23,6 +23,26 @@ dotenv.config();
 mongoose.connect(process.env.DATABASE_ACCESS, () =>
   console.log("Database connected")
 );
+
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static("client/build"));
+
+  app.get("*", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
+  });
+
+  app.use(function (req, res, next) {
+    res.header(
+      "Access-Control-Allow-Origin",
+      "https://headquarter-orbital.herokuapp.com"
+    ); // update to match the domain you will make the request from
+    res.header(
+      "Access-Control-Allow-Headers",
+      "Origin, X-Requested-With, Content-Type, Accept"
+    );
+    next();
+  });
+}
 
 // app.use(express.json());
 app.use(express.json({ limit: "50mb" }));
