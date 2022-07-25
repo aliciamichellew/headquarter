@@ -35,7 +35,7 @@ export default function Home() {
   const [internships, setInternships] = useState([]);
   const [friends, setFriends] = useState([]);
   const [loading, setLoading] = useState(false);
-  const { user } = useAppContext;
+  const { user } = useContext(UserContext);
 
   useEffect(() => {
     const getMyModules = async userId => {
