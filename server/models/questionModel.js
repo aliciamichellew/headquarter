@@ -52,7 +52,16 @@ const QuestionSchema = new mongoose.Schema({
   ],
   moduleCode: {
     type: String,
-    required: true,
+  },
+  company: {
+    type: String,
+  },
+  position: {
+    type: String,
+  },
+  internshipId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Internship",
   },
   date: {
     type: Date,

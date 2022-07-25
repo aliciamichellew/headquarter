@@ -31,10 +31,9 @@ import PostCard from "../../posts/PostCard";
 import AddPostModal from "../../posts/AddPostModal";
 import profile from "../../img/profile.png";
 import usePagination from "../utils/Pagination";
-import ModuleButton from "./ModuleButton";
-import ExperiencedModuleModal from "./ExperiencedModuleModal";
-import DeleteExperiencedModuleModal from "./DeleteExperiencedModuleModal";
-import ProfileAvatar from "../profile/ProfileAvatar";
+import InternshipButton from "./internshipButton";
+import ExperiencedInternshipModal from "./ExperiencedInternshipModal";
+import DeleteExperiencedInternshipModal from "./DeleteExperiencedInternshipModal";
 import { UserContext } from "../../App";
 
 const DrawerHeader = styled("div")(({ theme }) => ({
@@ -46,60 +45,21 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   ...theme.mixins.toolbar,
 }));
 
-export default function ModulePage(module) {
-  const { moduleCode } = useParams();
-  const [title, setTitle] = useState("");
+export default function InternshipPage() {
+  const { internshipId } = useParams();
+  const [company, setCompany] = useState("");
+  const [position, setPosition] = useState("");
   const [posts, setPosts] = useState([]);
   const theme = useTheme();
   const [open, setOpen] = useState(false);
   const [sort, setSort] = useState("");
   const [loading, setLoading] = useState(false);
-  const [moduleList, setModuleList] = useState([]);
+  const [internshipList, setInternshipList] = useState([]);
   const navigate = useNavigate();
   const [follow, setFollow] = useState();
   const { userInfo } = useContext(UserContext);
   const userId = userInfo ? userInfo._id : null;
   const [experienced, setExperienced] = useState();
-  const [profilePic, setProfilePic] = useState("");
-  const [experiencedUserList, setExperiencedUserlist] = useState([]);
-
-  const checkFollow = async () => {
-    try {
-      const config = {
-        headers: {
-          "Content-type": "application/json",
-        },
-        params: {
-          moduleCode: moduleCode,
-          userId: userId,
-        },
-      };
-      const { data } = await axios.get(
-        `/api/modules/checkfollowmodule`,
-        config
-      );
-      setFollow(data);
-    } catch (err) {
-      // checkTokenValid(err, navigate);
-    }
-  };
-
-  const checkExperienced = async () => {
-    const config = {
-      headers: {
-        "Content-type": "application/json",
-      },
-      params: {
-        moduleCode: moduleCode,
-        userId: userId,
-      },
-    };
-    const { data } = await axios.get(
-      `/api/modules/checkexperiencedmodule`,
-      config
-    );
-    setExperienced(data);
-  };
 
   const getPosts = async () => {
     setLoading(true);
@@ -107,55 +67,84 @@ export default function ModulePage(module) {
       headers: {
         "Content-type": "application/json",
       },
+      params: {
+        id: internshipId,
+        userId: userId,
+      },
     };
     const { data } = await axios.get(
-      `/api/post/getpostbymodulecode/${moduleCode}`,
-      { moduleCode },
+      `/api/post/getpostbyinternshipId/${internshipId}`,
+      { internshipId },
       config
     );
     setPosts(data);
     setLoading(false);
   };
 
-  const getModulesInfo = async () => {
-    setLoading(true);
-    const config = {
-      headers: {
-        "Content-type": "application/json",
-      },
+  useEffect(() => {
+    const getInternshipInfo = async id => {
+      setLoading(true);
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+        },
+      };
+      const { data } = await axios.get(
+        `/api/internships/fetchInternship/${id}`,
+        { id },
+        config
+      );
+      setCompany(data.company);
+      setPosition(data.position);
+      setLoading(false);
     };
-    const { data } = await axios.get(
-      `/api/modules/searchModules/${moduleCode}`,
-      { moduleCode },
-      config
-    );
-    setTitle(data.title);
-    setLoading(false);
-  };
-
-  const getExperiencedUser = async () => {
-    setLoading(true);
-    const config = {
-      headers: {
-        "Content-type": "application/json",
-      },
-    };
-    const { data } = await axios.get(
-      `/api/modules/getexperiencedusers/${moduleCode}`,
-      { moduleCode },
-      config
-    );
-    setExperiencedUserlist(data);
-    setLoading(false);
-  };
+    if (internshipId) {
+      getInternshipInfo(internshipId);
+    }
+  }, [internshipId]);
 
   useEffect(() => {
-    getModulesInfo();
-    checkFollow();
-    checkExperienced();
-    getPosts();
-    getExperiencedUser();
-  }, [moduleCode]);
+    const checkFollow = async userId => {
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+        },
+        params: {
+          company: company,
+          postion: position,
+          userId: userId,
+        },
+      };
+      const { data } = await axios.get(
+        `/api/internships/checkinternship/${userId}`,
+        { userId },
+        config
+      );
+      setFollow(data);
+    };
+    const checkExperienced = async (id, userId) => {
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+        },
+        params: {
+          id: id,
+          userId: userId,
+        },
+      };
+      const { data } = await axios.get(
+        `/api/internships/experiencedinterns`,
+        config
+      );
+      setExperienced(data);
+    };
+
+    if (internshipId && userId) {
+      checkExperienced(internshipId, userId);
+      checkFollow(userId);
+      getPosts();
+    }
+  }, [internshipId, userId]);
 
   const [page, setPage] = useState(1);
   const PER_PAGE = 10;
@@ -178,9 +167,9 @@ export default function ModulePage(module) {
     if (!follow) {
       await axios({
         method: "put",
-        url: "/api/profile/followmodule",
+        url: "/api/profile/followinternship",
         data: {
-          moduleCode: moduleCode,
+          id: internshipId,
           userId: userId,
         },
       });
@@ -188,9 +177,9 @@ export default function ModulePage(module) {
     } else {
       await axios({
         method: "put",
-        url: "/api/profile/unfollowmodule",
+        url: "/api/profile/unfollowinternship",
         data: {
-          moduleCode: moduleCode,
+          id: internshipId,
           userId: userId,
         },
       });
@@ -199,7 +188,7 @@ export default function ModulePage(module) {
   };
 
   useEffect(() => {
-    const fetchModules = async userId => {
+    const fetchInternships = async userId => {
       setLoading(true);
       const config = {
         headers: {
@@ -207,33 +196,15 @@ export default function ModulePage(module) {
         },
       };
       const { data } = await axios.get(
-        `/api/modules/mymodules/${userId}`,
+        `/api/internships/myinternships/${userId}`,
         { userId },
         config
       );
-      setModuleList(data);
+      setInternshipList(data);
       setLoading(false);
     };
-    const getUserProfile = async userId => {
-      try {
-        setLoading(false);
-        const config = {
-          headers: {
-            "Content-type": "application/json",
-          },
-        };
-        const { data } = await axios.get(
-          `/api/profile/getprofile/${userId}`,
-          { userId },
-          config
-        );
-        setProfilePic(data.profilePic || "");
-        setLoading(false);
-      } catch (err) {}
-    };
     if (userId) {
-      fetchModules(userId);
-      getUserProfile(userId);
+      fetchInternships(userId);
     }
   }, [userId]);
 
@@ -249,30 +220,22 @@ export default function ModulePage(module) {
 
       setLoading(true);
       const { data } = await axios.get(
-        `/api/modules/mymodules/search/${userId}/${searchQuery}`,
+        `/api/internships/myinternship/search/${userId}/${searchQuery}`,
         { userId, searchQuery },
         config
       );
 
-      setModuleList(data);
+      setInternshipList(data);
       setLoading(false);
     } catch (error) {
       throw error.message;
     }
   };
 
-  // let users = [{ name: "User 1" }, { name: "User 2" }, { name: "User 3" }];
+  let users = [{ name: "User 1" }, { name: "User 2" }, { name: "User 3" }];
 
-  const handleCreatePost = async (
-    event,
-    _id,
-    isAnonymous,
-    text,
-    title,
-    moduleCode
-  ) => {
+  const handleCreatePost = async (event, _id, isAnonymous, text, title) => {
     event.preventDefault();
-
     try {
       const config = {
         headers: {
@@ -282,8 +245,8 @@ export default function ModulePage(module) {
 
       const currentPosts = [...posts];
       const { data } = await axios.post(
-        "/api/post/add",
-        { _id, isAnonymous, text, title, moduleCode },
+        "/api/post/add2",
+        { _id, isAnonymous, text, title, company, position, internshipId },
         config
       );
       currentPosts.push(data);
@@ -391,29 +354,30 @@ export default function ModulePage(module) {
   const handleExperienced = async (
     event,
     userId,
-    moduleCode,
-    acadYear,
-    semester
+    company,
+    position,
+    startDate,
+    endDate
   ) => {
     await axios({
       method: "put",
-      url: "/api/profile/experiencedmodule",
+      url: "/api/profile/experiencedinternship",
       data: {
-        moduleCode: moduleCode,
+        id: internshipId,
         userId: userId,
-        acadYear: acadYear,
-        semester: semester,
+        startDate: startDate,
+        endDate: endDate,
       },
     });
     setExperienced(true);
   };
 
-  const handleRemoveExperienced = async (event, moduleCode) => {
+  const handleRemoveExperienced = async (event, company, position) => {
     await axios({
       method: "put",
-      url: "/api/profile/unexperiencedmodule",
+      url: "/api/profile/unexperiencedinternship",
       data: {
-        moduleCode: moduleCode,
+        id: internshipId,
         userId: userId,
       },
     });
@@ -425,7 +389,7 @@ export default function ModulePage(module) {
     _DATA.jump(p);
   };
 
-  if (!userInfo || !userId) {
+  if (!userInfo) {
     navigate("/");
     return <></>;
   }
@@ -472,10 +436,10 @@ export default function ModulePage(module) {
                 }}>
                 <Box sx={{ display: "flex", flexDirection: "column" }}>
                   <Typography sx={{ fontSize: 40, color: "#FFCE26" }}>
-                    {moduleCode.toUpperCase()}
+                    {company}
                   </Typography>
                   <Typography sx={{ fontSize: 40, color: "#FFCE26" }}>
-                    {title}
+                    {position}
                   </Typography>
                 </Box>
                 <Box
@@ -487,14 +451,16 @@ export default function ModulePage(module) {
                     alignItems: "center",
                   }}>
                   {!experienced && (
-                    <ExperiencedModuleModal
-                      moduleCode={moduleCode}
+                    <ExperiencedInternshipModal
+                      company={company}
+                      position={position}
                       handleExperienced={handleExperienced}
                     />
                   )}
                   {experienced && (
-                    <DeleteExperiencedModuleModal
-                      moduleCode={moduleCode}
+                    <DeleteExperiencedInternshipModal
+                      company={company}
+                      position={position}
                       handleRemoveExperienced={handleRemoveExperienced}
                     />
                   )}
@@ -507,7 +473,11 @@ export default function ModulePage(module) {
                         onChange={handleChangeFollow}
                       />
                     }
-                    label={follow ? "Added to My Modules" : "Add to My Modules"}
+                    label={
+                      follow
+                        ? "Added to My Internships"
+                        : "Add to My Internships"
+                    }
                     sx={{ color: "#FFCE26" }}
                   />
                   <FormControl
@@ -563,7 +533,7 @@ export default function ModulePage(module) {
                     />
                     <TextField
                       id='searchQuery'
-                      label='Search by Module Code'
+                      label='Search by company or position'
                       variant='standard'
                       sx={{ width: "100%" }}
                       value={searchQuery}
@@ -594,10 +564,11 @@ export default function ModulePage(module) {
                     mt: 3,
                     width: "100%",
                   }}>
-                  {moduleList.slice(0, 10).map(modules => (
-                    <ModuleButton
-                      moduleCode={modules.moduleCode}
-                      moduleTitle={modules.title}
+                  {internshipList.slice(0, 10).map(internships => (
+                    <InternshipButton
+                      company={internships.company}
+                      position={internships.position}
+                      internshipId={internships._id}
                     />
                   ))}
                 </Box>
@@ -615,10 +586,10 @@ export default function ModulePage(module) {
                       height: 40,
                     }}
                     onClick={() => {
-                      navigate("/mymodules");
+                      navigate("/myinternship");
                     }}>
                     <Typography fontFamily={"Berlin Sans FB"}>
-                      View All My Modules
+                      View All My Internships
                     </Typography>
                   </Button>
                 </Box>
@@ -643,24 +614,19 @@ export default function ModulePage(module) {
                       flexDirection: "row",
                       m: 2,
                       width: "100%",
-                      gap: 1,
                     }}>
-                    {!profilePic && (
-                      <img
-                        src={profile}
-                        alt='profile'
-                        style={{
-                          width: 40,
-                          marginRight: 5,
-                          borderRadius: "50%",
-                        }}
-                      />
-                    )}
-                    {profilePic && (
-                      <ProfileAvatar profilePic={profilePic} width={40} />
-                    )}
+                    <img
+                      src={profile}
+                      alt='profile'
+                      style={{
+                        width: 40,
+                        marginRight: 10,
+                        borderRadius: "50%",
+                      }}
+                    />
                     <AddPostModal
-                      moduleCode={moduleCode}
+                      company={company}
+                      position={position}
                       handleSubmit={handleCreatePost}
                     />
                   </Box>
@@ -703,12 +669,7 @@ export default function ModulePage(module) {
                 <Typography sx={{ fontSize: 30, mb: 3 }}>
                   Experienced Users
                 </Typography>
-                {experiencedUserList.map(users => (
-                  <UserCard
-                    users={users.user}
-                    content={`${users.acadYear}Semester ${users.semester}`}
-                  />
-                ))}
+                <UserCard users={users} />
               </Box>
             </Box>
           </Box>

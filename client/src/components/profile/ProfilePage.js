@@ -118,7 +118,6 @@ export default function ProfilePage() {
       },
     };
     const { data } = await axios.get(`/api/profile/checkfollowuser`, config);
-    console.log(data);
     setFollow(data);
   };
 
@@ -183,13 +182,6 @@ export default function ProfilePage() {
       setLoading(false);
     } catch (error) {}
   };
-  useEffect(() => {
-    const userInfo = localStorage.getItem("userInfo");
-
-    if (!userInfo) {
-      navigate("/");
-    }
-  });
 
   const handleChangeFollow = async e => {
     if (!follow) {

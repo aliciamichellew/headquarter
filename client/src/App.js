@@ -1,5 +1,5 @@
 import "./styles.css";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import React, { createContext, useState, useEffect } from "react";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import Landing from "./components/auth/LoginPage";
@@ -15,6 +15,10 @@ import setAuthToken from "./components/utils/setAuthToken";
 import CommentPage from "./posts/CommentPage";
 import MyModules from "./components/modules/MyModules";
 import MyProfilePage from "./components/profile/MyProfilePage";
+import AllInternship from "./components/internship/AllInternship";
+import MyInternship from "./components/internship/MyInternships";
+import InternshipPage from "./components/internship/InternshipPage";
+import ChatPage from "./components/chat/ChatPage";
 
 const theme = createTheme({
   typography: {
@@ -39,20 +43,25 @@ export default function App() {
   return (
     <ThemeProvider theme={theme}>
       <UserContext.Provider value={{ userInfo, setUserInfo }}>
-        <BrowserRouter>
-          <Routes>
-            <Route exact path='/' element={<Landing />} />
-            <Route path='/home' element={<Home />} />
-            <Route path='/login' element={<Login />} />
-            <Route path='/signup' element={<SignUp />} />
-            <Route path='/myprofile' element={<MyProfilePage />} />
-            <Route path='/allmodules' element={<AllModules />} />
-            <Route path='/mymodules' element={<MyModules />} />
-            <Route path='/profile/:username' element={<ProfilePage />} />
-            <Route path='/modules/:moduleCode' element={<ModulePage />} />
-            <Route path='/commentpage/:postId' element={<CommentPage />} />
-          </Routes>
-        </BrowserRouter>
+        <Routes>
+          <Route exact path='/' element={<Landing />} />
+          <Route path='/home' element={<Home />} />
+          <Route path='/login' element={<Login />} />
+          <Route path='/signup' element={<SignUp />} />
+          <Route path='/myprofile' element={<MyProfilePage />} />
+          <Route path='/allmodules' element={<AllModules />} />
+          <Route path='/mymodules' element={<MyModules />} />
+          <Route path='/profile/:username' element={<ProfilePage />} />
+          <Route path='/modules/:moduleCode' element={<ModulePage />} />
+          <Route path='/commentpage/:postId' element={<CommentPage />} />
+          <Route path='/allinternship' element={<AllInternship />} />
+          <Route path='/myinternship' element={<MyInternship />} />
+          <Route
+            path='/internships/:internshipId'
+            element={<InternshipPage />}
+          />
+          <Route path='/chats' element={<ChatPage />} />
+        </Routes>
       </UserContext.Provider>
     </ThemeProvider>
   );

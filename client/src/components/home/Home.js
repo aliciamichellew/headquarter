@@ -16,6 +16,7 @@ import SideDrawer from "../../components/drawer/SideNav";
 import ModuleButton from "../modules/ModuleButton";
 import axios from "axios";
 import ProfileButton from "../profile/ProfileButton";
+import InternshipButton from "../internship/internshipButton";
 import { UserContext } from "../../App";
 
 const DrawerHeader = styled("div")(({ theme }) => ({
@@ -30,10 +31,10 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 export default function Home() {
   const navigate = useNavigate();
   const [modules, setModules] = useState([]);
+  const [internships, setInternships] = useState([]);
   const [friends, setFriends] = useState([]);
   const [loading, setLoading] = useState(false);
   const { userInfo } = useContext(UserContext);
-  console.log("user info = ", userInfo);
 
   useEffect(() => {
     const getMyModules = async userId => {
@@ -51,6 +52,24 @@ export default function Home() {
         );
 
         setModules(data);
+        setLoading(false);
+      } catch (error) {}
+    };
+    const getMyInternships = async userId => {
+      try {
+        setLoading(false);
+        const config = {
+          headers: {
+            "Content-type": "application/json",
+          },
+        };
+        const { data } = await axios.get(
+          `/api/internships/myinternship/${userId}`,
+          { userId },
+          config
+        );
+
+        setInternships(data);
         setLoading(false);
       } catch (error) {}
     };
@@ -76,6 +95,7 @@ export default function Home() {
     if (userInfo) {
       getMyModules(userInfo._id);
       getMyFriends(userInfo._id);
+      getMyInternships(userInfo._id);
     } else {
       navigate("/");
     }
@@ -211,57 +231,26 @@ export default function Home() {
                   <CardContent>
                     <Box component='form' noValidate sx={{ mt: 0 }}>
                       <Box sx={{ display: "flex", flexDirection: "column" }}>
-                        <Button
-                          size='large'
-                          sx={{
-                            color: "#000000",
-                            ":hover": {
-                              bgcolor: "#FFCE26",
-                            },
-                            textAlign: "left",
-                          }}
-                          style={{ justifyContent: "flex-start" }}>
-                          <Typography fontFamily={"Berlin Sans FB"}>
-                            Software Engineer
-                          </Typography>
-                        </Button>
-                        <Button
-                          size='large'
-                          sx={{
-                            color: "#000000",
-                            ":hover": {
-                              bgcolor: "#FFCE26",
-                            },
-                            textAlign: "left",
-                          }}
-                          style={{ justifyContent: "flex-start" }}>
-                          <Typography fontFamily={"Berlin Sans FB"}>
-                            Data Analyst
-                          </Typography>
-                        </Button>
-                        <Button
-                          size='large'
-                          sx={{
-                            color: "#000000",
-                            ":hover": {
-                              bgcolor: "#FFCE26",
-                            },
-                            textAlign: "left",
-                          }}
-                          style={{ justifyContent: "flex-start" }}>
-                          <Typography fontFamily={"Berlin Sans FB"}>
-                            Product Manager
-                          </Typography>
-                        </Button>
+                        {internships.map(internships => (
+                          <InternshipButton
+                            company={internships.company}
+                            position={internships.position}
+                            internshipId={internships._id}
+                          />
+                        ))}
                         <Button
                           type='submit'
                           fullWidth
                           variant='contained'
+                          size='large'
                           sx={{
                             mt: 2,
                             mb: 0,
                             color: "#000000",
                             backgroundColor: "#FFCE26",
+                          }}
+                          onClick={() => {
+                            navigate("/myinternship");
                           }}>
                           <Typography fontFamily={"Berlin Sans FB"}>
                             View All My Internships

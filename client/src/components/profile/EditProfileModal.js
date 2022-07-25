@@ -35,7 +35,6 @@ const EditProfileModal = ({ handleEditProfile }) => {
 
   const getUserProfile = async e => {
     try {
-      console.log("get user profile called");
       // setLoading(false);
       const config = {
         headers: {
@@ -64,10 +63,7 @@ const EditProfileModal = ({ handleEditProfile }) => {
 
   useEffect(() => {
     getUserProfile();
-    console.log(profile);
   }, []);
-
-  console.log("edit profile", profile);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -83,15 +79,12 @@ const EditProfileModal = ({ handleEditProfile }) => {
 
     reader.onloadend = () => {
       setImage(reader.result);
-      console.log(image);
     };
   }
 
   const handleChange = e => {
     const file = e.target.files[0];
-    console.log(file);
     setProfilePic(file);
-    console.log(profilePic);
     previewFiles(file);
   };
 

@@ -6,10 +6,21 @@ import {
   CardContent,
   Button,
   Typography,
+  ThemeProvider,
+  Stack,
+  createTheme,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 const ModuleCard = ({ modules, loading }) => {
+   const customTheme = createTheme({
+        palette: {
+          primary: {
+            main: "#ffce26",
+            contrastText: "#000000"
+          }
+        }
+    });
   let navigate = useNavigate();
 
   if (loading) {
@@ -38,14 +49,19 @@ const ModuleCard = ({ modules, loading }) => {
             </Typography>
           </CardContent>
           <CardActions sx={{ flexDirection: "column" }}>
-            <Button
-              size="small"
-              onClick={() => {
-                navigate(`/modules/${modules.moduleCode}`);
-              }}
-            >
-              View
-            </Button>
+           <ThemeProvider theme={customTheme}>
+                <Box sx={{
+            width: 263}}>
+                    <Stack>
+
+                            <Button variant="contained" size="small" onClick={() => {
+                navigate(`/modules/${modules.moduleCode}`)}}>
+                            View
+                        </Button>
+                    </Stack>
+                        
+                </Box>
+                </ThemeProvider>
           </CardActions>
         </Card>
       ))}

@@ -91,6 +91,7 @@ const styles = {
 export default function MyProfilePage() {
   const navigate = useNavigate();
   const [modules, setModules] = useState([]);
+  const [internships, setInternships] = useState([]);
   const [friends, setFriends] = useState([]);
   const [loading, setLoading] = useState(false);
   const { userInfo } = useContext(UserContext);
@@ -123,6 +124,24 @@ export default function MyProfilePage() {
     } catch (error) {}
   };
 
+  const getMyInternships = async e => {
+    try {
+      setLoading(false);
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+        },
+      };
+      const { data } = await axios.get(
+        `/api/internships/InternshipTaken/${userId}`,
+        { userId },
+        config
+      );
+      setInternships(data);
+      setLoading(false);
+    } catch (error) {}
+  };
+
   const getMyFriends = async e => {
     try {
       setLoading(true);
@@ -138,14 +157,12 @@ export default function MyProfilePage() {
       );
 
       setFriends(data);
-      console.log(friends);
       setLoading(false);
     } catch (error) {}
   };
 
   const getUserProfile = async e => {
     try {
-      console.log("get user profile called");
       setLoading(false);
       const config = {
         headers: {
@@ -214,9 +231,7 @@ export default function MyProfilePage() {
         image: image,
       });
       const uploadedImg = result.data.public_id;
-      console.log("uploaded img", uploadedImg);
       setProfilePic(uploadedImg);
-      console.log("profile pic", profilePic);
 
       const config = {
         headers: {
@@ -248,8 +263,6 @@ export default function MyProfilePage() {
       await getUserProfile();
     } catch (error) {}
   };
-
-  console.log("profile", userProfile);
 
   if (!userInfo) {
     navigate("/");
@@ -475,18 +488,18 @@ export default function MyProfilePage() {
                         <Box component='form' noValidate sx={{ mt: 0 }}>
                           <Box
                             sx={{ display: "flex", flexDirection: "column" }}>
-                            {modules.length == 0 && (
+                            {internships.length == 0 && (
                               <Box
                                 sx={{
                                   display: "flex",
                                   justifyContent: "center",
                                 }}>
                                 <Typography fontSize={40}>
-                                  No Modules Found
+                                  You have no Internship Experience
                                 </Typography>
                               </Box>
                             )}
-                            {modules.map(modules => (
+                            {internships.map(internships => (
                               <Button
                                 size='large'
                                 sx={{
@@ -498,7 +511,7 @@ export default function MyProfilePage() {
                                 }}
                                 style={{ justifyContent: "flex-start" }}>
                                 <Typography>
-                                  {modules.moduleCode} {modules.title}
+                                  {internships.company} {internships.position}
                                 </Typography>
                               </Button>
                             ))}

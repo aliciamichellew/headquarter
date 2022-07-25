@@ -17,7 +17,7 @@ import {
   Divider,
   Tooltip,
 } from "@mui/material";
-import { Home, Logout, ViewModule } from "@mui/icons-material";
+import { Chat, Home, Logout, ViewModule, Work } from "@mui/icons-material";
 
 import { useNavigate } from "react-router-dom";
 
@@ -64,7 +64,6 @@ export default function TopDrawer({ open, handleDrawerOpen, isHomePage }) {
   useEffect(() => {
     const getUserProfile = async userId => {
       try {
-        console.log("get user profile called");
         const config = {
           headers: {
             "Content-type": "application/json",
@@ -224,9 +223,22 @@ export default function TopDrawer({ open, handleDrawerOpen, isHomePage }) {
                     }}>
                     <ViewModule sx={{ mr: 1 }} /> My Modules
                   </MenuItem>
+                  <MenuItem
+                    onClick={() => {
+                      navigate("/myinternship");
+                    }}>
+                    <Work sx={{ mr: 1 }} /> My Internships
+                  </MenuItem>
+                  <MenuItem
+                    onClick={() => {
+                      navigate("/chats");
+                    }}>
+                    <Chat sx={{ mr: 1 }} /> Chats
+                  </MenuItem>
                   <Divider />
                   <MenuItem
                     onClick={() => {
+                      setUserInfo(null);
                       localStorage.removeItem("userInfo");
                       navigate("/");
                     }}>
