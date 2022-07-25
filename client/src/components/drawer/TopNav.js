@@ -17,13 +17,13 @@ import {
   Divider,
   Tooltip,
 } from "@mui/material";
-import { Home, Logout, ViewModule } from "@mui/icons-material";
+import { Chat, Home, Logout, ViewModule, Work } from "@mui/icons-material";
 
 import { useNavigate } from "react-router-dom";
 
 import logo from "../../img/logo.png";
 import ProfileAvatar from "../profile/ProfileAvatar";
-// import { checkTokenValid, logout } from "../../utils/logout";
+//import { checkTokenValid, logout } from "../../utils/logout";
 
 const drawerWidth = 240;
 
@@ -78,7 +78,7 @@ export default function TopDrawer({ open, handleDrawerOpen, isHomePage }) {
       );
       setProfilePic(data.profilePic || "");
     } catch (err) {
-      // checkTokenValid(err, navigate);
+      //checkTokenValid(err, navigate);
     }
   };
 
@@ -228,6 +228,20 @@ export default function TopDrawer({ open, handleDrawerOpen, isHomePage }) {
                     }}
                   >
                     <ViewModule sx={{ mr: 1 }} /> My Modules
+                  </MenuItem>
+                  <MenuItem
+                    onClick={() => {
+                      navigate("/myinternship");
+                    }}
+                  >
+                    <Work sx={{ mr: 1 }} /> My Internships
+                  </MenuItem>
+                  <MenuItem
+                    onClick={() => {
+                      navigate("/chats");
+                    }}
+                  >
+                    <Chat sx={{ mr: 1 }} /> Chats
                   </MenuItem>
                   <Divider />
                   <MenuItem

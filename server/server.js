@@ -7,7 +7,7 @@ const userRoutes = require("./routes/userRoutes");
 const moduleRoutes = require("./routes/moduleRoutes");
 const profileRoutes = require("./routes/profileRoutes");
 const postRoutes = require("./routes/postRoutes");
-const messageRoutes = require("./route/messageRoutes");
+const messageRoutes = require("./routes/messageRoutes");
 const internshipRoutes = require("./routes/Internshiproutes");
 const chatRoutes = require("./routes/chatRoutes")
 const cors = require("cors");
@@ -60,13 +60,13 @@ app.use(errorHandler);
 
 const port = 4000;
 
-app.listen(port, () => {
+const server = app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
 
 app.post("/", async (req, res) => {});
 
-const io = socketIO(5000, {
+const io = socketIO(server, {
   pingTimeout: 60000,
   cors: {
     origin: "http://localhost:3000",
@@ -74,6 +74,7 @@ const io = socketIO(5000, {
 });
 
 io.on("connection", (socket) => {
+  console.log("Connected to socket.io");
   socket.on("setup", (userData) => {
     socket.join(userData._id);
 

@@ -15,6 +15,10 @@ import setAuthToken from "./components/utils/setAuthToken";
 import CommentPage from "./posts/CommentPage";
 import MyModules from "./components/modules/MyModules";
 import MyProfilePage from "./components/profile/MyProfilePage";
+import AllInternship from "./components/internship/AllInternship";
+import MyInternship from "./components/internship/MyInternships";
+import InternshipPage from "./components/internship/InternshipPage";
+import ChatPage from "./components/chat/ChatPage";
 
 const theme = createTheme({
   typography: {
@@ -32,7 +36,7 @@ export default function App() {
   }, [localStorage.getItem("userInfo")]);
   return (
     <ThemeProvider theme={theme}>
-      <BrowserRouter>
+      
         <Routes>
           <Route exact path="/" element={<Landing />} />
           <Route path="/home" element={<Home />} />
@@ -47,9 +51,8 @@ export default function App() {
            <Route path="/allinternship" element={<AllInternship />} />
           <Route path="/myinternship" element={<MyInternship />} />
           <Route path="/internships/:internshipId" element={<InternshipPage />} />
-           <Route path="/chats/" element={<ChatPage />} />
+           <Route path="/chats" element={<ChatPage />} />
         </Routes>
-      </BrowserRouter>
     </ThemeProvider>
   );
 }

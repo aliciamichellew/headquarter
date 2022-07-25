@@ -168,6 +168,9 @@ export default function SideDrawer({ open, handleDrawerClose, theme }) {
           key={"Internships"}
           disablePadding
           sx={{ display: "block", color: "#FFCE26" }}
+           onClick={() => {
+            navigate("/allinternship");
+          }}
         >
           <ListItemButton
             sx={{

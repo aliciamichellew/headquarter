@@ -1,7 +1,7 @@
 const asyncHandler = require("express-async-handler");
-const Profile = require("../model/profileModel");
+const Profile = require("../models/profileModel");
 const { response } = require("express");
-const Internship = require('../model/InternshipModel');
+const Internship = require('../models/InternshipModel');
 // const { default: Profile } = require("../../client/src/components/Profile");
 
 const createInternship = asyncHandler(async (req, res) => {
@@ -81,7 +81,7 @@ const findInternshipbyCompanyandPosition = asyncHandler(async (req, res) => {
 const findInternshipbyId = asyncHandler(async (req, res) => {
   const { id } = req.params 
 
-  const internship = await Internship.findById(id)
+  const internship = await Internship.findOne({id});
 
   if(!internship) {
     return res.status(404).json({error: "Internship does not exist"})
@@ -96,55 +96,13 @@ const getMyInternship = async (req, res) => {
     const profile = await Profile.findOne({ user: userId });
     if (!profile) {
       res.status(200).send({ message: "User not found!" });
-    }
-    // console.log(profile);
+    } 
     res.json(profile.myInternships);
-  } catch (error) {
+   }catch (error) {
+    // console.log(profile);
+    
     console.log(error);
     res.status(400).send({ message: "Error occured when getting my internship" });
-  }
-};
-
-const getInternshipTaken = async (req, res) => {
-  try {
-    const { userId } = req.params;
-    const profile = await Profile.findOne({ user: userId });
-    if (!profile) {
-      res.status(200).send({ message: "User not found!" });
-    }
-    res.json(profile.internshipsExperience);
-  } catch (error) {
-    res
-      .status(400)
-      .send({ message: "Error occured when getting internship experience" });
-  }
-};
-
-const userFollowInternship = async (req, res) => {
-  try {
-    console.log("masuk");
-    const checkFollow = req.query;
-
-    const profile = await Profile.findOne({ user: checkFollow.userId });
-    if (!profile) {
-      res.status(200).send({ message: "User not found!" });
-    }
-
-    let followed = false;
-    const findInternshipFollowed = await Profile.findOne({
-      user: checkFollow.userId,
-      myInternships: { $elemMatch: { company: checkFollow.companyName, position: checkFollow.jobTitle } },
-    });
-
-    if (findInternshipFollowed) {
-      followed = true;
-    }
-    console.log(followed);
-    res.json(followed);
-  } catch (error) {
-    res
-      .status(400)
-      .send({ message: "Error occured when checking user follow internship" });
   }
 };
 
@@ -193,7 +151,7 @@ const userExperiencedInternship = async (req, res) => {
     let experienced = false;
     const findInternshipExperienced = await Profile.findOne({
       user: checkExperienced.userId,
-      internshipsExperience: { $elemMatch: { _id: checkExperienced._id } },
+      internshipsExperience: { $elemMatch: { id: checkExperienced.id } },
     });
 
     if (findIntershipExperienced) {
@@ -204,6 +162,46 @@ const userExperiencedInternship = async (req, res) => {
     res
       .status(400)
       .send({ message: "Error occured when checking user experience internship" });
+  }
+};
+const getInternshipTaken = async (req, res) => {
+try {
+    const { userId } = req.params;
+    const profile = await Profile.findOne({ user: userId });
+    if (!profile) {
+      res.status(200).send({ message: "User not found!" });
+    }
+    res.json(profile.InternshipTaken);
+  } catch (error) {
+    res
+      .status(400)
+      .send({ message: "Error occured when getting internship taken" });
+  }
+};
+
+const userFollowInternship = async (req, res) => {
+  try {
+    const checkFollow = req.query;
+
+    const profile = await Profile.findOne({ user: checkFollow.userId });
+    if (!profile) {
+      res.status(200).send({ message: "User not found!" });
+    }
+
+    let followed = false;
+    const findInternshipFollowed = await Profile.findOne({
+      user: checkFollow.userId,
+      myInternships: { $elemMatch: { companyName: checkFollow.companyName, jobTitle: checkFollow.jobTitle } },
+    });
+
+    if (findInternshipFollowed) {
+      followed = true;
+    }
+    res.json(followed);
+  } catch (error) {
+    res
+      .status(400)
+      .send({ message: "Error occured when checking user follow internship" });
   }
 };
 

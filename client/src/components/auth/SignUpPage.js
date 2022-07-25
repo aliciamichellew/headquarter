@@ -23,6 +23,7 @@ import setAuthToken from "../utils/setAuthToken";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 
 import axios from "axios";
+import { addUserToLocalStorage } from "../utils/localStorage";
 
 function Copyright(props) {
   return (
@@ -87,6 +88,7 @@ export default function SignUpSide() {
         );
         localStorage.setItem("userInfo", JSON.stringify(data));
         setAuthToken(data.token);
+        addUserToLocalStorage(data);
       } catch (error) {
         setIsSignUpFail(true);
       } finally {

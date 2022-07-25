@@ -91,6 +91,7 @@ const styles = {
 export default function MyProfilePage() {
   const navigate = useNavigate();
   const [modules, setModules] = useState([]);
+  const [internships, setInternships] = useState([]);
   const [friends, setFriends] = useState([]);
   const [loading, setLoading] = useState(false);
   const userInfo = localStorage.getItem("userInfo");
@@ -120,6 +121,24 @@ export default function MyProfilePage() {
         config
       );
       setModules(data);
+      setLoading(false);
+    } catch (error) {}
+  };
+
+  const getMyInternships = async (e) => {
+    try {
+      setLoading(false);
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+        },
+      };
+      const { data } = await axios.get(
+        `/api/internships/InternshipTaken/${userId}`,
+        { userId },
+        config
+      );
+      setInternships(data);
       setLoading(false);
     } catch (error) {}
   };
@@ -490,7 +509,7 @@ export default function MyProfilePage() {
                           <Box
                             sx={{ display: "flex", flexDirection: "column" }}
                           >
-                            {modules.length == 0 && (
+                            {internships.length == 0 && (
                               <Box
                                 sx={{
                                   display: "flex",
@@ -498,11 +517,11 @@ export default function MyProfilePage() {
                                 }}
                               >
                                 <Typography fontSize={40}>
-                                  No Modules Found
+                                  You have no Internship Experience
                                 </Typography>
                               </Box>
                             )}
-                            {modules.map((modules) => (
+                            {internships.map((internships) => (
                               <Button
                                 size="large"
                                 sx={{
@@ -515,7 +534,7 @@ export default function MyProfilePage() {
                                 style={{ justifyContent: "flex-start" }}
                               >
                                 <Typography>
-                                  {modules.moduleCode} {modules.title}
+                                  {internships.company} {internships.position}
                                 </Typography>
                               </Button>
                             ))}

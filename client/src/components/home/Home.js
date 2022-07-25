@@ -16,6 +16,7 @@ import SideDrawer from "../../components/drawer/SideNav";
 import ModuleButton from "../modules/ModuleButton";
 import axios from "axios";
 import ProfileButton from "../profile/ProfileButton";
+import InternshipButton from "../internship/internshipButton";
 
 const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
@@ -29,6 +30,7 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 export default function Home() {
   const navigate = useNavigate();
   const [modules, setModules] = useState([]);
+  const [internships, setInternships] = useState([]);
   const [friends, setFriends] = useState([]);
   const [loading, setLoading] = useState(false);
   const userInfo = localStorage.getItem("userInfo");
@@ -49,6 +51,25 @@ export default function Home() {
       );
 
       setModules(data);
+      setLoading(false);
+    } catch (error) {}
+  };
+
+   const getMyInternships = async (e) => {
+    try {
+      setLoading(false);
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+        },
+      };
+      const { data } = await axios.get(
+        `/api/internships/myinternship/${userId}`,
+        { userId },
+        config
+      );
+
+      setInternships(data);
       setLoading(false);
     } catch (error) {}
   };
@@ -82,6 +103,7 @@ export default function Home() {
   });
 
   useEffect(() => {
+    getMyInternships();
     getMyModules();
     getMyFriends();
     console.log("friends", friends);
@@ -223,60 +245,26 @@ export default function Home() {
                   <CardContent>
                     <Box component="form" noValidate sx={{ mt: 0 }}>
                       <Box sx={{ display: "flex", flexDirection: "column" }}>
+                      {internships.map((internships) => (
+                        <InternshipButton
+                        company={internships.company}
+                        position={internships.position}
+                        internshipId={internships._id}
+                        />
+                        ))}
                         <Button
+                        type="submit"
+                        fullWidth
+                        variant="contained"
                           size="large"
-                          sx={{
-                            color: "#000000",
-                            ":hover": {
-                              bgcolor: "#FFCE26",
-                            },
-                            textAlign: "left",
-                          }}
-                          style={{ justifyContent: "flex-start" }}
-                        >
-                          <Typography fontFamily={"Berlin Sans FB"}>
-                            Software Engineer
-                          </Typography>
-                        </Button>
-                        <Button
-                          size="large"
-                          sx={{
-                            color: "#000000",
-                            ":hover": {
-                              bgcolor: "#FFCE26",
-                            },
-                            textAlign: "left",
-                          }}
-                          style={{ justifyContent: "flex-start" }}
-                        >
-                          <Typography fontFamily={"Berlin Sans FB"}>
-                            Data Analyst
-                          </Typography>
-                        </Button>
-                        <Button
-                          size="large"
-                          sx={{
-                            color: "#000000",
-                            ":hover": {
-                              bgcolor: "#FFCE26",
-                            },
-                            textAlign: "left",
-                          }}
-                          style={{ justifyContent: "flex-start" }}
-                        >
-                          <Typography fontFamily={"Berlin Sans FB"}>
-                            Product Manager
-                          </Typography>
-                        </Button>
-                        <Button
-                          type="submit"
-                          fullWidth
-                          variant="contained"
-                          sx={{
+                           sx={{
                             mt: 2,
                             mb: 0,
                             color: "#000000",
                             backgroundColor: "#FFCE26",
+                          }}
+                          onClick={() => {
+                            navigate("/myinternship");
                           }}
                         >
                           <Typography fontFamily={"Berlin Sans FB"}>

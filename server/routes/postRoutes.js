@@ -16,7 +16,7 @@ const {
   createPostforInternship,
   editPostInternship,
   deletePostInternship,
-  getPostsByInternshipCompanyandPosition, 
+  getPostsByInternshipId, 
 } = require("../controllers/postControllers");
 const { protect } = require("../middlewares/authMiddleware");
 const router = express.Router();
@@ -38,6 +38,6 @@ router.route("/add2").post(protect, createPostforInternship);
 router.route("/edit2").put(protect,  editPostInternship);
 router.route("/delete2").put(protect, deletePostInternship);
 router.route("/getpostbymodulecode/:moduleCode").get(getPostsByModuleCode);
-router.route("/getpostbyinternshipCompanyandPosition/").get(getPostsByInternshipCompanyandPosition);
+router.route("/getpostbyinternshipId/:internshipId").get(getPostsByInternshipId);
 
 module.exports = router;

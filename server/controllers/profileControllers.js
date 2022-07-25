@@ -44,6 +44,11 @@ const getUserProfile = async (req, res) => {
   }
 };
 
+const getUserProfiles = asyncHandler(async (req, res) => {
+    const profiles = await (await Profile.find({})).find({_id: {$ne: req.user._id}});
+      res.status(200).json(profiles);
+});
+
 const updateUserProfile = asyncHandler(async (req, res) => {
   try {
     const newProfile = req.body.profile;
@@ -354,6 +359,19 @@ const getUserIdFromUsername = async (req, res) => {
   }
 };
 
+const getUserFromUsername = async (req, res) => {
+  try {
+    const { username } = req.params;
+    const user = await User.find({ username: username });
+    res.json(user);
+  } catch (error) {
+    console.log(error);
+    res
+      .status(400)
+      .send({ message: "Error occured when getting user id from username" });
+  }
+};
+
 const checkFollowUser = async (req, res) => {
   try {
     const { userId, userIdFollow } = req.query;
@@ -416,8 +434,8 @@ const uploadProfilePic = async (req, res) => {
 
 const followInternship = async (req, res) => {
   try {
-    const { company, position, userId } = req.body;
-    const response = await Internship.findOne(company, position);
+    const { _id, userId } = req.body;
+    const response = await Internship.findOne(_id);
     console.log(response);
     if (!response) {
       res.status(400).send({ message: "Internship not found" });
@@ -431,7 +449,7 @@ const followInternship = async (req, res) => {
 
     const findInternshipFollowed = await Profile.findOne({
       user: userId,
-      myInternship: { $elemMatch: { company: company, position: position }
+      myInternship: { $elemMatch: { companyName: company, jobTitle: position }
     }});
 
     if (findInternshipFollowed) {
@@ -451,7 +469,7 @@ const followInternship = async (req, res) => {
 
 const unfollowInternship = async (req, res) => {
   try {
-    const { company, position, userId } = req.body;
+    const { _id, userId } = req.body;
     const response = await Internship.findOne(company, position);
     console.log(response);
     if (!response) {
@@ -466,7 +484,7 @@ const unfollowInternship = async (req, res) => {
 
     const findInternshipFollowed = await Profile.findOne({
       user: userId,
-      myInternship: { $elemMatch: { company: company, position: position } },
+      myInternship: { $elemMatch: { companyName: company, jobTitle: position } },
     });
 
     if (!findInternshipFollowed) {
@@ -486,8 +504,8 @@ const unfollowInternship = async (req, res) => {
 
 const experiencedInternship = async (req, res) => {
   try {
-    const { company, position, userId, startDate, endDate } = req.body;
-    const response = await Internship.findOne({company, position});
+    const { internshipId, userId, startDate, endDate } = req.body;
+    const response = await Internship.findOne({internshipId});
     if (!response) {
       res.status(400).send({ message: "Internship not found" });
       return;
@@ -501,7 +519,7 @@ const experiencedInternship = async (req, res) => {
 
     const findInternshipExperienced = await Profile.findOne({
       user: userId,
-      internshipsExperience: { $elemMatch: { company, position } },
+      internshipsExperience: { $elemMatch: { companyName: company, jobTitle: position } },
     });
 
     if (findInternshipExperienced) {
@@ -522,8 +540,8 @@ const experiencedInternship = async (req, res) => {
 
 const unexperiencedInternship = async (req, res) => {
   try {
-    const { company, position, userId } = req.body;
-    const response = await Internship.findOne({company, position});
+    const { internshipId, userId } = req.body;
+    const response = await Internship.findOne({internshipId});
     if (!response) {
       res.status(400).send({ message: "Internship not found" });
       return;
@@ -535,7 +553,7 @@ const unexperiencedInternship = async (req, res) => {
 
     const findInternshipExperienced = await Profile.findOne({
       user: userId,
-      internshipsExperience: { $elemMatch: { company: company, position: position } },
+      internshipsExperience: { $elemMatch: { companyName: company, jobTitle: position } },
     });
 
     if (!findInternshipExperienced) {
@@ -544,7 +562,7 @@ const unexperiencedInternship = async (req, res) => {
     }
     await Profile.updateOne(
       { user: userId },
-      { $pull: { internshipsExperience: { company: company, position: position } } }
+      { $pull: { internshipsExperience: { companyName: company, jobTitle: position } } }
     );
     res.status(200).send({ message: "Unexperienced internship success" });
   } catch (error) {
@@ -556,6 +574,7 @@ const unexperiencedInternship = async (req, res) => {
 
 module.exports = {
   getUserProfile,
+  getUserProfiles,
   updateUserProfile,
   followModule,
   unfollowModule,
@@ -571,5 +590,5 @@ module.exports = {
   unfollowInternship,
   experiencedInternship,
   unexperiencedInternship,
-  
+  getUserFromUsername
 };

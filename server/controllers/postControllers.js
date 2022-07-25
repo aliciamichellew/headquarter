@@ -637,7 +637,7 @@ const createPostforInternship = async (req, res) => {
     }
 
     const findUser = await User.find({ _id: post.user });
-    const returnFormat = getPostReturnFormat(findUser, post, []);
+    const returnFormat = getPostReturn(findUser, post, []);
 
     if (post) {
       res.status(201).json(returnFormat);
@@ -737,12 +737,12 @@ const deletePostInternship = async (req, res) => {
   }
 };
 
-const getPostsByInternshipCompanyandPosition = async (req, res) => {
+const getPostsByInternshipId = async (req, res) => {
   try {
-    const { company, position } = req.params;
+    const { _id } = req.params;
 
     const findInternship = await Internship.findOne({
-      company, position
+      _id
     });
     if (!findInternship) {
       res.status(400).send({ message: "Internship does not exist" });
@@ -765,8 +765,8 @@ const getPostsByInternshipCompanyandPosition = async (req, res) => {
           return;
         }
 
-        const comments = await getAllComments(findPost.answers);
-        posts.push(getPostReturnFormat(findUser, findPost, comments));
+        const comments = await getAllReviews(findPost.answers);
+        posts.push(getPostReturn(findUser, findPost, comments));
       }
     }
 
@@ -795,5 +795,5 @@ module.exports = {
   createPostforInternship,
   editPostInternship,
   deletePostInternship,
-  getPostsByInternshipCompanyandPosition, 
+  getPostsByInternshipId, 
 };

@@ -10,7 +10,7 @@ const {
   userExperiencedInternship,
   findInternshipbyId,
   findInternshipbyCompanyandPosition,
-  } = require("../controller/InternshipController");
+  } = require("../controllers/InternshipController");
 
 const { protect } = require("../middlewares/authMiddleware");
 const router = express.Router();
