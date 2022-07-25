@@ -1,6 +1,6 @@
 import "./styles.css";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import React, { useEffect } from "react";
+import { Routes, Route } from "react-router-dom";
+import React, { createContext, useState, useEffect } from "react";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import Landing from "./components/auth/LoginPage";
 
@@ -26,7 +26,12 @@ const theme = createTheme({
   },
 });
 
+export const UserContext = createContext();
+
 export default function App() {
+  const init = localStorage.getItem("userInfo") || null;
+  const [userInfo, setUserInfo] = useState(init ? JSON.parse(init) : null);
+
   useEffect(() => {
     const userInfo = JSON.parse(localStorage.getItem("userInfo"));
 
@@ -34,9 +39,10 @@ export default function App() {
       setAuthToken(userInfo.token);
     }
   }, [localStorage.getItem("userInfo")]);
+
   return (
     <ThemeProvider theme={theme}>
-      
+      <UserContext.Provider value={{ userInfo, setUserInfo }}>
         <Routes>
           <Route exact path="/" element={<Landing />} />
           <Route path="/home" element={<Home />} />
@@ -48,11 +54,15 @@ export default function App() {
           <Route path="/profile/:username" element={<ProfilePage />} />
           <Route path="/modules/:moduleCode" element={<ModulePage />} />
           <Route path="/commentpage/:postId" element={<CommentPage />} />
-           <Route path="/allinternship" element={<AllInternship />} />
+          <Route path="/allinternship" element={<AllInternship />} />
           <Route path="/myinternship" element={<MyInternship />} />
-          <Route path="/internships/:internshipId" element={<InternshipPage />} />
-           <Route path="/chats" element={<ChatPage />} />
+          <Route
+            path="/internships/:internshipId"
+            element={<InternshipPage />}
+          />
+          <Route path="/chats" element={<ChatPage />} />
         </Routes>
+      </UserContext.Provider>
     </ThemeProvider>
   );
 }

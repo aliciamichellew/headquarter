@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 
 import axios from "axios";
 
@@ -23,7 +23,7 @@ import { useNavigate } from "react-router-dom";
 
 import logo from "../../img/logo.png";
 import ProfileAvatar from "../profile/ProfileAvatar";
-//import { checkTokenValid, logout } from "../../utils/logout";
+import { UserContext } from "../../App";
 
 const drawerWidth = 240;
 
@@ -58,33 +58,39 @@ export default function TopDrawer({ open, handleDrawerOpen, isHomePage }) {
     setAnchorEl(null);
   };
 
-  const userInfo = localStorage.getItem("userInfo");
-  const userInfoJSON = JSON.parse(userInfo);
-  const userId = userInfoJSON._id || "";
+  const { userInfo, setUserInfo } = useContext(UserContext);
   const [profilePic, setProfilePic] = useState("");
 
-  const getUserProfile = async (e) => {
-    try {
-      console.log("get user profile called");
-      const config = {
-        headers: {
-          "Content-type": "application/json",
-        },
-      };
-      const { data } = await axios.get(
-        `/api/profile/getprofile/${userId}`,
-        { userId },
-        config
-      );
-      setProfilePic(data.profilePic || "");
-    } catch (err) {
-      //checkTokenValid(err, navigate);
-    }
-  };
-
   useEffect(() => {
-    getUserProfile();
-  }, [profilePic]);
+    const getUserProfile = async (userId) => {
+      try {
+        console.log("get user profile called");
+        const config = {
+          headers: {
+            "Content-type": "application/json",
+          },
+        };
+        const { data } = await axios.get(
+          `/api/profile/getprofile/${userId}`,
+          { userId },
+          config
+        );
+
+        setProfilePic(data.profilePic || "");
+      } catch (err) {}
+    };
+
+    if (userInfo) {
+      getUserProfile(userInfo._id);
+    } else {
+      navigate("/");
+    }
+  }, [userInfo, navigate]);
+
+  if (!userInfo) {
+    navigate("/");
+    return <></>;
+  }
 
   return (
     <AppBar position="fixed" open={open}>

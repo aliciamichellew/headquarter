@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { styled, useTheme } from "@mui/material/styles";
 import {
   Box,
@@ -17,6 +17,7 @@ import ModuleButton from "../modules/ModuleButton";
 import axios from "axios";
 import ProfileButton from "../profile/ProfileButton";
 import InternshipButton from "../internship/internshipButton";
+import { UserContext } from "../../App";
 
 const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
@@ -33,81 +34,73 @@ export default function Home() {
   const [internships, setInternships] = useState([]);
   const [friends, setFriends] = useState([]);
   const [loading, setLoading] = useState(false);
-  const userInfo = localStorage.getItem("userInfo");
-  const userInfoJSON = JSON.parse(userInfo);
-  const userId = userInfoJSON._id;
-  const getMyModules = async (e) => {
-    try {
-      setLoading(false);
-      const config = {
-        headers: {
-          "Content-type": "application/json",
-        },
-      };
-      const { data } = await axios.get(
-        `/api/modules/mymodules/${userId}`,
-        { userId },
-        config
-      );
-
-      setModules(data);
-      setLoading(false);
-    } catch (error) {}
-  };
-
-   const getMyInternships = async (e) => {
-    try {
-      setLoading(false);
-      const config = {
-        headers: {
-          "Content-type": "application/json",
-        },
-      };
-      const { data } = await axios.get(
-        `/api/internships/myinternship/${userId}`,
-        { userId },
-        config
-      );
-
-      setInternships(data);
-      setLoading(false);
-    } catch (error) {}
-  };
-
-  const getMyFriends = async (e) => {
-    try {
-      setLoading(true);
-      const config = {
-        headers: {
-          "Content-type": "application/json",
-        },
-      };
-      const { data } = await axios.get(
-        `/api/profile/getfollowing/${userId}`,
-        { userId },
-        config
-      );
-
-      setFriends(data);
-      console.log(friends);
-      setLoading(false);
-    } catch (error) {}
-  };
+  const { userInfo } = useContext(UserContext);
+  console.log("user info = ", userInfo);
 
   useEffect(() => {
-    const userInfo = localStorage.getItem("userInfo");
+    const getMyModules = async (userId) => {
+      try {
+        setLoading(false);
+        const config = {
+          headers: {
+            "Content-type": "application/json",
+          },
+        };
+        const { data } = await axios.get(
+          `/api/modules/mymodules/${userId}`,
+          { userId },
+          config
+        );
 
-    if (!userInfo) {
+        setModules(data);
+        setLoading(false);
+      } catch (error) {}
+    };
+    const getMyInternships = async (userId) => {
+      try {
+        setLoading(false);
+        const config = {
+          headers: {
+            "Content-type": "application/json",
+          },
+        };
+        const { data } = await axios.get(
+          `/api/internships/myinternship/${userId}`,
+          { userId },
+          config
+        );
+
+        setInternships(data);
+        setLoading(false);
+      } catch (error) {}
+    };
+    const getMyFriends = async (userId) => {
+      try {
+        setLoading(true);
+        const config = {
+          headers: {
+            "Content-type": "application/json",
+          },
+        };
+        const { data } = await axios.get(
+          `/api/profile/getfollowing/${userId}`,
+          { userId },
+          config
+        );
+
+        setFriends(data);
+        setLoading(false);
+      } catch (error) {}
+    };
+
+    if (userInfo) {
+      getMyModules(userInfo._id);
+      getMyFriends(userInfo._id);
+      getMyInternships(userInfo._id);
+    } else {
       navigate("/");
     }
-  });
-
-  useEffect(() => {
-    getMyInternships();
-    getMyModules();
-    getMyFriends();
-    console.log("friends", friends);
-  }, []);
+  }, [userInfo, navigate]);
 
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
@@ -119,6 +112,11 @@ export default function Home() {
   const handleDrawerClose = () => {
     setOpen(false);
   };
+
+  if (!userInfo) {
+    navigate("/");
+    return <></>;
+  }
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -171,7 +169,7 @@ export default function Home() {
                 sx={{ mx: 0, mt: 0 }}
                 align={"left"}
               >
-                {JSON.parse(userInfo).firstName.toUpperCase()}
+                {userInfo.firstName.toUpperCase()}
               </Typography>
             </Box>
 
@@ -245,19 +243,19 @@ export default function Home() {
                   <CardContent>
                     <Box component="form" noValidate sx={{ mt: 0 }}>
                       <Box sx={{ display: "flex", flexDirection: "column" }}>
-                      {internships.map((internships) => (
-                        <InternshipButton
-                        company={internships.company}
-                        position={internships.position}
-                        internshipId={internships._id}
-                        />
+                        {internships.map((internships) => (
+                          <InternshipButton
+                            company={internships.company}
+                            position={internships.position}
+                            internshipId={internships._id}
+                          />
                         ))}
                         <Button
-                        type="submit"
-                        fullWidth
-                        variant="contained"
+                          type="submit"
+                          fullWidth
+                          variant="contained"
                           size="large"
-                           sx={{
+                          sx={{
                             mt: 2,
                             mb: 0,
                             color: "#000000",

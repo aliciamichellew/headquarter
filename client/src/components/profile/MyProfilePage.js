@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 
 import { styled, useTheme } from "@mui/material/styles";
 import {
@@ -37,6 +37,7 @@ import axios from "axios";
 import EditProfileModal from "./EditProfileModal";
 import ProfileButton from "./ProfileButton";
 import ProfileAvatar from "./ProfileAvatar";
+import { UserContext } from "../../App";
 // import { getUserProfile } from "../../../../server/controllers/profileControllers";
 
 const DrawerHeader = styled("div")(({ theme }) => ({
@@ -94,9 +95,8 @@ export default function MyProfilePage() {
   const [internships, setInternships] = useState([]);
   const [friends, setFriends] = useState([]);
   const [loading, setLoading] = useState(false);
-  const userInfo = localStorage.getItem("userInfo");
-  const userInfoJSON = JSON.parse(userInfo);
-  const userId = userInfoJSON._id;
+  const { userInfo } = useContext(UserContext);
+  const userId = userInfo ? userInfo._id : null;
   const [userProfile, setUserProfile] = useState();
   const [profilePic, setProfilePic] = useState("");
   const [bio, setBio] = useState("");
@@ -191,14 +191,6 @@ export default function MyProfilePage() {
   };
 
   useEffect(() => {
-    const userInfo = localStorage.getItem("userInfo");
-
-    if (!userInfo) {
-      navigate("/");
-    }
-  });
-
-  useEffect(() => {
     getUserProfile();
     getMyModules();
     getMyFriends();
@@ -278,6 +270,11 @@ export default function MyProfilePage() {
   };
 
   console.log("profile", userProfile);
+
+  if (!userInfo) {
+    navigate("/");
+    return <></>;
+  }
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -360,8 +357,8 @@ export default function MyProfilePage() {
                     }}
                   >
                     <Typography sx={{ fontSize: 40, color: "#FFCE26" }}>
-                      {JSON.parse(userInfo).firstName.toUpperCase()}{" "}
-                      {JSON.parse(userInfo).lastName.toUpperCase()}
+                      {userInfo.firstName.toUpperCase()}{" "}
+                      {userInfo.lastName.toUpperCase()}
                     </Typography>
                     <Typography sx={{ fontSize: 20, color: "#FFCE26" }}>
                       {userProfile && userProfile.bio}
@@ -371,7 +368,6 @@ export default function MyProfilePage() {
                 <Box sx={{ display: "flex", flexDirection: "row" }}>
                   <EditProfileModal
                     // profile={userProfile}
-                    userInfo={userInfo}
                     handleEditProfile={handleEditProfile}
                   />
                 </Box>
