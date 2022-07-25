@@ -3,18 +3,21 @@ require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
-const userRoutes = require("./routes/userRoutes");
-const moduleRoutes = require("./routes/moduleRoutes");
-const profileRoutes = require("./routes/profileRoutes");
-const postRoutes = require("./routes/postRoutes");
-const messageRoutes = require("./routes/messageRoutes");
-const internshipRoutes = require("./routes/Internshiproutes");
-const chatRoutes = require("./routes/chatRoutes");
+const userRoutes = require("./server/routes/userRoutes");
+const moduleRoutes = require("./server/routes/moduleRoutes");
+const profileRoutes = require("./server/routes/profileRoutes");
+const postRoutes = require("./server/routes/postRoutes");
+const messageRoutes = require("./server/routes/messageRoutes");
+const internshipRoutes = require("./server/routes/Internshiproutes");
+const chatRoutes = require("./server/routes/chatRoutes");
 const path = require("path");
 const cors = require("cors");
 var bodyParser = require("body-parser");
-const { notFound, errorHandler } = require("./middlewares/errorMiddleware");
-const cloudinary = require("./cloudinary/cloudinary");
+const {
+  notFound,
+  errorHandler,
+} = require("./server/middlewares/errorMiddleware");
+const cloudinary = require("./server/cloudinary/cloudinary");
 const socketIO = require("socket.io");
 
 const app = express();

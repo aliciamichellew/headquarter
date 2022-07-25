@@ -2,12 +2,12 @@
   "name": "headquarter",
   "version": "1.0.0",
   "description": "Have burning questions about academics and careers and do not have a place to ask? headquarter provides users with an all-in-one platform where they can seek knowledge, clear their doubts and expand their network at the same time.",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "concurrently \"npm run server\" \"npm run client\"",
-    "server": "npm start --prefix server",
-    "client": "npm start --prefix client",
+    "start": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\"",
+    "server": "nodemon server.js",
+    "client": "npm run start --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "build": "cd client && npm run build",
     "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix server && npm install --prefix client && npm run build"
@@ -23,7 +23,15 @@
   },
   "homepage": "https://github.com/aliciamichellew/headquarter#readme",
   "dependencies": {
+    "body-parser": "^1.20.0",
     "concurrently": "^7.3.0",
-    "cross-env": "^7.0.3"
+    "cors": "^2.8.5",
+    "cross-env": "^7.0.3",
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1",
+    "mongoose": "^6.4.6",
+    "nodemon": "^2.0.19",
+    "path": "^0.12.7",
+    "socket.io": "^4.5.1"
   }
 }
