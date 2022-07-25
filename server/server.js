@@ -21,7 +21,7 @@ const app = express();
 
 dotenv.config();
 
-const port = process.env.PORT || 4000;
+const port = process.env.PORT || 5000;
 
 const server = app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
@@ -55,7 +55,7 @@ console.log(path.join(__dirname, "../", "client/", "build/", "index.html"));
 
 if (process.env.NODE_ENV === "production") {
   console.log("masuk if");
-  app.use(express.static("../client/build"));
+  app.use(express.static(path.join(__dirname, "../", "client/", "build")));
 
   app.get("*", (req, res) => {
     res.sendFile(
