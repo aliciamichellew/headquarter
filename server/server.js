@@ -54,7 +54,8 @@ app.use(errorHandler);
 console.log(path.join(__dirname, "../", "client/", "build/", "index.html"));
 
 if (process.env.NODE_ENV === "production") {
-  app.use(express.static("client/build"));
+  console.log("masuk if");
+  app.use(express.static("../client/build"));
 
   app.get("*", (req, res) => {
     res.sendFile(
