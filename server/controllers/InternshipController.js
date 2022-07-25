@@ -102,7 +102,6 @@ const getMyInternship = async (req, res) => {
     // console.log(profile);
     
     console.log(error);
-    res.status(400).send({ message: "Error occured when getting my internship" });
   }
 };
 

@@ -19,7 +19,7 @@ import {
   Checkbox,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import { Add, Check } from "@mui/icons-material";
+import { Add, Check} from "@mui/icons-material";
 
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
@@ -67,6 +67,7 @@ export default function InternshipPage(internship) {
         "Content-type": "application/json",
       },
       params: {
+        id: id,
         company:company,
         postion: position,
         userId: userInfoJSON._id,
@@ -443,10 +444,10 @@ export default function InternshipPage(internship) {
               >
                 <Box sx={{ display: "flex", flexDirection: "column" }}>
                   <Typography sx={{ fontSize: 40, color: "#FFCE26" }}>
-                    {setCompany}
+                    {company}
                   </Typography>
                   <Typography sx={{ fontSize: 40, color: "#FFCE26" }}>
-                    {setPosition}
+                    {position}
                   </Typography>
                 </Box>
                 <Box
@@ -472,7 +473,8 @@ export default function InternshipPage(internship) {
                       handleRemoveExperienced={handleRemoveExperienced}
                     />
                   )}
-                  <FormControlLabel
+
+                   <FormControlLabel
                     control={
                       <Checkbox
                         icon={<Add sx={{ color: "#FFCE26" }} />}
@@ -480,9 +482,10 @@ export default function InternshipPage(internship) {
                         checked={follow ? follow : false}
                         onChange={handleChangeFollow}
                       />
-                    }
+                   }
                     label={follow ? "Added to My Internships" : "Add to My Internships"}
                     sx={{ color: "#FFCE26" }}
+                    
                   />
                   <FormControl
                     sx={{ mx: 2, minWidth: 120, borderColor: "#FFCE26" }}

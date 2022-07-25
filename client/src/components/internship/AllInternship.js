@@ -67,6 +67,26 @@ export default function AllInternship() {
     fetchInternship();
   }, []);
 
+ const handleCreateNew = async (event, company, position) => {
+    event.preventDefault();
+
+    try {
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+        },
+      };
+      const { res } = await axios({
+        method: "post",
+        url: "/api/internships",
+        data: {
+          company: {company},
+          position: {position},
+        },
+      });
+    } catch (error) {}
+  };
+
   const [searchQuery, setSearchQuery] = useState("");
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -171,7 +191,7 @@ export default function AllInternship() {
                   <Button type="submit" fullWidth variant="contained" sx={{width: 150, height: 40,}}>
                     <Typography fontFamily={"Berlin Sans FB"}>Search</Typography>
                   </Button>
-                  <NewInternship/>
+                  <NewInternship noValidate onSubmit={handleCreateNew}/>
                  
                 </Stack>
               </ThemeProvider>

@@ -10,6 +10,7 @@ import {
   FormControlLabel,
   Checkbox,
   Box,
+  FormLabel,
 } from "@mui/material";
 
 const NewInternship = ({ handleSubmit }) => {
@@ -38,8 +39,8 @@ const NewInternship = ({ handleSubmit }) => {
       <Button
         variant="contained"
         sx={{
-          backgroundColor: "#D4D4D4",
-          color: "#909090",
+          backgroundColor: "#000000",
+          color: "#ffce26",
           height: 40,
           width: "100%",
         }}
@@ -52,6 +53,7 @@ const NewInternship = ({ handleSubmit }) => {
         <DialogContent
           sx={{ display: "flex", flexDirection: "column", width: "500px" }}
         >
+        <Box component="form" noValidate onSubmit={handleSubmit} sx={{display:"flex", justifyContent:"flex-end"}}>
           <Typography sx={{ fontSize: 20 }}>company</Typography>
           <TextField
             id="outlined-textarea"
@@ -64,11 +66,11 @@ const NewInternship = ({ handleSubmit }) => {
           <TextField
             id="outlined-textarea"
             maxRows={5}
-            multiline
             sx={{ my: 1 }}
             value={position}
             onChange={(e) => setPosition(e.target.value)}
           />
+          </Box>
           <FormControlLabel
             control={<Checkbox checked={isAnonymous} onChange={handleChange} />}
             label="Anonymous"
@@ -84,7 +86,7 @@ const NewInternship = ({ handleSubmit }) => {
             }}
           >
             <Button onClick={handleClose}>Cancel</Button>
-            <Button type="submit">Submit</Button>
+            <Button type="submit" onClick={handleClose}>Submit</Button>
           </Box>
         </DialogActions>
       </Dialog>

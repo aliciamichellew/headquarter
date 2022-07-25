@@ -93,6 +93,7 @@ export default function ProfilePage() {
 
   const navigate = useNavigate();
   const [modules, setModules] = useState([]);
+  const [internships, setInternships] = useState([]);
   const [loading, setLoading] = useState(false);
   const userInfo = localStorage.getItem("userInfo");
   const userInfoJSON = JSON.parse(userInfo);
@@ -215,7 +216,32 @@ export default function ProfilePage() {
       setFollow(false);
     }
   };
+  const getMyInternships = async (e) => {
+    try {
+      setLoading(false);
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+        },
+      };
+      const { data } = await axios.get(
+        `/api/internships/InternshipTaken/${userId}`,
+        { userId },
+        config
+      );
+      setInternships(data);
+      setLoading(false);
+    } catch (error) {}
+  };
+  useEffect(() => {
+    const userInfo = localStorage.getItem("userInfo");
 
+    if (!userInfo) {
+      navigate("/");
+    }
+  });
+
+  
   useEffect(() => {
     getUserId();
   }, []);
@@ -225,8 +251,10 @@ export default function ProfilePage() {
       getProfile();
       getMyModules();
       checkFollow();
+      getMyInternships();
     }
   }, [userId]);
+
 
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
@@ -534,6 +562,52 @@ export default function ProfilePage() {
                               >
                                 <Typography>
                                   {modules.moduleCode} {modules.title}
+                                </Typography>
+                              </Button>
+                            ))}
+                          </Box>
+                        </Box>
+                      </CardContent>
+                    </Card>
+                  </Box>
+                </TabPanel>
+                <TabPanel value={value} index={1}>
+                  <Box sx={{ mt: 0 }}>
+                    <Typography sx={{ fontSize: 25, color: "#FFCE26" }}>
+                      Internships Experiences
+                    </Typography>
+                    <Card sx={{ mx: 0, mt: 3 }}>
+                      <CardContent>
+                        <Box component="form" noValidate sx={{ mt: 0 }}>
+                          <Box
+                            sx={{ display: "flex", flexDirection: "column" }}
+                          >
+                            {internships.length == 0 && (
+                              <Box
+                                sx={{
+                                  display: "flex",
+                                  justifyContent: "center",
+                                }}
+                              >
+                                <Typography fontSize={20}>
+                                  No Internships Found
+                                </Typography>
+                              </Box>
+                            )}
+                            {internships.map((internships) => (
+                              <Button
+                                size="large"
+                                sx={{
+                                  color: "#000000",
+                                  ":hover": {
+                                    bgcolor: "#FFCE26",
+                                  },
+                                  textAlign: "left",
+                                }}
+                                style={{ justifyContent: "flex-start" }}
+                              >
+                                <Typography>
+                                  {internships.company} {internships.position}
                                 </Typography>
                               </Button>
                             ))}
