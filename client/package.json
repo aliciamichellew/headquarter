@@ -19,6 +19,8 @@
     "cloudinary-react": "^1.8.1",
     "cors": "^2.8.5",
     "dotenv": "^16.0.1",
+    "headquarter": "file:..",
+    "npm": "^8.15.0",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
     "react-router-dom": "^6.3.0",
