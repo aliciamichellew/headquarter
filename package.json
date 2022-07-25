@@ -1,0 +1,26 @@
+{
+  "name": "headquarter",
+  "version": "1.0.0",
+  "description": "Have burning questions about academics and careers and do not have a place to ask? headquarter provides users with an all-in-one platform where they can seek knowledge, clear their doubts and expand their network at the same time.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "server": "npm start --prefix server",
+    "client": "npm start --prefix client",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aliciamichellew/headquarter.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/aliciamichellew/headquarter/issues"
+  },
+  "homepage": "https://github.com/aliciamichellew/headquarter#readme",
+  "dependencies": {
+    "concurrently": "^7.3.0"
+  }
+}
