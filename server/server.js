@@ -10,6 +10,7 @@ const postRoutes = require("./routes/postRoutes");
 const messageRoutes = require("./routes/messageRoutes");
 const internshipRoutes = require("./routes/Internshiproutes");
 const chatRoutes = require("./routes/chatRoutes");
+const path = require("path");
 const cors = require("cors");
 var bodyParser = require("body-parser");
 const { notFound, errorHandler } = require("./middlewares/errorMiddleware");
@@ -54,7 +55,9 @@ if (process.env.NODE_ENV === "production") {
   app.use(express.static("client/build"));
 
   app.get("*", (req, res) => {
-    res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
+    res.sendFile(
+      path.join(__dirname, "../", "client/", "build/", "index.html")
+    );
   });
 
   app.use(function (req, res, next) {
