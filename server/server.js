@@ -70,10 +70,6 @@ if (process.env.NODE_ENV === "production") {
   });
 }
 
-// app.use(express.json());
-
-app.post("/", async (req, res) => {});
-
 const io = socketIO(server, {
   pingTimeout: 60000,
   cors: {
