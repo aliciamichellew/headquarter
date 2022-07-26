@@ -53,8 +53,8 @@ app.use("/api/message", messageRoutes);
 app.use(notFound);
 app.use(errorHandler);
 
-console.log(path.join(__dirname, "../", "client/", "build/", "index.html"));
-console.log(path.resolve(__dirname, "client", "build", "index.html"));
+// console.log(path.join(__dirname, "../", "client/", "build/", "index.html"));
+// console.log(path.resolve(__dirname, "client", "build", "index.html"));
 
 // if (process.env.NODE_ENV === "production") {
 //   console.log("masuk if");
