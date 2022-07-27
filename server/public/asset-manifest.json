@@ -1,12 +1,13 @@
 {
   "files": {
-    "main.css": "/static/css/main.3ae38a7b.css",
-    "main.js": "/static/js/main.0aa784a4.js",
+    "main.css": "/static/css/main.698cc97f.css",
+    "main.js": "/static/js/main.33eed18c.js",
+    "static/media/BRLNSR.TTF": "/static/media/BRLNSR.dc095e60ae5e90312573.TTF",
     "static/media/logo.png": "/static/media/logo.799ccebc19d5c19f19fa.png",
     "index.html": "/index.html"
   },
   "entrypoints": [
-    "static/css/main.3ae38a7b.css",
-    "static/js/main.0aa784a4.js"
+    "static/css/main.698cc97f.css",
+    "static/js/main.33eed18c.js"
   ]
 }

@@ -4,7 +4,7 @@ const Internship = require("../models/InternshipModel");
 const Post = require("../models/questionModel");
 const { getUserIdFromToken } = require("../middlewares/authMiddleware");
 
-const formatToken = previous => {
+const formatToken = (previous) => {
   return previous.split(" ")[1];
 };
 
@@ -56,7 +56,7 @@ const getPostReturnFormat = (user, post, comments) => {
   return data;
 };
 
-const getAllComments = async answers => {
+const getAllComments = async (answers) => {
   const comments = [];
   for (let i of answers) {
     const commentUser = await User.findOne({ _id: i.author });
@@ -104,12 +104,14 @@ const createPosts = async (req, res) => {
 
     if (post) {
       res.status(201).json(returnFormat);
+      return;
     } else {
       res.status(400).send({ message: "Error occured when creating new post" });
       return;
     }
   } catch (error) {
     res.status(400).send({ message: "Error occured when creating new post" });
+    return;
   }
 };
 
@@ -145,8 +147,10 @@ const editPost = async (req, res) => {
     );
 
     res.status(200).send({ message: "Update post success" });
+    return;
   } catch (error) {
     res.status(400).send({ message: "Error occured when updating post" });
+    return;
   }
 };
 
@@ -195,8 +199,10 @@ const deletePost = async (req, res) => {
     }
 
     res.status(200).send({ message: "Delete post success" });
+    return;
   } catch (error) {
     res.status(400).send({ message: "Error occured when deleting post" });
+    return;
   }
 };
 
@@ -239,8 +245,10 @@ const upvote = async (req, res) => {
 
     await editPostField(upvotePost._id, "$push", "upvote", upvotePost.userId);
     res.status(200).send({ message: "Upvote post success" });
+    return;
   } catch (error) {
     res.status(400).send({ message: "Error occured when upvoting post" });
+    return;
   }
 };
 
@@ -273,8 +281,10 @@ const unupvote = async (req, res) => {
       );
     }
     res.status(200).send({ message: "Unupvoting post success" });
+    return;
   } catch (error) {
     res.status(400).send({ message: "Error occured when unupvoting post" });
+    return;
   }
 };
 
@@ -388,8 +398,10 @@ const downvote = async (req, res) => {
       downvotePost.userId
     );
     res.status(200).send({ message: "Downvote post success" });
+    return;
   } catch (error) {
     res.status(400).send({ message: "Error occured when downvoting post" });
+    return;
   }
 };
 
@@ -423,8 +435,10 @@ const undownvote = async (req, res) => {
       );
     }
     res.status(200).send({ message: "Undownvote post success" });
+    return;
   } catch (error) {
     res.status(400).send({ message: "Error occured when undownvoting post" });
+    return;
   }
 };
 
@@ -476,8 +490,10 @@ const comment = async (req, res) => {
 
     await editPostField(postDetails._id, "$push", "answers", newComment);
     res.status(200).send({ message: "Post comment success" });
+    return;
   } catch (error) {
     res.status(400).send({ message: "Error occured when commenting post" });
+    return;
   }
 };
 
@@ -514,8 +530,10 @@ const deleteComment = async (req, res) => {
     );
     // await editPostField(post._id, "$pull", "answers", comment._id);
     res.status(200).send({ message: "Delete comment success" });
+    return;
   } catch (error) {
     res.status(400).send({ message: "Error occured when deleting comment" });
+    return;
   }
 };
 
@@ -528,6 +546,7 @@ const getPostsByModuleCode = async (req, res) => {
     });
     if (!findModule) {
       res.status(200).json([]);
+      return;
     }
 
     const posts = [];
@@ -552,6 +571,7 @@ const getPostsByModuleCode = async (req, res) => {
     }
 
     res.status(200).json(posts);
+    return;
   } catch (error) {
     res
       .status(400)
@@ -579,10 +599,12 @@ const getPostByPostId = async (req, res) => {
     const post = getPostReturnFormat(findUser, findPost, comments);
 
     res.status(200).json(post);
+    return;
   } catch (error) {
     res
       .status(400)
       .send({ message: "Error occured when getting posts by post id" });
+    return;
   }
 };
 
@@ -623,7 +645,7 @@ const getPostReturn = (user, post, comments) => {
   return data;
 };
 
-const getAllReviews = async answers => {
+const getAllReviews = async (answers) => {
   const comments = [];
   for (let i of answers) {
     const commentUser = await User.findOne({ _id: i.author });
@@ -676,12 +698,14 @@ const createPostforInternship = async (req, res) => {
     const returnFormat = getPostReturn(findUser, post, []);
     if (post) {
       res.status(201).json(returnFormat);
+      return;
     } else {
       res.status(400).send({ message: "Error occured when creating new post" });
       return;
     }
   } catch (error) {
     res.status(400).send({ message: "Error occured when creating new post" });
+    return;
   }
 };
 
@@ -717,8 +741,10 @@ const editPostInternship = async (req, res) => {
     );
 
     res.status(200).send({ message: "Update post success" });
+    return;
   } catch (error) {
     res.status(400).send({ message: "Error occured when updating post" });
+    return;
   }
 };
 
@@ -767,8 +793,10 @@ const deletePostInternship = async (req, res) => {
     }
 
     res.status(200).send({ message: "Delete post success" });
+    return;
   } catch (error) {
     res.status(400).send({ message: "Error occured when deleting post" });
+    return;
   }
 };
 
@@ -805,10 +833,12 @@ const getPostsByInternshipId = async (req, res) => {
     }
 
     res.status(200).json(posts);
+    return;
   } catch (error) {
     res
       .status(400)
       .send({ message: "Error occured when getting posts by internship" });
+    return;
   }
 };
 

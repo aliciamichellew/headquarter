@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import {
   Button,
   CssBaseline,
@@ -24,17 +24,19 @@ import { Link as RouterLink, useNavigate } from "react-router-dom";
 
 import axios from "axios";
 import { addUserToLocalStorage } from "../utils/localStorage";
+import { UserContext } from "../../App";
 
 function Copyright(props) {
   return (
     <Typography
-      variant='body2'
-      color='text.secondary'
-      align='center'
+      variant="body2"
+      color="text.secondary"
+      align="center"
       fontFamily={"Berlin Sans FB"}
-      {...props}>
+      {...props}
+    >
       {"Copyright © "}
-      <Link color='inherit' href='https://mui.com/'>
+      <Link color="inherit" href="https://mui.com/">
         headquarter
       </Link>{" "}
       {new Date().getFullYear()}
@@ -56,8 +58,10 @@ export default function SignUpSide() {
   const [message, setMessage] = useState(null);
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const { setUserInfo } = useContext(UserContext);
 
-  const handleSubmit = async event => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     if (password !== confirmPassword) {
       setMessage("Passwords Do not Match");
@@ -76,9 +80,13 @@ export default function SignUpSide() {
           { firstName, lastName, username, email, password },
           config
         );
+        setUserInfo(data);
         localStorage.setItem("userInfo", JSON.stringify(data));
         setAuthToken(data.token);
-        addUserToLocalStorage(data);
+        // addUserToLocalStorage(data);
+        // localStorage.setItem("userInfo", JSON.stringify(data));
+        navigate("/home");
+        // console.log("masuk")
       } catch (error) {
         setIsSignUpFail(true);
       } finally {
@@ -101,8 +109,8 @@ export default function SignUpSide() {
     <ThemeProvider theme={theme}>
       <Box sx={{ display: "flex" }}>
         <TopDrawer open={open} handleDrawerOpen={handleDrawerOpen} />
-        <Box component='main' sx={{ flexGrow: 1, p: 0 }}>
-          <Grid container component='main' sx={{ height: "100vh" }}>
+        <Box component="main" sx={{ flexGrow: 1, p: 0 }}>
+          <Grid container component="main" sx={{ height: "100vh" }}>
             <CssBaseline />
             <Grid
               item
@@ -116,7 +124,8 @@ export default function SignUpSide() {
                 flexDirection: "column",
                 alignItems: "center",
                 justifyContent: "center",
-              }}>
+              }}
+            >
               <Box
                 sx={{
                   my: 8,
@@ -125,15 +134,17 @@ export default function SignUpSide() {
                   flexDirection: "column",
                   alignItems: "center",
                   justifyContent: "center",
-                }}>
-                <img src={logo} alt='logo' style={{ width: 300 }} />
+                }}
+              >
+                <img src={logo} alt="logo" style={{ width: 300 }} />
                 <Typography fontFamily={"Berlin Sans FB"} fontSize={60}>
                   headquarter
                 </Typography>
                 <Typography
                   fontFamily={"Berlin Sans FB"}
                   fontSize={20}
-                  sx={{ mx: 10 }}>
+                  sx={{ mx: 10 }}
+                >
                   headquarter students to their dreams.
                 </Typography>
               </Box>
@@ -150,7 +161,8 @@ export default function SignUpSide() {
                 flexDirection: "column",
                 alignItems: "center",
                 justifyContent: "center",
-              }}>
+              }}
+            >
               <Box
                 sx={{
                   my: 8,
@@ -158,11 +170,13 @@ export default function SignUpSide() {
                   display: "flex",
                   flexDirection: "column",
                   alignItems: "center",
-                }}>
+                }}
+              >
                 <Typography
                   fontFamily={"Berlin Sans FB"}
                   fontSize={50}
-                  sx={{ my: 5 }}>
+                  sx={{ my: 5 }}
+                >
                   Sign Up
                 </Typography>
                 <Card sx={{ mx: 5 }}>
@@ -171,87 +185,88 @@ export default function SignUpSide() {
                     {message && <ErrorMessage> {message} </ErrorMessage>}
                     {loading && <CircularProgress />}
                     <Box
-                      component='form'
+                      component="form"
                       noValidate
                       onSubmit={handleSubmit}
-                      sx={{ mt: 0 }}>
+                      sx={{ mt: 0 }}
+                    >
                       <TextField
-                        margin='normal'
+                        margin="normal"
                         required
                         fullWidth
-                        id='firstName'
-                        label='First Name'
-                        name='firstName'
-                        autoComplete='firstName'
+                        id="firstName"
+                        label="First Name"
+                        name="firstName"
+                        autoComplete="firstName"
                         autoFocus
                         value={firstName}
-                        onChange={e => setFirstName(e.target.value)}
+                        onChange={(e) => setFirstName(e.target.value)}
                       />
                       <TextField
-                        margin='normal'
+                        margin="normal"
                         required
                         fullWidth
-                        id='lastName'
-                        label='Last Name'
-                        name='lastName'
-                        autoComplete='lastName'
+                        id="lastName"
+                        label="Last Name"
+                        name="lastName"
+                        autoComplete="lastName"
                         autoFocus
                         value={lastName}
-                        onChange={e => setLastName(e.target.value)}
+                        onChange={(e) => setLastName(e.target.value)}
                       />
                       <TextField
-                        margin='normal'
+                        margin="normal"
                         required
                         fullWidth
-                        id='username'
-                        label='Username'
-                        name='username'
-                        autoComplete='username'
+                        id="username"
+                        label="Username"
+                        name="username"
+                        autoComplete="username"
                         autoFocus
                         value={username}
-                        onChange={e => setUsername(e.target.value)}
+                        onChange={(e) => setUsername(e.target.value)}
                       />
                       <TextField
-                        margin='normal'
+                        margin="normal"
                         required
                         fullWidth
-                        id='email'
-                        label='Email Address'
-                        name='email'
-                        autoComplete='email'
+                        id="email"
+                        label="Email Address"
+                        name="email"
+                        autoComplete="email"
                         autoFocus
                         value={email}
-                        onChange={e => setEmail(e.target.value)}
+                        onChange={(e) => setEmail(e.target.value)}
                       />
                       <TextField
-                        margin='normal'
+                        margin="normal"
                         required
                         fullWidth
-                        name='password'
-                        label='Password'
-                        type='password'
-                        id='password'
-                        autoComplete='current-password'
+                        name="password"
+                        label="Password"
+                        type="password"
+                        id="password"
+                        autoComplete="current-password"
                         value={password}
-                        onChange={e => setPassword(e.target.value)}
+                        onChange={(e) => setPassword(e.target.value)}
                       />
                       <TextField
-                        margin='normal'
+                        margin="normal"
                         required
                         fullWidth
-                        name='confirmPassword'
-                        label='Confirm Password'
-                        type='password'
-                        id='confirmPassword'
-                        autoComplete='current-password'
+                        name="confirmPassword"
+                        label="Confirm Password"
+                        type="password"
+                        id="confirmPassword"
+                        autoComplete="current-password"
                         value={confirmPassword}
-                        onChange={e => setConfirmPassword(e.target.value)}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
                       />
                     </Box>
                   </CardContent>
                   {isSignUpFail && (
                     <div style={{ padding: "0px 10px 0px 10px" }}>
-                      <Alert severity='error'>User already existed!</Alert>
+                      <Alert severity="error">User already existed!</Alert>
                     </div>
                   )}
                   <CardActions
@@ -260,36 +275,40 @@ export default function SignUpSide() {
                       alignContent: "center",
                       flexDirection: "column",
                       justifyContent: "center",
-                    }}>
+                    }}
+                  >
                     <Box
-                      component='form'
+                      component="form"
                       noValidate
                       onSubmit={handleSubmit}
-                      sx={{ mt: 1 }}>
+                      sx={{ mt: 1 }}
+                    >
                       <Button
-                        type='submit'
+                        type="submit"
                         fullWidth
-                        variant='contained'
+                        variant="contained"
                         sx={{
                           mt: 2,
                           mb: 0,
                           color: "#000000",
                           backgroundColor: "#FFCE26",
-                        }}>
+                        }}
+                      >
                         <Typography fontFamily={"Berlin Sans FB"}>
                           Sign Up
                         </Typography>
                       </Button>
                       <Button
-                        type='submit'
+                        type="submit"
                         fullWidth
-                        variant='contained'
+                        variant="contained"
                         sx={{
                           mt: 3,
                           mb: 2,
                           color: "#000000",
                           backgroundColor: "#FFCE26",
-                        }}>
+                        }}
+                      >
                         <Typography fontFamily={"Berlin Sans FB"}>
                           Continue with Google
                         </Typography>
@@ -298,8 +317,9 @@ export default function SignUpSide() {
                         <Grid item>
                           <Link
                             component={RouterLink}
-                            to='/login'
-                            variant='body2'>
+                            to="/login"
+                            variant="body2"
+                          >
                             <Typography fontFamily={"Berlin Sans FB"}>
                               {"Have an account? Log in"}
                             </Typography>

@@ -17,6 +17,7 @@
     "axios": "^0.27.2",
     "cloudinary-react": "^1.8.1",
     "cors": "^2.8.5",
+    "cross-env": "^7.0.3",
     "dotenv": "^16.0.1",
     "headquarter": "file:..",
     "npm": "^8.15.0",
@@ -52,5 +53,6 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "proxy": "http://localhost:5000"
 }

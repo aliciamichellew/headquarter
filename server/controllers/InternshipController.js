@@ -30,6 +30,7 @@ const createInternship = asyncHandler(async (req, res) => {
       company: Internship.company,
       position: Internship.position,
     });
+    return;
   } else {
     res.status(404);
     throw new Error("Failed to create the Internship");
@@ -39,6 +40,7 @@ const createInternship = asyncHandler(async (req, res) => {
 const fetchInternship = asyncHandler(async (req, res) => {
   const internships = await Internship.find({}).sort({ createdAt: -1 });
   res.status(200).json(internships);
+  return;
 });
 /*const addInternship = async (internshipId, postId) => {
   const internshipUpdated = await Internship.updateOne(
@@ -86,9 +88,11 @@ const findInternshipbyId = asyncHandler(async (req, res) => {
   const internship = await Internship.findOne({ _id: id });
   if (!internship) {
     return res.status(404).json({ error: "Internship does not exist" });
+    return;
   }
 
   res.status(200).json(internship);
+  return;
 });
 
 const getMyInternship = async (req, res) => {
@@ -97,6 +101,7 @@ const getMyInternship = async (req, res) => {
     const profile = await Profile.findOne({ user: userId });
     if (!profile) {
       res.status(200).send({ message: "User not found!" });
+      return;
     }
     res.json(profile.myInternships);
   } catch (error) {
@@ -112,6 +117,7 @@ const findInternshipSearchQueryMyInternships = async (req, res) => {
     const profile = await Profile.findOne({ user: userId });
     if (!profile) {
       res.status(200).send({ message: "User not found!" });
+      return;
     }
     const data = profile.myInternships;
     if (!data) {
@@ -139,11 +145,13 @@ const findInternshipSearchQueryMyInternships = async (req, res) => {
 
 const userExperiencedInternship = async (req, res) => {
   try {
+    console.log("masuk api");
     const checkExperienced = req.query;
 
     const profile = await Profile.findOne({ user: checkExperienced.userId });
     if (!profile) {
       res.status(200).send({ message: "User not found!" });
+      return;
     }
 
     let experienced = false;
@@ -152,14 +160,16 @@ const userExperiencedInternship = async (req, res) => {
       internshipsExperience: { $elemMatch: { id: checkExperienced.id } },
     });
 
-    if (findIntershipExperienced) {
+    if (findInternshipExperienced) {
       experienced = true;
     }
     res.json(experienced);
   } catch (error) {
+    console.log(error);
     res.status(400).send({
       message: "Error occured when checking user experience internship",
     });
+    return;
   }
 };
 const getInternshipTaken = async (req, res) => {
@@ -168,6 +178,7 @@ const getInternshipTaken = async (req, res) => {
     const profile = await Profile.findOne({ user: userId });
     if (!profile) {
       res.status(200).send({ message: "User not found!" });
+      return;
     }
     res.json(profile.InternshipTaken);
   } catch (error) {

@@ -20,7 +20,7 @@ router.route("/").get(fetchInternship);
 router.route("/searchInternship/").get(findInternshipbyCompanyorPosition);
 router.route("/getInternship/").get(findInternshipbyCompanyandPosition);
 router.route("/fetchInternship/:id").get(findInternshipbyId);
-router.route("/myinternships/:userId").get(protect, getMyInternship);
+router.route("/myinternship/:userId").get(protect, getMyInternship);
 router.route("/InternshipTaken/:userId").get(protect, getInternshipTaken);
 router.route("/checkinternship/:userId").get(protect, userFollowInternship);
 router.route("/experiencedinterns").get(userExperiencedInternship);

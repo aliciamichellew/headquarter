@@ -11,3 +11,9 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+@font-face {
+  font-family: "Berlin Sans FB";
+  src: url("./fonts/BRLNSR.TTF") format("truetype");
+  font-weight: normal;
+}

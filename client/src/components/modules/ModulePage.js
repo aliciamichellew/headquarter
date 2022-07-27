@@ -235,7 +235,7 @@ export default function ModulePage(module) {
       fetchModules(userId);
       getUserProfile(userId);
     }
-  }, [userId]);
+  }, [userId, follow]);
 
   const [searchQuery, setSearchQuery] = useState("");
   const handleSubmit = async e => {
@@ -286,8 +286,7 @@ export default function ModulePage(module) {
         { _id, isAnonymous, text, title, moduleCode },
         config
       );
-      currentPosts.push(data);
-      setPosts(currentPosts);
+      await getPosts();
     } catch (error) {}
   };
 

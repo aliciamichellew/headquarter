@@ -36,6 +36,7 @@ const getUserProfile = async (req, res) => {
       user: userId,
     });
     res.json(profile);
+    return;
   } catch (error) {
     res
       .status(400)
@@ -48,6 +49,7 @@ const getUserProfiles = asyncHandler(async (req, res) => {
     await Profile.find({})
   ).find({ _id: { $ne: req.user._id } });
   res.status(200).json(profiles);
+  return;
 });
 
 const updateUserProfile = asyncHandler(async (req, res) => {
@@ -60,6 +62,7 @@ const updateUserProfile = asyncHandler(async (req, res) => {
       newProfile.hasOwnProperty("username")
     ) {
       res.status(400).send({ message: "Cannot update email or username" });
+      return;
     }
 
     const profile = await Profile.findOneAndUpdate(
@@ -88,8 +91,10 @@ const updateUserProfile = asyncHandler(async (req, res) => {
     }
 
     res.status(200).send({ message: "Update status success" });
+    return;
   } catch (err) {
     res.status(400).send({ message: "Error occured when updating user" });
+    return;
   }
 });
 
@@ -121,8 +126,10 @@ const followModule = async (req, res) => {
       { $push: { myModules: moduleData } }
     );
     res.status(200).send({ message: "Follow module success" });
+    return;
   } catch (error) {
     res.status(400).send({ message: "Error occured when following module" });
+    return;
   }
 };
 
@@ -154,8 +161,10 @@ const unfollowModule = async (req, res) => {
       { $pull: { myModules: moduleData } }
     );
     res.status(200).send({ message: "Unfollow module success" });
+    return;
   } catch (error) {
     res.status(400).send({ message: "Error occured when unfollowing module" });
+    return;
   }
 };
 
@@ -205,10 +214,12 @@ const experiencedModule = async (req, res) => {
       await addExperiencedtoModule(moduleExists._id, experiencedData);
     }
     res.status(200).send({ message: "Experienced module success" });
+    return;
   } catch (error) {
     res
       .status(400)
       .send({ message: "Error occured when adding module to experienced" });
+    return;
   }
 };
 
@@ -240,10 +251,12 @@ const unexperiencedModule = async (req, res) => {
       { $pull: { moduleTaken: { moduleCode: moduleCode } } }
     );
     res.status(200).send({ message: "Unexperienced module success" });
+    return;
   } catch (error) {
     res
       .status(400)
       .send({ message: "Error occured when removing module from experienced" });
+    return;
   }
 };
 
@@ -272,8 +285,10 @@ const followUser = async (req, res) => {
 
     await editFollowingList(userId, "$push", "myFollowing", userIdFollow);
     res.status(200).send({ message: "Follow user success" });
+    return;
   } catch (error) {
     res.status(400).send({ message: "Error occured when following user" });
+    return;
   }
 };
 
@@ -302,8 +317,11 @@ const unfollowUser = async (req, res) => {
 
     await editFollowingList(userId, "$pull", "myFollowing", userIdFollow);
     res.status(200).send({ message: "Unfollow user success" });
+
+    return;
   } catch (error) {
     res.status(400).send({ message: "Error occured when unfollowing user" });
+    return;
   }
 };
 
@@ -329,8 +347,10 @@ const getFollowing = async (req, res) => {
       }
     }
     res.status(200).json(following);
+    return;
   } catch (error) {
     res.status(400).send({ message: "Error occured when get following" });
+    return;
   }
 };
 
@@ -382,10 +402,12 @@ const checkFollowUser = async (req, res) => {
       follow = true;
     }
     res.json(follow);
+    return;
   } catch (error) {
     res
       .status(400)
       .send({ message: "Error occured when checking user follow" });
+    return;
   }
 };
 
@@ -407,6 +429,7 @@ const uploadProfilePic = async (req, res) => {
   );
   try {
     res.status(200).json(uploadedImage);
+    return;
   } catch (error) {}
 };
 
@@ -439,6 +462,7 @@ const followInternship = async (req, res) => {
       { $push: { myInternship: InternshipData } }
     );
     res.status(200).send({ message: "Follow internship success" });
+    return;
   } catch (error) {
     res
       .status(400)
@@ -475,11 +499,13 @@ const unfollowInternship = async (req, res) => {
       { $pull: { myInternship: InternshipData } }
     );
     res.status(200).send({ message: "Unfollow internship success" });
+    return;
   } catch (error) {
     console.log(error);
     res
       .status(400)
       .send({ message: "Error occured when unfollowing internship" });
+    return;
   }
 };
 
@@ -514,10 +540,12 @@ const experiencedInternship = async (req, res) => {
       { $push: { internshipsExperience: internshipData } }
     );
     res.status(200).send({ message: "Experienced internship success" });
+    return;
   } catch (error) {
     res
       .status(400)
       .send({ message: "Error occured when adding internship to experienced" });
+    return;
   }
 };
 
@@ -554,10 +582,12 @@ const unexperiencedInternship = async (req, res) => {
       }
     );
     res.status(200).send({ message: "Unexperienced internship success" });
+    return;
   } catch (error) {
     res.status(400).send({
       message: "Error occured when removing internship from experienced",
     });
+    return;
   }
 };
 

@@ -42,6 +42,7 @@ const accessChat = asyncHandler(async (req, res) => {
       );
 
       res.status(452).send(FullChat);
+      return;
     } catch (error) {
       res.status(404);
       throw new Error(error.messsage);
@@ -55,7 +56,7 @@ const fetchChat = asyncHandler(async (req, res) => {
       .populate("users", "-password")
       .populate("LatestMessage")
       .sort({ updatedAt: -1 })
-      .then(async results => {
+      .then(async (results) => {
         results = await User.populate(results, {
           path: "latestMessage.sender",
           select: "name email",

@@ -156,6 +156,14 @@ export default function CommentPage() {
     setOpen(false);
   };
 
+  const handleBack = () => {
+    if (post.content.company && post.content.position) {
+      navigate(`/internships/${post.content.internshipId}`);
+    } else {
+      navigate(`/modules/${post.content.moduleCode}`);
+    }
+  };
+
   return (
     <div>
       <Box sx={{ display: "flex" }}>
@@ -202,9 +210,7 @@ export default function CommentPage() {
                     },
                   }}
                   style={{ justifyContent: "flex-start" }}
-                  onClick={() => {
-                    navigate(`/modules/${post.content.moduleCode}`);
-                  }}
+                  onClick={handleBack}
                   startIcon={<ArrowBack />}>
                   <Box sx={{ display: "flex", flexDirection: "column" }}>
                     <Typography fontSize={20}>Back</Typography>

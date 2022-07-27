@@ -23,11 +23,9 @@ dotenv.config();
 
 const port = process.env.PORT || 5000;
 
-app.use(express.static(path.join(__dirname + "/public")));
-
-const server = app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
-});
+mongoose.connect(process.env.DATABASE_ACCESS, () =>
+  console.log("Database connected")
+);
 
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ extended: true, limit: "50mb" }));
@@ -38,11 +36,12 @@ app.use(
   })
 );
 
-mongoose.connect(process.env.DATABASE_ACCESS, () =>
-  console.log("Database connected")
-);
-
+// console.log(process.env.NODE_ENV);
+// // if (process.env.NODE_ENV === "production") {
+// console.log("masuk production");
 app.use(cors());
+app.use(express.static(path.join(__dirname + "/public")));
+
 app.use("/api/internships", internshipRoutes);
 app.use("/api/chat", chatRoutes);
 app.use("/api/users", userRoutes);
@@ -50,8 +49,30 @@ app.use("/api/modules", moduleRoutes);
 app.use("/api/profile", profileRoutes);
 app.use("/api/post", postRoutes);
 app.use("/api/message", messageRoutes);
-app.use(notFound);
 app.use(errorHandler);
+
+app.get("*", (req, res, next) => {
+  console.log("what i want");
+  res.sendFile(path.join(__dirname + "/public/index.html"));
+});
+app.use(notFound);
+
+// app.use(function (req, res, next) {
+//   res.header(
+//     "Access-Control-Allow-Origin",
+//     "https://headquarter-orbital.herokuapp.com"
+//   ); // update to match the domain you will make the request from
+//   res.header(
+//     "Access-Control-Allow-Headers",
+//     "Origin, X-Requested-With, Content-Type, Accept"
+//   );
+//   next();
+// });
+// }
+
+const server = app.listen(port, () => {
+  console.log(`Example app listening on port ${port}`);
+});
 
 // console.log(path.join(__dirname, "../", "client/", "build/", "index.html"));
 // console.log(path.resolve(__dirname, "client", "build", "index.html"));

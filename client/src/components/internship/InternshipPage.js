@@ -82,7 +82,7 @@ export default function InternshipPage() {
   };
 
   useEffect(() => {
-    const getInternshipInfo = async id => {
+    const getInternshipInfo = async (id) => {
       setLoading(true);
       const config = {
         headers: {
@@ -104,7 +104,7 @@ export default function InternshipPage() {
   }, [internshipId]);
 
   useEffect(() => {
-    const checkFollow = async userId => {
+    const checkFollow = async (userId) => {
       const config = {
         headers: {
           "Content-type": "application/json",
@@ -159,11 +159,11 @@ export default function InternshipPage() {
     setOpen(false);
   };
 
-  const handleChange = event => {
+  const handleChange = (event) => {
     setSort(event.target.value);
   };
 
-  const handleChangeFollow = async e => {
+  const handleChangeFollow = async (e) => {
     if (!follow) {
       await axios({
         method: "put",
@@ -188,7 +188,7 @@ export default function InternshipPage() {
   };
 
   useEffect(() => {
-    const fetchInternships = async userId => {
+    const fetchInternships = async (userId) => {
       setLoading(true);
       const config = {
         headers: {
@@ -196,7 +196,7 @@ export default function InternshipPage() {
         },
       };
       const { data } = await axios.get(
-        `/api/internships/myinternships/${userId}`,
+        `/api/internships/myinternship/${userId}`,
         { userId },
         config
       );
@@ -209,7 +209,7 @@ export default function InternshipPage() {
   }, [userId]);
 
   const [searchQuery, setSearchQuery] = useState("");
-  const handleSubmit = async e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const config = {
@@ -406,16 +406,17 @@ export default function InternshipPage() {
         handleDrawerClose={handleDrawerClose}
         theme={theme}
       />
-      <Box component='main' sx={{ flexGrow: 1, pt: 0 }}>
+      <Box component="main" sx={{ flexGrow: 1, pt: 0 }}>
         <Grid
           container
-          component='main'
+          component="main"
           sx={{
             minHeight: "100vh",
             backgroundColor: "#FFCE26",
             display: "flex",
             alignContent: "flex-start",
-          }}>
+          }}
+        >
           <DrawerHeader />
           <Box
             sx={{
@@ -425,7 +426,8 @@ export default function InternshipPage() {
               display: "flex",
               flexDirection: "column",
               width: "100%",
-            }}>
+            }}
+          >
             <Card sx={{ backgroundColor: "#1E2328", pl: 2, pt: 1, pb: 1 }}>
               <Box
                 sx={{
@@ -433,7 +435,8 @@ export default function InternshipPage() {
                   flexDirection: "row",
                   justifyContent: "space-between",
                   width: "100%",
-                }}>
+                }}
+              >
                 <Box sx={{ display: "flex", flexDirection: "column" }}>
                   <Typography sx={{ fontSize: 40, color: "#FFCE26" }}>
                     {company}
@@ -449,7 +452,8 @@ export default function InternshipPage() {
                     justifyContent: "flex-end",
                     justifyItems: "center",
                     alignItems: "center",
-                  }}>
+                  }}
+                >
                   {!experienced && (
                     <ExperiencedInternshipModal
                       company={company}
@@ -481,17 +485,19 @@ export default function InternshipPage() {
                     sx={{ color: "#FFCE26" }}
                   />
                   <FormControl
-                    sx={{ mx: 2, minWidth: 120, borderColor: "#FFCE26" }}>
+                    sx={{ mx: 2, minWidth: 120, borderColor: "#FFCE26" }}
+                  >
                     <InputLabel
-                      id='demo-simple-select-helper-label'
-                      sx={{ color: "#FFCE26", borderColor: "#FFCE26" }}>
+                      id="demo-simple-select-helper-label"
+                      sx={{ color: "#FFCE26", borderColor: "#FFCE26" }}
+                    >
                       Sort
                     </InputLabel>
                     <Select
-                      labelId='demo-simple-select-helper-label'
-                      id='demo-simple-select-helper'
+                      labelId="demo-simple-select-helper-label"
+                      id="demo-simple-select-helper"
                       value={sort}
-                      label='Sort'
+                      label="Sort"
                       onChange={handleChange}
                       sx={{
                         border: "1px solid #FFCE26",
@@ -499,8 +505,9 @@ export default function InternshipPage() {
                         "& .MuiSvgIcon-root": {
                           color: "#FFCE26",
                         },
-                      }}>
-                      <MenuItem value=''>{/* <em>Latest</em> */}</MenuItem>
+                      }}
+                    >
+                      <MenuItem value="">{/* <em>Latest</em> */}</MenuItem>
                       <MenuItem value={"latest"}>Latest</MenuItem>
                       <MenuItem value={"mostliked"}>Most Liked</MenuItem>
                     </Select>
@@ -512,14 +519,15 @@ export default function InternshipPage() {
             <Box sx={{ display: "flex", flexDirection: "row", gap: 5, mt: 3 }}>
               <Box sx={{ width: "25%" }}>
                 <Box
-                  component='form'
+                  component="form"
                   noValidate
                   onSubmit={handleSubmit}
                   sx={{
                     display: "flex",
                     justifyContent: "flex-start",
                     flexDirection: "row",
-                  }}>
+                  }}
+                >
                   <Box
                     sx={{
                       display: "flex",
@@ -527,30 +535,32 @@ export default function InternshipPage() {
                       justifyItems: "center",
                       width: "70%",
                       mr: 1,
-                    }}>
+                    }}
+                  >
                     <SearchIcon
                       sx={{ color: "action.active", mr: 1, my: 0.5 }}
                     />
                     <TextField
-                      id='searchQuery'
-                      label='Search by company or position'
-                      variant='standard'
+                      id="searchQuery"
+                      label="Search by company or position"
+                      variant="standard"
                       sx={{ width: "100%" }}
                       value={searchQuery}
-                      onChange={e => setSearchQuery(e.target.value)}
+                      onChange={(e) => setSearchQuery(e.target.value)}
                     />
                   </Box>
                   <Button
-                    type='submit'
+                    type="submit"
                     fullWidth
-                    variant='contained'
+                    variant="contained"
                     sx={{
                       mb: 0,
                       color: "#FFCE26",
                       backgroundColor: "#1E2328",
                       width: "30%",
                       height: 40,
-                    }}>
+                    }}
+                  >
                     <Typography fontFamily={"Berlin Sans FB"}>
                       Search
                     </Typography>
@@ -563,8 +573,9 @@ export default function InternshipPage() {
                     alignItems: "flex-start",
                     mt: 3,
                     width: "100%",
-                  }}>
-                  {internshipList.slice(0, 10).map(internships => (
+                  }}
+                >
+                  {internshipList.slice(0, 10).map((internships) => (
                     <InternshipButton
                       company={internships.company}
                       position={internships.position}
@@ -574,9 +585,9 @@ export default function InternshipPage() {
                 </Box>
                 <Box>
                   <Button
-                    type='submit'
+                    type="submit"
                     fullWidth
-                    variant='contained'
+                    variant="contained"
                     sx={{
                       mt: 2,
                       mb: 0,
@@ -587,7 +598,8 @@ export default function InternshipPage() {
                     }}
                     onClick={() => {
                       navigate("/myinternship");
-                    }}>
+                    }}
+                  >
                     <Typography fontFamily={"Berlin Sans FB"}>
                       View All My Internships
                     </Typography>
@@ -600,24 +612,27 @@ export default function InternshipPage() {
                   flexDirection: "column",
                   alignItems: "center",
                   width: "50%",
-                }}>
+                }}
+              >
                 <Card
                   sx={{
                     display: "flex",
                     flexDirection: "row",
                     mb: 3,
                     width: "100%",
-                  }}>
+                  }}
+                >
                   <Box
                     sx={{
                       display: "flex",
                       flexDirection: "row",
                       m: 2,
                       width: "100%",
-                    }}>
+                    }}
+                  >
                     <img
                       src={profile}
-                      alt='profile'
+                      alt="profile"
                       style={{
                         width: 40,
                         marginRight: 10,
@@ -639,9 +654,10 @@ export default function InternshipPage() {
                     padding: 0,
                     gap: 3,
                     width: "100%",
-                  }}>
+                  }}
+                >
                   {loading && <CircularProgress />}
-                  {_DATA.currentData().map(posts => (
+                  {_DATA.currentData().map((posts) => (
                     <PostCard
                       posts={posts}
                       handleAddComment={handleAddComment}
@@ -665,7 +681,8 @@ export default function InternshipPage() {
                 />
               </Box>
               <Box
-                sx={{ display: "flex", flexDirection: "column", width: "25%" }}>
+                sx={{ display: "flex", flexDirection: "column", width: "25%" }}
+              >
                 <Typography sx={{ fontSize: 30, mb: 3 }}>
                   Experienced Users
                 </Typography>

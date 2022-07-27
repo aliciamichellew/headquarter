@@ -35,6 +35,7 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 export default function AllModules() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -59,10 +60,11 @@ export default function AllModules() {
       setModuleList(res.data);
       setLoading(false);
     };
-    fetchModules();
-  }, []);
+    if (!searchQuery) {
+      fetchModules();
+    }
+  }, [searchQuery]);
 
-  const [searchQuery, setSearchQuery] = useState("");
   const handleSubmit = async e => {
     e.preventDefault();
     try {
@@ -73,13 +75,15 @@ export default function AllModules() {
       };
 
       setLoading(true);
-      const { data } = await axios.get(
-        `/api/modules/allmodules/${searchQuery}`,
-        { searchQuery },
-        config
-      );
+      if (searchQuery) {
+        const { data } = await axios.get(
+          `/api/modules/allmodules/${searchQuery}`,
+          { searchQuery },
+          config
+        );
+        setModuleList(data);
+      }
 
-      setModuleList(data);
       setLoading(false);
     } catch (error) {
       throw error.message;

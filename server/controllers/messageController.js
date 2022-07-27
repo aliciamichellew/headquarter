@@ -28,6 +28,7 @@ const sendMessage = async (req, res) => {
   await Chat.findByIdAndUpdate(chatId, { latestMessage: m }, { new: true });
 
   res.status(201).json(m);
+  return;
 };
 
 const allMessages = async (req, res) => {
@@ -38,6 +39,7 @@ const allMessages = async (req, res) => {
     .populate("chat");
 
   res.status(202).json(getMessage);
+  return;
 };
 
 module.exports = { allMessages, sendMessage };

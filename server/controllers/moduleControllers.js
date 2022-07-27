@@ -24,12 +24,16 @@ const findModule = asyncHandler(async (request, response) => {
   const data = await axios.get(NUSMODS_MODULELIST_URL);
   const { searchQuery } = request.params;
 
+  if (!searchQuery) {
+    response.json(data);
+    return;
+  }
   if (!data.data) {
     response.status(400);
     throw new Error("Fetch Failed!");
   }
 
-  const module = data.data.filter(x =>
+  const module = data.data.filter((x) =>
     x.moduleCode.includes(searchQuery.toUpperCase())
   );
 
@@ -57,10 +61,13 @@ const getMyModules = async (req, res) => {
     const profile = await Profile.findOne({ user: userId });
     if (!profile) {
       res.status(200).send({ message: "User not found!" });
+      return;
     }
     res.json(profile.myModules);
+    return;
   } catch (error) {
     res.status(400).send({ message: "Error occured when getting my module" });
+    return;
   }
 };
 
@@ -70,12 +77,14 @@ const getModuleTaken = async (req, res) => {
     const profile = await Profile.findOne({ user: userId });
     if (!profile) {
       res.status(200).send({ message: "User not found!" });
+      return;
     }
     res.json(profile.moduleTaken);
   } catch (error) {
     res
       .status(400)
       .send({ message: "Error occured when getting module taken" });
+    return;
   }
 };
 
@@ -86,6 +95,7 @@ const userFollowModule = async (req, res) => {
     const profile = await Profile.findOne({ user: checkFollow.userId });
     if (!profile) {
       res.status(200).send({ message: "User not found!" });
+      return;
     }
 
     let followed = false;
@@ -111,6 +121,7 @@ const findModuleSearchQueryMyModules = async (req, res) => {
     const profile = await Profile.findOne({ user: userId });
     if (!profile) {
       res.status(200).send({ message: "User not found!" });
+      return;
     }
     const data = profile.myModules;
     if (!data) {
@@ -118,7 +129,7 @@ const findModuleSearchQueryMyModules = async (req, res) => {
       throw new Error("Fetch Failed!");
     }
 
-    const module = data.filter(x =>
+    const module = data.filter((x) =>
       x.moduleCode.includes(searchQuery.toUpperCase())
     );
 
@@ -137,6 +148,7 @@ const userExperiencedModule = async (req, res) => {
     const profile = await Profile.findOne({ user: checkExperienced.userId });
     if (!profile) {
       res.status(200).send({ message: "User not found!" });
+      return;
     }
 
     let experienced = false;
@@ -167,6 +179,7 @@ const getExperiencedUser = async (req, res) => {
 
     if (!module) {
       res.status(200).json(users);
+      return;
     }
     const experiencedUsers = module.experiencedUser;
 
@@ -187,6 +200,7 @@ const getExperiencedUser = async (req, res) => {
       }
     }
     res.status(200).json(users);
+    return;
   } catch (err) {
     res
       .status(400)

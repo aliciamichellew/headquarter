@@ -54,11 +54,12 @@ function TabPanel(props) {
 
   return (
     <div
-      role='tabpanel'
+      role="tabpanel"
       hidden={value !== index}
       id={`simple-tabpanel-${index}`}
       aria-labelledby={`simple-tab-${index}`}
-      {...other}>
+      {...other}
+    >
       {value === index && (
         <Box sx={{ mx: 3, mb: 3 }}>
           <Typography>{children}</Typography>
@@ -98,6 +99,8 @@ export default function MyProfilePage() {
   const userId = userInfo ? userInfo._id : null;
   const [userProfile, setUserProfile] = useState();
   const [profilePic, setProfilePic] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [bio, setBio] = useState("");
   const [twitter, setTwitter] = useState("");
   const [facebook, setFacebook] = useState("");
@@ -106,7 +109,7 @@ export default function MyProfilePage() {
   const [website, setWebsite] = useState("");
   const [github, setGithub] = useState("");
 
-  const getMyModules = async e => {
+  const getMyModules = async (e) => {
     try {
       setLoading(false);
       const config = {
@@ -124,7 +127,7 @@ export default function MyProfilePage() {
     } catch (error) {}
   };
 
-  const getMyInternships = async e => {
+  const getMyInternships = async (e) => {
     try {
       setLoading(false);
       const config = {
@@ -142,7 +145,7 @@ export default function MyProfilePage() {
     } catch (error) {}
   };
 
-  const getMyFriends = async e => {
+  const getMyFriends = async (e) => {
     try {
       setLoading(true);
       const config = {
@@ -161,7 +164,7 @@ export default function MyProfilePage() {
     } catch (error) {}
   };
 
-  const getUserProfile = async e => {
+  const getUserProfile = async (e) => {
     try {
       setLoading(false);
       const config = {
@@ -175,6 +178,8 @@ export default function MyProfilePage() {
         config
       );
       setUserProfile(data);
+      setFirstName(data.firstName);
+      setLastName(data.lastName);
       setProfilePic(data.profilePic || "");
       setBio(data.bio || "");
       setTwitter(data.social.twitter || "");
@@ -227,11 +232,22 @@ export default function MyProfilePage() {
     event.preventDefault();
 
     try {
-      const result = await axios.post("/api/profile/uploadprofilepic", {
-        image: image,
-      });
-      const uploadedImg = result.data.public_id;
-      setProfilePic(uploadedImg);
+      if (image) {
+        const result = await axios.post("/api/profile/uploadprofilepic", {
+          image: image,
+        });
+        const uploadedImg = result.data.public_id;
+        setProfilePic(uploadedImg);
+        const { res } = await axios({
+          method: "put",
+          url: "/api/profile/editprofile",
+          data: {
+            profile: {
+              profilePic: uploadedImg,
+            },
+          },
+        });
+      }
 
       const config = {
         headers: {
@@ -246,7 +262,6 @@ export default function MyProfilePage() {
           profile: {
             firstName: firstName,
             lastName: lastName,
-            profilePic: uploadedImg,
             bio: bio,
             social: {
               twitter: twitter,
@@ -281,16 +296,17 @@ export default function MyProfilePage() {
         handleDrawerClose={handleDrawerClose}
         theme={theme}
       />
-      <Box component='main' sx={{ flexGrow: 1, pt: 0 }}>
+      <Box component="main" sx={{ flexGrow: 1, pt: 0 }}>
         <Grid
           container
-          component='main'
+          component="main"
           sx={{
             minHeight: "100vh",
             backgroundColor: "#FFCE26",
             display: "flex",
             alignContent: "flex-start",
-          }}>
+          }}
+        >
           <DrawerHeader />
           <Box
             sx={{
@@ -301,7 +317,8 @@ export default function MyProfilePage() {
               flexDirection: "column",
               width: "100%",
               alignItems: "center",
-            }}>
+            }}
+          >
             <Card
               sx={{
                 display: "flex",
@@ -310,7 +327,8 @@ export default function MyProfilePage() {
                 alignItems: "center",
                 backgroundColor: "#1E2328",
                 flexDirection: "column",
-              }}>
+              }}
+            >
               <Box
                 sx={{
                   mt: 5,
@@ -320,12 +338,13 @@ export default function MyProfilePage() {
                   flexDirection: "column",
                   width: "100%",
                   alignItems: "center",
-                }}>
+                }}
+              >
                 <Box sx={{ display: "flex", flexDirection: "row" }}>
                   {!profilePic && (
                     <img
                       src={profile}
-                      alt='profile'
+                      alt="profile"
                       style={{
                         width: 150,
                         marginRight: 5,
@@ -343,10 +362,10 @@ export default function MyProfilePage() {
                       flexDirection: "column",
                       justifyContent: "center",
                       ml: 5,
-                    }}>
+                    }}
+                  >
                     <Typography sx={{ fontSize: 40, color: "#FFCE26" }}>
-                      {userInfo.firstName.toUpperCase()}{" "}
-                      {userInfo.lastName.toUpperCase()}
+                      {firstName.toUpperCase()} {lastName.toUpperCase()}
                     </Typography>
                     <Typography sx={{ fontSize: 20, color: "#FFCE26" }}>
                       {userProfile && userProfile.bio}
@@ -423,17 +442,18 @@ export default function MyProfilePage() {
                   <Tabs
                     value={value}
                     onChange={handleChange}
-                    aria-label='basic tabs example'
-                    orientation='vertical'
-                    TabIndicatorProps={{ style: { background: "#FFCE26" } }}>
-                    <Tab label='Modules' {...a11yProps(0)} style={styles.tab} />
+                    aria-label="basic tabs example"
+                    orientation="vertical"
+                    TabIndicatorProps={{ style: { background: "#FFCE26" } }}
+                  >
+                    <Tab label="Modules" {...a11yProps(0)} style={styles.tab} />
                     <Tab
-                      label='Internships'
+                      label="Internships"
                       {...a11yProps(1)}
                       style={styles.tab}
                     />
                     <Tab
-                      label='Following'
+                      label="Following"
                       {...a11yProps(1)}
                       style={styles.tab}
                     />
@@ -447,26 +467,29 @@ export default function MyProfilePage() {
                         fontSize: 25,
                         justifyContent: "center",
                         color: "#FFCE26",
-                      }}>
+                      }}
+                    >
                       Modules Taken
                     </Typography>
                     <Card sx={{ mx: 0, mt: 3 }}>
                       <CardContent>
-                        <Box component='form' noValidate sx={{ mt: 0 }}>
+                        <Box component="form" noValidate sx={{ mt: 0 }}>
                           <Box
-                            sx={{ display: "flex", flexDirection: "column" }}>
+                            sx={{ display: "flex", flexDirection: "column" }}
+                          >
                             {modules.length == 0 && (
                               <Box
                                 sx={{
                                   display: "flex",
                                   justifyContent: "center",
-                                }}>
+                                }}
+                              >
                                 <Typography fontSize={20}>
                                   You have not taken any module.
                                 </Typography>
                               </Box>
                             )}
-                            {modules.map(modules => (
+                            {modules.map((modules) => (
                               <ModuleButton
                                 moduleCode={modules.moduleCode}
                                 moduleTitle={modules.title}
@@ -485,23 +508,25 @@ export default function MyProfilePage() {
                     </Typography>
                     <Card sx={{ mx: 0, mt: 3 }}>
                       <CardContent>
-                        <Box component='form' noValidate sx={{ mt: 0 }}>
+                        <Box component="form" noValidate sx={{ mt: 0 }}>
                           <Box
-                            sx={{ display: "flex", flexDirection: "column" }}>
+                            sx={{ display: "flex", flexDirection: "column" }}
+                          >
                             {internships.length == 0 && (
                               <Box
                                 sx={{
                                   display: "flex",
                                   justifyContent: "center",
-                                }}>
+                                }}
+                              >
                                 <Typography fontSize={40}>
                                   You have no Internship Experience
                                 </Typography>
                               </Box>
                             )}
-                            {internships.map(internships => (
+                            {internships.map((internships) => (
                               <Button
-                                size='large'
+                                size="large"
                                 sx={{
                                   color: "#000000",
                                   ":hover": {
@@ -509,7 +534,8 @@ export default function MyProfilePage() {
                                   },
                                   textAlign: "left",
                                 }}
-                                style={{ justifyContent: "flex-start" }}>
+                                style={{ justifyContent: "flex-start" }}
+                              >
                                 <Typography>
                                   {internships.company} {internships.position}
                                 </Typography>
@@ -528,21 +554,23 @@ export default function MyProfilePage() {
                     </Typography>
                     <Card sx={{ mx: 0, mt: 3 }}>
                       <CardContent>
-                        <Box component='form' noValidate sx={{ mt: 0 }}>
+                        <Box component="form" noValidate sx={{ mt: 0 }}>
                           <Box
-                            sx={{ display: "flex", flexDirection: "column" }}>
+                            sx={{ display: "flex", flexDirection: "column" }}
+                          >
                             {friends.length == 0 && (
                               <Box
                                 sx={{
                                   display: "flex",
                                   justifyContent: "center",
-                                }}>
+                                }}
+                              >
                                 <Typography fontSize={20}>
                                   You have not added any friends.
                                 </Typography>
                               </Box>
                             )}
-                            {friends.map(friends => (
+                            {friends.map((friends) => (
                               <ProfileButton
                                 firstName={friends.firstName}
                                 lastName={friends.lastName}
