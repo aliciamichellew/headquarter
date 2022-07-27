@@ -2,6 +2,7 @@ const asyncHandler = require("express-async-handler");
 const Profile = require("../models/profileModel");
 const { response } = require("express");
 const Internship = require("../models/InternshipModel");
+const User = require("../models/userModel");
 // const { default: Profile } = require("../../client/src/components/Profile");
 
 const createInternship = asyncHandler(async (req, res) => {
@@ -149,7 +150,7 @@ const userExperiencedInternship = async (req, res) => {
     let experienced = false;
     const findInternshipExperienced = await Profile.findOne({
       user: checkExperienced.userId,
-      internshipsExperience: { $elemMatch: { id: checkExperienced.id } },
+      internshipsExperience: { $elemMatch: {  id: checkExperienced.id} },
     });
 
     if (findIntershipExperienced) {
@@ -169,7 +170,7 @@ const getInternshipTaken = async (req, res) => {
     if (!profile) {
       res.status(200).send({ message: "User not found!" });
     }
-    res.json(profile.InternshipTaken);
+    res.json(profile.internshipsExperience);
   } catch (error) {
     res
       .status(400)
@@ -209,6 +210,44 @@ const userFollowInternship = async (req, res) => {
   }
 };
 
+const getUserExperience = async(req,res) => {
+  try{
+    const {id} = req.params;
+    const Internship = await Internship.findOne({ _id: id });
+    const users =[];
+
+    if(!Internship) {
+      res.status(201).json(users);
+      return;
+    }
+
+    const experiencedUsers = Internship.experienceUsers;
+    if (experiencedUsers.length !== 0) {
+      for (var item of experiencedUsers) {
+        const findUser = await User.findOne({ _id: item.user });
+        if (!findUser) {
+          res.status(400).send({ message: "User does not exist" });
+          return;
+        }
+
+        const data = {
+          user: findUser,
+          startDate: item.startDate,
+          endDate: item.endDate,
+        };
+        users.push(data);
+      }
+    }
+    res.status(200).json(users);
+    return;
+  } catch (err) {
+    res
+      .status(400)
+      .send({ message: "Error occured when getting experienced user" });
+  }
+};
+
+
 module.exports = {
   createInternship,
   fetchInternship,
@@ -220,6 +259,7 @@ module.exports = {
   userExperiencedInternship,
   findInternshipbyId,
   findInternshipbyCompanyandPosition,
+  getUserExperience,
   /*getInternship,
   findInternshipbyPosition,
   findInternshipbyPositionandCompany,

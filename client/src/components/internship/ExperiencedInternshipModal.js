@@ -19,8 +19,8 @@ const ExperiencedInternshipModal = ({
   position,
   handleExperienced,
 }) => {
-  const userInfo = useContext(UserContext);
-  const userId = userInfo._id;
+  const { userInfo }= useContext(UserContext);
+  
   const [open, setOpen] = useState(false);
   const [startDate, setstartDate] = useState("");
   const [endDate, setendDate] = useState("");
@@ -31,10 +31,6 @@ const ExperiencedInternshipModal = ({
 
   const handleClose = () => {
     setOpen(false);
-  };
-
-  const handleChangeDate = event => {
-    setendDate(event.target.value);
   };
 
   if (!userInfo) {
@@ -90,7 +86,7 @@ const ExperiencedInternshipModal = ({
             onSubmit={event => {
               handleExperienced(
                 event,
-                userId,
+                userInfo._id,
                 company,
                 position,
                 startDate,

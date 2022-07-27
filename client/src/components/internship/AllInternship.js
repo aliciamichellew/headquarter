@@ -227,11 +227,12 @@ export default function AllInternship() {
               alignItems={"center"}
               display={"flex"}>
               <Pagination
-                count={10}
-                page={page}
-                onChange={handlePaginationChange}
-                showFirstButton
-                showLastButton
+                  count={count}
+                  page={page}
+                  onChange={handlePaginationChange}
+                  showFirstButton
+                  showLastButton
+                  sx={{ mt: 2 }}
               />
             </Grid>
           </Box>

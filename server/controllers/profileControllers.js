@@ -425,18 +425,18 @@ const followInternship = async (req, res) => {
 
     const findInternshipFollowed = await Profile.findOne({
       user: userId,
-      myInternship: {
-        $elemMatch: { companyName: company, jobTitle: position },
+      myInternships: {
+        $elemMatch: { companyName: InternshipData.company, jobTitle: InternshipData.position },
       },
     });
 
     if (findInternshipFollowed) {
       res.status(200).send({ message: "Internship followed already" });
       return;
-    }
+    } 
     await Profile.updateOne(
       { user: userId },
-      { $push: { myInternship: InternshipData } }
+      { $push: { myInternships: InternshipData } }
     );
     res.status(200).send({ message: "Follow internship success" });
   } catch (error) {
