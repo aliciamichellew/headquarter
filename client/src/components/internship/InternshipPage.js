@@ -34,6 +34,7 @@ import usePagination from "../utils/Pagination";
 import InternshipButton from "./internshipButton";
 import ExperiencedInternshipModal from "./ExperiencedInternshipModal";
 import DeleteExperiencedInternshipModal from "./DeleteExperiencedInternshipModal";
+import ProfileAvatar from "../profile/ProfileAvatar";
 import { UserContext } from "../../App";
 
 const DrawerHeader = styled("div")(({ theme }) => ({
@@ -45,7 +46,7 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   ...theme.mixins.toolbar,
 }));
 
-export default function InternshipPage() {
+export default function InternshipPage(internship) {
   const { internshipId } = useParams();
   const [company, setCompany] = useState("");
   const [position, setPosition] = useState("");
@@ -60,6 +61,8 @@ export default function InternshipPage() {
   const { userInfo } = useContext(UserContext);
   const userId = userInfo ? userInfo._id : null;
   const [experienced, setExperienced] = useState();
+  const [profilePic, setProfilePic] = useState("");
+  const [experiencedUser, setExperiencedUser] = useState([]);
 
   const checkFollow = async () => {
     const config = {
@@ -72,7 +75,7 @@ export default function InternshipPage() {
         userId: userId,
       },
     };
-    const { data } = await axios.get(`/api/internships/checkinternship/${userId}`, {userId}, config);
+    const { data } = await axios.get(`/api/internships/checkinternship` , config);
     setFollow(data);
   };
 
@@ -113,8 +116,7 @@ export default function InternshipPage() {
     setLoading(false);
   };
 
-  useEffect(() => {
-    const getInternshipInfo = async id => {
+    const getInternshipInfo = async () => {
       setLoading(true);
       const config = {
         headers: {
@@ -122,61 +124,38 @@ export default function InternshipPage() {
         },
       };
       const { data } = await axios.get(
-        `/api/internships/fetchInternship/${id}`,
-        { id },
+        `/api/internships/fetchInternship/${internshipId}`,
+        { internshipId },
         config
       );
       setCompany(data.company);
       setPosition(data.position);
       setLoading(false);
     };
-    if (internshipId) {
-      getInternshipInfo(internshipId);
-    }
-  }, [internshipId]);
+    
+    const getExperiencedUsers = async () => {
+    setLoading(true);
+    const config = {
+      headers: {
+        "Content-type": "application/json",
+      },
+    };
+    const { data } = await axios.get(
+      `/api/internships/userExperience/${internshipId}`,
+      { internshipId },
+      config
+    );
+    setExperiencedUser(data);
+    setLoading(false);
+  };
 
   useEffect(() => {
-    const checkFollow = async userId => {
-      const config = {
-        headers: {
-          "Content-type": "application/json",
-        },
-        params: {
-          company: company,
-          postion: position,
-          userId: userId,
-        },
-      };
-      const { data } = await axios.get(
-        `/api/internships/checkinternship/${userId}`,
-        { userId },
-        config
-      );
-      setFollow(data);
-    };
-    const checkExperienced = async (id, userId) => {
-      const config = {
-        headers: {
-          "Content-type": "application/json",
-        },
-        params: {
-          id: id,
-          userId: userId,
-        },
-      };
-      const { data } = await axios.get(
-        `/api/internships/experiencedinterns`,
-        config
-      );
-      setExperienced(data);
-    };
-
-    if (internshipId && userId) {
-      checkExperienced(internshipId, userId);
-      checkFollow(userId);
-      getPosts();
-    }
-  }, [internshipId, userId]);
+    getInternshipInfo();
+    checkFollow();
+    checkExperienced();
+    getPosts();
+    getExperiencedUsers();
+  }, [internshipId]);
 
   const [page, setPage] = useState(1);
   const PER_PAGE = 10;
@@ -201,7 +180,7 @@ export default function InternshipPage() {
         method: "put",
         url: "/api/profile/followinternship",
         data: {
-          id: internshipId,
+          internshipId: internshipId,
           userId: userId,
         },
       });
@@ -211,7 +190,7 @@ export default function InternshipPage() {
         method: "put",
         url: "/api/profile/unfollowinternship",
         data: {
-          id: internshipId,
+          internshipId: internshipId,
           userId: userId,
         },
       });
@@ -235,10 +214,29 @@ export default function InternshipPage() {
       setInternshipList(data);
       setLoading(false);
     };
+
+  const getUserProfile = async userId => {
+      try {
+        setLoading(false);
+        const config = {
+          headers: {
+            "Content-type": "application/json",
+          },
+        };
+        const { data } = await axios.get(
+          `/api/profile/getprofile/${userId}`,
+          { userId },
+          config
+        );
+        setProfilePic(data.profilePic || "");
+        setLoading(false);
+      } catch (err) {}
+    };
     if (userId) {
       fetchInternships(userId);
+      getUserProfile(userId);
     }
-  }, [userId]);
+  }, [userId, follow]);
 
   const [searchQuery, setSearchQuery] = useState("");
   const handleSubmit = async e => {
@@ -264,9 +262,7 @@ export default function InternshipPage() {
     }
   };
 
-  let users = [{ name: "User 1" }, { name: "User 2" }, { name: "User 3" }];
-
-  const handleCreatePost = async (event, _id, isAnonymous, text, title) => {
+  const handleCreatePost = async (event, _id, isAnonymous, text, title, company, position, internshipId) => {
     event.preventDefault();
     try {
       const config = {
@@ -281,8 +277,7 @@ export default function InternshipPage() {
         { _id, isAnonymous, text, title, company, position, internshipId },
         config
       );
-      currentPosts.push(data);
-      setPosts(currentPosts);
+      await getPosts();
     } catch (error) {}
   };
 
@@ -386,6 +381,7 @@ export default function InternshipPage() {
   const handleExperienced = async (
     event,
     userId,
+    internshipId,
     company,
     position,
     startDate,
@@ -395,7 +391,7 @@ export default function InternshipPage() {
       method: "put",
       url: "/api/profile/experiencedinternship",
       data: {
-        id: internshipId,
+        internshipId: internshipId,
         userId: userId,
         startDate: startDate,
         endDate: endDate,
@@ -421,7 +417,7 @@ export default function InternshipPage() {
     _DATA.jump(p);
   };
 
-  if (!userInfo) {
+  if (!userInfo || !userId ) {
     navigate("/");
     return <></>;
   }
@@ -649,6 +645,7 @@ export default function InternshipPage() {
                       m: 2,
                       width: "100%",
                     }}>
+                    {!profilePic && (
                     <img
                       src={profile}
                       alt='profile'
@@ -658,6 +655,10 @@ export default function InternshipPage() {
                         borderRadius: "50%",
                       }}
                     />
+                    )}
+                     {profilePic && (
+                      <ProfileAvatar profilePic={profilePic} width={40} />
+                     )}
                     <AddPostModal
                       company={company}
                       position={position}
@@ -703,7 +704,10 @@ export default function InternshipPage() {
                 <Typography sx={{ fontSize: 30, mb: 3 }}>
                   Experienced Users
                 </Typography>
-                <UserCard users={users} />
+                {experiencedUser.map(users => (
+                <UserCard users={users.user}
+                    content={`${users.startDate} - ${users.endDate}`} />
+                ))}
               </Box>
             </Box>
           </Box>

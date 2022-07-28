@@ -84,7 +84,7 @@ export default function AllInternship() {
       };
       const { res } = await axios({
         method: "post",
-        url: "/api/internships",
+        url: "/api/internships/",
         data: {
           company: {company},
           position: {position},

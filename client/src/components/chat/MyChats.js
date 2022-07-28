@@ -14,7 +14,7 @@ const MyChats = ({ fetchAgain }) => {
 
   const fetchChats = async () => {
     try {
-      const { data } = await api.get(`/api/chat/${user._id}`);
+      const { data } = await api.get(`/api/chat`);
 
       setChats(data);
     } catch (error) {
@@ -37,19 +37,17 @@ const MyChats = ({ fetchAgain }) => {
       borderRadius="lg"
       borderWidth="1px"
     >
-     <Card sx={{ width: 275, height: 550, display: "flex" }}>
-      <Typography
-        pb={3}
+     <Card pb={3}
         px={3}
         fontSize={{ base: "28px", md: "30px" }}
         fontFamily="Poppins"
         display="flex"
         w="100%"
+        sx = {{height: 550}}
         justifyContent="space-between"
         alignItems="center"
-      >
-        My Chats
-      </Typography>
+        >
+      <Typography variant="h5" p = {1.5}> My Chats </Typography>
       <Box
         display="flex"
         flexDirection="column"
@@ -65,22 +63,21 @@ const MyChats = ({ fetchAgain }) => {
             {chats?.map((chat) => (
               <Box
                 onClick={() => setSelectedChat(chat)}
-                cursor="pointer"
                 bg={
-                  selectedChat === chat ? "rgba(67, 43, 255, 0.8)" : "#E8E8E8"
+                  selectedChat === chat ? "#38B2AC" : "#E8E8E8"
                 }
                 color={selectedChat === chat ? "white" : "black"}
                 px={3}
                 py={2}
                 borderRadius="lg"
-                key={chat?._id}
+                key={chat._id}
               >
                 <Typography>
-                  {getSender(loggedUser, chat?.users)}
+                  {chat.getSender(loggedUser, chat.users)}
                   
                   </Typography>
                   {chat.latestMessage && (
-                  <Typography fontSize="xs">
+                  <Typography fontSize="s">
                     <b>{chat.latestMessage.sender.name} : </b>
                     {chat.latestMessage.content.length > 50
                       ? chat.latestMessage.content.substring(0, 51) + "..."

@@ -3,6 +3,7 @@ import {
   Button,
   Card,
   CardContent,
+  CircularProgress,
   createTheme,
   Stack,
   TextField,
@@ -10,7 +11,7 @@ import {
   Typography
 } from "@mui/material";
 import axios from "axios";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ChatLoading from "./ChatLoading";
 import UserListItem from "../UserAvatar/UserListItem";
@@ -30,10 +31,9 @@ export default function ChatCard() {
 
   const [search, setSearch] = useState("");
   const [searchResult, setSearchResult] = useState([]);
-  const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [persons, setPersons] = useState([]);
   const [loadingChat, setLoadingChat] = useState(false);
-  const navigate = useNavigate();
   const {
     setSelectedChat,
     user,
@@ -42,7 +42,8 @@ export default function ChatCard() {
   } = useAppContext();
 
 
-  const handleSearch = async () => {
+  const handleSearch = async e => {
+  e.preventDefault();  
     if (!search) {
       toast.error("Please Provide username");
       return;
@@ -50,7 +51,8 @@ export default function ChatCard() {
     try {
       setLoading(true);
 
-      const { data } = await api.get(`/api/profile/fetchprofile/${search}`);
+      //problem
+      const { data } = await api.get(`/api/profile/fetchprofile/`, {search});
 
       setLoading(false);
       setSearchResult(data);
@@ -64,7 +66,7 @@ export default function ChatCard() {
     try {
       setLoadingChat(true);
 
-      const { data } = await api.get(`/api/chat/${userId}`);
+      const { data } = await api.post(`/api/chat/`, {userId});
 
       if (!chats.find((c) => c._id === data._id)) setChats([data, ...chats]);
       setSelectedChat(data);
@@ -73,6 +75,21 @@ export default function ChatCard() {
       toast.error(error);
     }
   };
+
+  useEffect(() => {
+    const fetchPersons = async () => {
+       const config = {
+        headers: {
+          "Content-type": "application/json",
+        },
+      };
+      const { data } = await api.get(`/api/profile/getfollowing/${user._id}`, config);
+
+      setLoading(false);
+      setPersons(data);
+    };
+    fetchPersons();
+  }, []);
 
   return (
     <Box
@@ -84,18 +101,21 @@ export default function ChatCard() {
         gap: 0,
         overflow: "auto",
         flexFlow: "wrap",
-        ml: 3,
+        ml: 0,
       }}
     >
-      <Card sx={{ width: 260, height: 550 }}>
-        <CardContent sx={{ height: 65 }}>
+      <Card sx={{ width: 300, height: 550 }}>
+        <CardContent sx={{ height: 525 }}>
           <Box component="form" sx={{display:"flex", justifyContent:"flex-end"}}>
         <Box
           sx={{
             display: "flex",
             alignItems: "center",
             justifyItems: "center",
-            width: 250,
+            width: 270,
+            padding: 0,
+            ml: 5,
+
             }}
             >
             <TextField
@@ -103,30 +123,39 @@ export default function ChatCard() {
             label="Search by name or email"
             id="outlined-size-small"
             size="small"
-            sx={{width: 100, gap: 2}}
+            sx={{width: 145, mr: 1}}
             value = {search}
             onChange={(e) => setSearch(e.target.value)}
             />
-
-           
-          </Box>
-
             <ThemeProvider theme={customTheme}>
-            <Stack spacing={2} direction="row">
+            <Stack  direction="row">
               <Button type="submit" fullWidth variant="contained"  onClick = {handleSearch}>
               <Typography fontFamily={"Berlin Sans FB"}>Search</Typography>
               </Button>
               </Stack>
             </ThemeProvider>
+            
+          </Box>
+       {persons.map((person, id) => {
+        if (person._id !== user._id) 
+        return <UserListItem
+            key={id}
+            user={person}
+            handleFunction={()=>accessChat(person._id)}/>
+      })}
+
         {loading ? (<ChatLoading /> 
         ):( 
-          searchResult?.map(user => (
+          searchResult?.map((user) => (
             <UserListItem
             key={user._id}
             user={user}
             handleFunction={()=>accessChat(user._id)}
             />)))}
             </Box>
+            
+           
+          {loadingChat && <CircularProgress />}
         </CardContent>
       </Card>
     </Box>

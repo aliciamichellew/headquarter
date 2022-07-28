@@ -4,12 +4,16 @@ import React from 'react';
 const ChatLoading = () => {
     return (
         <Stack>
-            <Skeleton variant="text" />
-            <Skeleton variant="text" />
-            <Skeleton variant="text" />
-            <Skeleton variant="text" />
-            <Skeleton variant="text" />
-            <Skeleton variant="text" />
+            <Skeleton variant="text" width={215} height={30}/>
+            <Skeleton variant="text" width={215} height={30}/>
+            <Skeleton variant="text" width={215} height={30}/>
+            <Skeleton variant="text" width={215} height={30}/>
+            <Skeleton variant="text" width={215} height={30}/>
+            <Skeleton variant="text" width={215} height={30}/>
+            <Skeleton variant="text" width={215} height={30}/>
+            <Skeleton variant="text" width={215} height={30}/>
+            <Skeleton variant="text" width={215} height={30}/>
+            <Skeleton variant="text" width={215} height={30}/> 
         </Stack>
     );
 }

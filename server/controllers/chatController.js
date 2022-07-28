@@ -11,7 +11,7 @@ const accessChat = asyncHandler(async (req, res) => {
     return res.sendStatus(451);
   }
 
-  var isChat = await Chat.find({
+  var isChat = await Chat.findOne({
     $and: [
       { users: { $elemMatch: { $eq: req.user._id } } },
       { users: { $elemMatch: { $eq: req.userId } } },

@@ -16,14 +16,12 @@ const {
   unfollowInternship,
   experiencedInternship,
   unexperiencedInternship,
-  getUserProfiles,
-  getUserFromUsername
+  Users,
 } = require("../controllers/profileControllers");
 const { protect } = require("../middlewares/authMiddleware");
 const router = express.Router();
-router.route("/").get(getUserProfiles);
 router.route("/getprofile/:userId").get(protect, getUserProfile);
-router.route("/fetchprofile/:username").get(getUserFromUsername);
+router.route("/fetchprofile/").get(protect, Users);
 router.route("/editprofile").put(protect, updateUserProfile);
 router.route("/followmodule").put(protect, followModule);
 router.route("/unfollowmodule").put(protect, unfollowModule);

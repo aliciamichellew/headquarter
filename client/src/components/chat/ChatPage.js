@@ -95,12 +95,6 @@ export default function ChatPage() {
 
           </Box>
             <Grid justifyContent={'center'} alignItems={'center'} display={'flex'}>
-              <Pagination
-                  count={10}
-                  page={page}
-                  onChange={handlePaginationChange}
-                  showFirstButton
-                  showLastButton/>
             </Grid>
           </Box>
         </Grid>

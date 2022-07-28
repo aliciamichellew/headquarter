@@ -189,8 +189,8 @@ const { selectedChat, setSelectedChat, user, notification, setNotification } = u
             justifyContent="center"
             h="100%"
             >
-              <Typography fontSize="3xl" pb={1} fontFamily="Poppins">
-                Click On Users to Start Conversation
+              <Typography fontSize="3xl" p={7} fontFamily="Poppins">
+                Search Users to Start Conversation
               </Typography>
             </Box>       
             )}

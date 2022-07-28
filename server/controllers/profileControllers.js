@@ -43,13 +43,6 @@ const getUserProfile = async (req, res) => {
   }
 };
 
-const getUserProfiles = asyncHandler(async (req, res) => {
-  const profiles = await (
-    await Profile.find({})
-  ).find({ _id: { $ne: req.user._id } });
-  res.status(200).json(profiles);
-});
-
 const updateUserProfile = asyncHandler(async (req, res) => {
   try {
     const newProfile = req.body.profile;
@@ -419,14 +412,14 @@ const followInternship = async (req, res) => {
       return;
     }
     const InternshipData = {
-      company: response.data.company,
-      position: response.data.position,
+      companyName: response.data.company,
+      jobTitle: response.data.position,
     };
 
     const findInternshipFollowed = await Profile.findOne({
       user: userId,
       myInternships: {
-        $elemMatch: { companyName: InternshipData.company, jobTitle: InternshipData.position },
+        $elemMatch: { companyName: InternshipData.companyName, jobTitle: InternshipData.jobTitle },
       },
     });
 
@@ -559,11 +552,25 @@ const unexperiencedInternship = async (req, res) => {
       message: "Error occured when removing internship from experienced",
     });
   }
-};
+  };
+
+  const Users = asyncHandler(async (req, res) => {
+  const keyword = req.query.search
+    ? {
+        $or: [
+          { name: { $regex: req.query.search, $options: "i" } },
+          { email: { $regex: req.query.search, $options: "i" } },
+        ],
+      }
+    : {};
+
+  const users = await User.find(keyword).find({ _id: { $ne: req.user._id } });
+  res.send(users);
+});
+
 
 module.exports = {
   getUserProfile,
-  getUserProfiles,
   updateUserProfile,
   followModule,
   unfollowModule,
@@ -579,5 +586,5 @@ module.exports = {
   unfollowInternship,
   experiencedInternship,
   unexperiencedInternship,
-  getUserFromUsername,
+  Users,
 };
