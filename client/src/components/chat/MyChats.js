@@ -42,8 +42,7 @@ const MyChats = ({ fetchAgain }) => {
         fontSize={{ base: "28px", md: "30px" }}
         fontFamily="Poppins"
         display="flex"
-        w="100%"
-        sx = {{height: 550}}
+        sx = {{height: 550, width: 300}}
         justifyContent="space-between"
         alignItems="center"
         >

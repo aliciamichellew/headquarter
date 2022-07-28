@@ -64,7 +64,7 @@ export default function MyInternship() {
       };
       setLoading(true);
       const res = await axios.get(
-        `/api/internships/myinternship/${userId}`,
+        `/api/internships/myinternships/${userId}`,
         { userId },
         config
       );
@@ -86,7 +86,7 @@ export default function MyInternship() {
 
       setLoading(true);
       const { data } = await axios.get(
-        `/api/internships/myinternship/search/${userId}/${searchQuery}`,
+        `/api/internships/myinternships/search/${userId}/${searchQuery}`,
         { userId },
         { searchQuery },
         config

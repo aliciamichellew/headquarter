@@ -21,7 +21,7 @@ const {
 const { protect } = require("../middlewares/authMiddleware");
 const router = express.Router();
 router.route("/getprofile/:userId").get(protect, getUserProfile);
-router.route("/fetchprofile/").get(protect, Users);
+router.route("/fetchprofile").get(protect, Users);
 router.route("/editprofile").put(protect, updateUserProfile);
 router.route("/followmodule").put(protect, followModule);
 router.route("/unfollowmodule").put(protect, unfollowModule);

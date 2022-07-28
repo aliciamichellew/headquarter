@@ -121,9 +121,9 @@ const { selectedChat, setSelectedChat, user, notification, setNotification } = u
         gap: 0,
         overflow: "auto",
         flexFlow: "wrap",
-        ml: 3,
+        ml: 0,
       }}>
-      <Card sx={{ width: 350, height: 550, display: "flex" }}>
+      <Card sx={{ width: 650, height: 550, display: "flex" }}>
       {selectedChat ? (
         <Box>
         <CardContent sx={{ flex: " auto" }}>
@@ -189,7 +189,7 @@ const { selectedChat, setSelectedChat, user, notification, setNotification } = u
             justifyContent="center"
             h="100%"
             >
-              <Typography fontSize="3xl" p={7} fontFamily="Poppins">
+              <Typography fontSize="30" p={25} fontFamily="Poppins">
                 Search Users to Start Conversation
               </Typography>
             </Box>       

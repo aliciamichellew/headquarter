@@ -28,7 +28,7 @@ router.route("/experiencedinterns").get(userExperiencedInternship);
 router.route("/userExperience/:id").get(getUserExperience);
 //router.route("/allinternship/:searchQuery").get(findInternshipSearchQuery);
 router
-  .route("/myinternship/search/:userId/:searchQuery")
+  .route("/myinternships/search/:userId/:searchQuery")
   .get(findInternshipSearchQueryMyInternships);
 
 module.exports = router;

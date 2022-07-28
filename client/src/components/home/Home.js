@@ -18,7 +18,6 @@ import axios from "axios";
 import ProfileButton from "../profile/ProfileButton";
 import InternshipButton from "../internship/internshipButton";
 import { UserContext } from "../../App";
-import { useAppContext } from "../chat/ChatProvider";
 
 const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
@@ -35,7 +34,7 @@ export default function Home() {
   const [internships, setInternships] = useState([]);
   const [friends, setFriends] = useState([]);
   const [loading, setLoading] = useState(false);
-  const { user } = useContext(UserContext);
+  const { userInfo } = useContext(UserContext);
 
   useEffect(() => {
     const getMyModules = async userId => {
@@ -65,7 +64,7 @@ export default function Home() {
           },
         };
         const { data } = await axios.get(
-          `/api/internships/myinternship/${userId}`,
+          `/api/internships/myinternships/${userId}`,
           { userId },
           config
         );
@@ -93,14 +92,14 @@ export default function Home() {
       } catch (error) {}
     };
 
-    if (user) {
-      getMyModules(user._id);
-      getMyFriends(user._id);
-      getMyInternships(user._id);
+    if (userInfo) {
+      getMyModules(userInfo._id);
+      getMyFriends(userInfo._id);
+      getMyInternships(userInfo._id);
     } else {
       navigate("/");
     }
-  }, [user, navigate]);
+  }, [userInfo, navigate]);
 
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
@@ -113,7 +112,7 @@ export default function Home() {
     setOpen(false);
   };
 
-  if (!user) {
+  if (!userInfo) {
     navigate("/");
     return <></>;
   }
@@ -164,7 +163,7 @@ export default function Home() {
                 fontSize={50}
                 sx={{ mx: 0, mt: 0 }}
                 align={"left"}>
-                {user.firstName.toUpperCase()}
+                {userInfo.firstName.toUpperCase()}
               </Typography>
             </Box>
 

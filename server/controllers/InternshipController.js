@@ -95,7 +95,7 @@ const findInternshipbyId = asyncHandler(async (req, res) => {
 const getMyInternship = async (req, res) => {
   try {
     const { userId } = req.params;
-    const profile = await Profile.findOne({ user: userId });
+    const profile = await Profile.findOne({ userId: userId });
     if (!profile) {
       res.status(200).send({ message: "User not found!" });
     }
@@ -150,10 +150,10 @@ const userExperiencedInternship = async (req, res) => {
     let experienced = false;
     const findInternshipExperienced = await Profile.findOne({
       user: checkExperienced.userId,
-      internshipsExperience: { $elemMatch: {  id: checkExperienced.id} },
+      internshipsExperience: { $elemMatch: {  id: checkExperienced._id } },
     });
 
-    if (findIntershipExperienced) {
+    if (findInternshipExperienced) {
       experienced = true;
     }
     res.json(experienced);
@@ -213,15 +213,15 @@ const userFollowInternship = async (req, res) => {
 const getUserExperience = async(req,res) => {
   try{
     const {id} = req.params;
-    const Internship = await Internship.findOne({ _id: id });
+    const internship = await Internship.findOne({ id: id });
     const users =[];
 
-    if(!Internship) {
+    if(!internship) {
       res.status(201).json(users);
       return;
     }
 
-    const experiencedUsers = Internship.experienceUsers;
+  const experiencedUsers = internship.experiencedUser;
     if (experiencedUsers.length !== 0) {
       for (var item of experiencedUsers) {
         const findUser = await User.findOne({ _id: item.user });
