@@ -77,6 +77,7 @@ export default function InternshipPage() {
       { internshipId },
       config
     );
+    console.log("internship get post data = ", data);
     setPosts(data);
     setLoading(false);
   };

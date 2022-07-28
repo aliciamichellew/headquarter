@@ -539,6 +539,7 @@ const deleteComment = async (req, res) => {
 
 const getPostsByModuleCode = async (req, res) => {
   try {
+    console.log("masuk");
     const { moduleCode } = req.params;
 
     const findModule = await Modules.findOne({
@@ -559,7 +560,11 @@ const getPostsByModuleCode = async (req, res) => {
           return;
         }
 
+        // console.log(findPost);
+        console.log("userId = ", findPost.user);
+
         const findUser = await User.findOne({ _id: findPost.user });
+        console.log(findUser);
         if (!findUser) {
           res.status(400).send({ message: "User does not exist" });
           return;
@@ -589,6 +594,7 @@ const getPostByPostId = async (req, res) => {
       return;
     }
 
+    console.log("userId = ", findPost.user);
     const findUser = await User.findOne({ _id: findPost.user });
     if (!findPost) {
       res.status(400).send({ message: "User does not exist" });
@@ -695,7 +701,7 @@ const createPostforInternship = async (req, res) => {
     }
 
     const findUser = await User.findOne({ _id: post.user });
-    const returnFormat = getPostReturn(findUser, post, []);
+    const returnFormat = getPostReturnFormat(findUser, post, []);
     if (post) {
       res.status(201).json(returnFormat);
       return;
@@ -828,7 +834,7 @@ const getPostsByInternshipId = async (req, res) => {
         }
 
         const comments = await getAllReviews(findPost.answers);
-        posts.push(getPostReturn(findUser, findPost, comments));
+        posts.push(getPostReturnFormat(findUser, findPost, comments));
       }
     }
 

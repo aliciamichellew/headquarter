@@ -16,8 +16,12 @@ const UserCard = ({ users, content, loading }) => {
   const [name, setName] = useState("");
 
   useEffect(() => {
-    const getUserProfile = async userId => {
+    console.log("masuk user card");
+    console.log("users = ", users);
+    console.log("userId = ", userId);
+    const getUserProfile = async (userId) => {
       try {
+        console.log("masuk get user profile");
         const config = {
           headers: {
             "Content-type": "application/json",
@@ -28,11 +32,13 @@ const UserCard = ({ users, content, loading }) => {
           { userId },
           config
         );
+        console.log("user card data = ", data);
         setProfilePic(data.profilePic || "");
         const name = data.firstName + " " + data.lastName;
         setName(name);
       } catch (err) {}
     };
+    console.log(userId);
     if (userId) {
       getUserProfile(userId);
     }
@@ -46,16 +52,18 @@ const UserCard = ({ users, content, loading }) => {
         alignItems: "flex-start",
         padding: 0,
         gap: 3,
-      }}>
+      }}
+    >
       {/* {users.map((users) => ( */}
       <Card
-        sx={{ width: 275, backgroundColor: "transparent", boxShadow: "none" }}>
+        sx={{ width: 275, backgroundColor: "transparent", boxShadow: "none" }}
+      >
         <Box sx={{ display: "flex", flexDirection: "row" }}>
           <Box>
             {!profilePic && (
               <img
                 src={profile}
-                alt='profile'
+                alt="profile"
                 style={{ width: 50, borderRadius: "50%" }}
               />
             )}
@@ -71,7 +79,8 @@ const UserCard = ({ users, content, loading }) => {
             <Typography
               onClick={() => {
                 navigate(`/profile/${users.username}`);
-              }}>
+              }}
+            >
               {name}
             </Typography>
             {/* <Link href="#" underline="none" color="inherit">
