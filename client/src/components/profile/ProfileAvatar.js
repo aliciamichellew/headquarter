@@ -14,7 +14,7 @@ const ProfileAvatar = ({ profilePic, width }) => {
   // Use the image with public ID, 'front_face'.
   const myImage = cld.image(profilePic);
 
-  console.log(width);
+  // console.log(width);
 
   // Apply the transformation.
   myImage

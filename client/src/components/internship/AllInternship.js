@@ -55,26 +55,49 @@ export default function AllInternship() {
     setOpen(false);
   };
 
-  const [InternshipList, setInternshipList] = useState([]);
+  const [internshipList, setInternshipList] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    const fetchInternship = async () => {
+  const handleAddNewInternship = async (event, company, position) => {
+    event.preventDefault();
+
+    try {
+      console.log("inside handle add new intern function");
       const config = {
         headers: {
           "Content-type": "application/json",
         },
       };
-      setLoading(true);
-      const res = await axios.get("/api/internships", config);
-      setInternshipList(res.data);
-      setLoading(false);
+
+      const currentInternships = [...internshipList];
+      const { data } = await axios.post(
+        "/api/internships",
+        { company, position },
+        config
+      );
+      console.log(data);
+      await fetchInternship();
+    } catch (error) {}
+  };
+
+  const fetchInternship = async () => {
+    const config = {
+      headers: {
+        "Content-type": "application/json",
+      },
     };
+    setLoading(true);
+    const res = await axios.get("/api/internships", config);
+    setInternshipList(res.data);
+    setLoading(false);
+  };
+
+  useEffect(() => {
     fetchInternship();
   }, []);
 
   const [searchQuery, setSearchQuery] = useState("");
-  const handleSubmit = async e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const config = {
@@ -103,12 +126,12 @@ export default function AllInternship() {
 
   const [spacing, setSpacing] = React.useState(2);
 
-  const handleChange = event => {
+  const handleChange = (event) => {
     setSpacing(Number(event.target.value));
   };
 
-  const count = Math.ceil(InternshipList.length / PER_PAGE);
-  const _DATA = usePagination(InternshipList, PER_PAGE);
+  const count = Math.ceil(internshipList.length / PER_PAGE);
+  const _DATA = usePagination(internshipList, PER_PAGE);
 
   const handlePaginationChange = (e, p) => {
     setPage(p);
@@ -127,16 +150,17 @@ export default function AllInternship() {
         handleDrawerClose={handleDrawerClose}
         theme={theme}
       />
-      <Box component='main' sx={{ flexGrow: 1, pt: 3 }}>
+      <Box component="main" sx={{ flexGrow: 1, pt: 3 }}>
         <Grid
           container
-          component='main'
+          component="main"
           sx={{
             minHeight: "100vh",
             backgroundColor: "#FFCE26",
             display: "flex",
             alignContent: "flex-start",
-          }}>
+          }}
+        >
           <DrawerHeader />
           <Box
             sx={{
@@ -147,54 +171,59 @@ export default function AllInternship() {
               width: "100%",
               gap: 2,
               overflow: "auto",
-            }}>
+            }}
+          >
             <Typography
               fontFamily={"Berlin Sans FB"}
               fontSize={50}
               sx={{ mx: 0, mt: 0 }}
-              align={"left"}>
+              align={"left"}
+            >
               View All Internships
             </Typography>
 
             <Box
-              component='form'
+              component="form"
               noValidate
               onSubmit={handleSubmit}
-              sx={{ display: "flex", justifyContent: "flex-end" }}>
+              sx={{ display: "flex", justifyContent: "flex-end" }}
+            >
               <Box
                 sx={{
                   display: "flex",
                   alignItems: "center",
                   justifyItems: "center",
                   width: 250,
-                }}>
+                }}
+              >
                 <Search sx={{ color: "action.active", mr: 1, my: 0.5 }} />
                 <TextField
-                  label='Search by company or position'
-                  id='outlined-size-small'
-                  size='small'
+                  label="Search by company or position"
+                  id="outlined-size-small"
+                  size="small"
                   sx={{ width: 200 }}
                   value={searchQuery}
-                  onChange={e => setSearchQuery(e.target.value)}
+                  onChange={(e) => setSearchQuery(e.target.value)}
                 />
               </Box>
 
               <ThemeProvider theme={customTheme}>
-                <Stack spacing={2} direction='row'>
+                <Stack spacing={2} direction="row">
                   <Button
-                    type='submit'
+                    type="submit"
                     fullWidth
-                    variant='contained'
-                    sx={{ width: 150, height: 40 }}>
+                    variant="contained"
+                    sx={{ width: 150, height: 40 }}
+                  >
                     <Typography fontFamily={"Berlin Sans FB"}>
                       Search
                     </Typography>
                   </Button>
-                  <NewInternship />
+                  <NewInternship handleSubmit={handleAddNewInternship} />
                 </Stack>
               </ThemeProvider>
             </Box>
-            {InternshipList.length == 0 && (
+            {internshipList.length == 0 && (
               <Box sx={{ display: "flex", justifyContent: "center" }}>
                 <Typography fontSize={40}>No Internships Found</Typography>
               </Box>
@@ -204,7 +233,8 @@ export default function AllInternship() {
             <Grid
               justifyContent={"center"}
               alignItems={"center"}
-              display={"flex"}>
+              display={"flex"}
+            >
               <Pagination
                 count={10}
                 page={page}

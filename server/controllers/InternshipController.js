@@ -5,35 +5,42 @@ const Internship = require("../models/InternshipModel");
 // const { default: Profile } = require("../../client/src/components/Profile");
 
 const createInternship = asyncHandler(async (req, res) => {
-  const { company, position } = req.body;
+  try {
+    console.log("masuk create internship");
+    const { company, position } = req.body;
 
-  if (!company || !position) {
-    res.status(401);
-    throw new Error("Please Enter all the Fields");
-  }
+    if (!company || !position) {
+      res.status(400).send({ message: "Please Enter All Fields" });
+      return;
+    }
 
-  const InternshipExists = await Internship.findOne({ company, position });
+    const InternshipExists = await Internship.findOne({ company, position });
 
-  if (InternshipExists) {
-    res.status(402);
-    throw new Error("Internship already exists");
-  }
+    if (InternshipExists) {
+      res.status(400).send({ message: "Internship already exist" });
+      return;
+    }
 
-  const internship = await Internship.create({
-    company,
-    position,
-  });
-
-  if (internship) {
-    res.status(403).json({
-      _id: Internship._id,
-      company: Internship.company,
-      position: Internship.position,
+    const internship = await Internship.create({
+      company,
+      position,
     });
+    console.log(internship);
+
+    if (internship) {
+      res.status(201).json({
+        _id: Internship._id,
+        company: Internship.company,
+        position: Internship.position,
+      });
+      return;
+    }
+  } catch (error) {
+    console.log(error);
+    res
+      .status(400)
+      .send({ message: "Error occured when creating new internship" });
     return;
-  } else {
-    res.status(404);
-    throw new Error("Failed to create the Internship");
   }
 });
 
