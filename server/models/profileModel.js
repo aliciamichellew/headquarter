@@ -67,9 +67,17 @@ const ProfileSchema = new mongoose.Schema({
   ],
   internshipsExperience: [
     {
-      internship: {
+      internshipId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "internships",
+        required: true,
+      },
+      companyName: {
+        type: "String",
+        required: true,
+      },
+      jobTitle: {
+        type: "String",
         required: true,
       },
       startDate: {
@@ -78,10 +86,6 @@ const ProfileSchema = new mongoose.Schema({
       },
       endDate: {
         type: Date,
-      },
-      current: {
-        type: Boolean,
-        default: false,
       },
     },
   ],

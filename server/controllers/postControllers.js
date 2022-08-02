@@ -539,7 +539,7 @@ const deleteComment = async (req, res) => {
 
 const getPostsByModuleCode = async (req, res) => {
   try {
-    console.log("masuk");
+    // console.log("masuk");
     const { moduleCode } = req.params;
 
     const findModule = await Modules.findOne({
@@ -561,10 +561,10 @@ const getPostsByModuleCode = async (req, res) => {
         }
 
         // console.log(findPost);
-        console.log("userId = ", findPost.user);
+        // console.log("userId = ", findPost.user);
 
         const findUser = await User.findOne({ _id: findPost.user });
-        console.log(findUser);
+        // console.log(findUser);
         if (!findUser) {
           res.status(400).send({ message: "User does not exist" });
           return;
@@ -594,7 +594,7 @@ const getPostByPostId = async (req, res) => {
       return;
     }
 
-    console.log("userId = ", findPost.user);
+    // console.log("userId = ", findPost.user);
     const findUser = await User.findOne({ _id: findPost.user });
     if (!findPost) {
       res.status(400).send({ message: "User does not exist" });

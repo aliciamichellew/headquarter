@@ -354,17 +354,17 @@ export default function InternshipPage() {
 
   const handleExperienced = async (
     event,
+    internshipId,
     userId,
-    company,
-    position,
     startDate,
     endDate
   ) => {
+    console.log(userId);
     await axios({
       method: "put",
       url: "/api/profile/experiencedinternship",
       data: {
-        id: internshipId,
+        internshipId: internshipId,
         userId: userId,
         startDate: startDate,
         endDate: endDate,
@@ -373,12 +373,12 @@ export default function InternshipPage() {
     setExperienced(true);
   };
 
-  const handleRemoveExperienced = async (event, company, position) => {
+  const handleRemoveExperienced = async (event, internshipId, userId) => {
     await axios({
       method: "put",
       url: "/api/profile/unexperiencedinternship",
       data: {
-        id: internshipId,
+        internshipId: internshipId,
         userId: userId,
       },
     });
@@ -457,6 +457,7 @@ export default function InternshipPage() {
                 >
                   {!experienced && (
                     <ExperiencedInternshipModal
+                      internshipId={internshipId}
                       company={company}
                       position={position}
                       handleExperienced={handleExperienced}
@@ -464,8 +465,7 @@ export default function InternshipPage() {
                   )}
                   {experienced && (
                     <DeleteExperiencedInternshipModal
-                      company={company}
-                      position={position}
+                      internshipId={internshipId}
                       handleRemoveExperienced={handleRemoveExperienced}
                     />
                   )}

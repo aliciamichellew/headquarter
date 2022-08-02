@@ -5,6 +5,7 @@ const Modules = require("../models/moduleModel");
 const Internship = require("../models/InternshipModel");
 const axios = require("axios");
 const cloudinary = require("../cloudinary/cloudinary");
+const { userFollowModule } = require("./moduleControllers");
 
 const editFollowingList = async (id, op, key, value) => {
   await Profile.updateOne(
@@ -422,9 +423,9 @@ const uploadProfilePic = async (req, res) => {
     },
     function (error, result) {
       if (error) {
-        console.log(error);
+        // console.log(error);
       }
-      console.log(result);
+      // console.log(result);
     }
   );
   try {
@@ -436,10 +437,10 @@ const uploadProfilePic = async (req, res) => {
 const followInternship = async (req, res) => {
   try {
     const { _id, userId } = req.body;
-    console.log("follow req.body = ", req.body);
-    console.log(_id);
+    // console.log("follow req.body = ", req.body);
+    // console.log(_id);
     const response = await Internship.findOne({ _id: _id });
-    console.log("follow response = ", response);
+    // console.log("follow response = ", response);
     if (!response) {
       res.status(400).send({ message: "Internship not found" });
       return;
@@ -450,7 +451,7 @@ const followInternship = async (req, res) => {
       jobTitle: response.position,
     };
 
-    console.log("Internship data: ", InternshipData);
+    // console.log("Internship data: ", InternshipData);
 
     const findInternshipFollowed = await Profile.findOne({
       user: userId,
@@ -459,14 +460,14 @@ const followInternship = async (req, res) => {
       },
     });
 
-    console.log("follow checkpoint");
-    console.log("findInternshipFollowed: ", findInternshipFollowed);
+    // console.log("follow checkpoint");
+    // console.log("findInternshipFollowed: ", findInternshipFollowed);
 
     if (findInternshipFollowed) {
       res.status(200).send({ message: "Internship followed already" });
       return;
     }
-    console.log("Internship data: ", InternshipData);
+    // console.log("Internship data: ", InternshipData);
     await Profile.updateOne(
       { user: userId },
       { $push: { myInternships: InternshipData } }
@@ -474,7 +475,7 @@ const followInternship = async (req, res) => {
     res.status(200).send({ message: "Follow internship success" });
     return;
   } catch (error) {
-    console.log("follow error = ", error);
+    // console.log("follow error = ", error);
     res
       .status(400)
       .send({ message: "Error occured when following internship" });
@@ -511,7 +512,7 @@ const unfollowInternship = async (req, res) => {
       },
     });
 
-    console.log("findInternshipFollowed = ", findInternshipFollowed);
+    // console.log("findInternshipFollowed = ", findInternshipFollowed);
 
     if (!findInternshipFollowed) {
       res.status(200).send({ message: "Internship has not been followed" });
@@ -524,7 +525,7 @@ const unfollowInternship = async (req, res) => {
     res.status(200).send({ message: "Unfollow internship success" });
     return;
   } catch (error) {
-    console.log("unfollow error = ", error);
+    // console.log("unfollow error = ", error);
     res
       .status(400)
       .send({ message: "Error occured when unfollowing internship" });
@@ -534,23 +535,35 @@ const unfollowInternship = async (req, res) => {
 
 const experiencedInternship = async (req, res) => {
   try {
+    console.log("req.body = ", req.body);
     const { internshipId, userId, startDate, endDate } = req.body;
-    const response = await Internship.findOne({ internshipId });
+    const response = await Internship.findOne({ _id: internshipId });
     if (!response) {
       res.status(400).send({ message: "Internship not found" });
       return;
     }
+
+    console.log("response = ", response);
     const internshipData = {
-      company: response.data.company,
-      position: response.data.company,
+      internshipId: internshipId,
+      companyName: response.company,
+      jobTitle: response.position,
       startDate: startDate,
       endDate: endDate,
     };
 
+    const userData = {
+      user: userId,
+      startDate: startDate,
+      endDate: endDate,
+    };
+
+    console.log("internship data = ", internshipData);
+
     const findInternshipExperienced = await Profile.findOne({
       user: userId,
       internshipsExperience: {
-        $elemMatch: { companyName: company, jobTitle: position },
+        $elemMatch: { internshipId: internshipId },
       },
     });
 
@@ -562,9 +575,15 @@ const experiencedInternship = async (req, res) => {
       { user: userId },
       { $push: { internshipsExperience: internshipData } }
     );
+
+    await Internship.updateOne(
+      { _id: internshipId },
+      { $push: { experiencedUser: userData } }
+    );
     res.status(200).send({ message: "Experienced internship success" });
     return;
   } catch (error) {
+    console.log("experienced internship error = ", error);
     res
       .status(400)
       .send({ message: "Error occured when adding internship to experienced" });
@@ -574,23 +593,22 @@ const experiencedInternship = async (req, res) => {
 
 const unexperiencedInternship = async (req, res) => {
   try {
+    console.log("unexperiencedInternship req.body = ", req.body);
     const { internshipId, userId } = req.body;
-    const response = await Internship.findOne({ internshipId });
+    const response = await Internship.findOne({ _id: internshipId });
     if (!response) {
       res.status(400).send({ message: "Internship not found" });
       return;
     }
-    const internshipData = {
-      company: response.data.company,
-      position: response.data.position,
-    };
 
     const findInternshipExperienced = await Profile.findOne({
       user: userId,
       internshipsExperience: {
-        $elemMatch: { companyName: company, jobTitle: position },
+        $elemMatch: { internshipId: internshipId },
       },
     });
+
+    console.log("find Internship experienced: ", findInternshipExperienced);
 
     if (!findInternshipExperienced) {
       res.status(200).send({ message: "User is not experienced" });
@@ -600,13 +618,23 @@ const unexperiencedInternship = async (req, res) => {
       { user: userId },
       {
         $pull: {
-          internshipsExperience: { companyName: company, jobTitle: position },
+          internshipsExperience: { internshipId: internshipId },
+        },
+      }
+    );
+
+    await Internship.updateOne(
+      { _id: internshipId },
+      {
+        $pull: {
+          experiencedUser: { user: userId },
         },
       }
     );
     res.status(200).send({ message: "Unexperienced internship success" });
     return;
   } catch (error) {
+    console.log("unexperienced internship error = ", error);
     res.status(400).send({
       message: "Error occured when removing internship from experienced",
     });

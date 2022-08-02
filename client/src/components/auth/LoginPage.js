@@ -74,7 +74,6 @@ export default function LoginSide() {
   let navigate = useNavigate();
 
   const handleSubmit = async (e) => {
-    console.log("masuk submit");
     e.preventDefault();
     try {
       const config = {
@@ -85,13 +84,11 @@ export default function LoginSide() {
 
       setLoading(true);
 
-      console.log("checkpoint 1");
       const { data } = await axios.post(
         "/api/users/login",
         { email, password },
         config
       );
-      console.log("data", data);
 
       setUserInfo(data);
       localStorage.setItem("userInfo", JSON.stringify(data));
@@ -99,7 +96,6 @@ export default function LoginSide() {
       setLoading(false);
       navigate("/home");
     } catch (error) {
-      console.log(error);
       // setError(error.response.data.message);
       setLoading(false);
     }

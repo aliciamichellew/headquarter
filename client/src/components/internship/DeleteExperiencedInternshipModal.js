@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
   Button,
   Dialog,
@@ -9,12 +9,14 @@ import {
   Box,
 } from "@mui/material";
 import { Check } from "@mui/icons-material";
+import { UserContext } from "../../App";
 
 const DeleteExperiencedInternshipModal = ({
-  company,
-  position,
+  internshipId,
   handleRemoveExperienced,
 }) => {
+  const userInfo = useContext(UserContext);
+  const userId = userInfo.userInfo._id;
   const [open, setOpen] = useState(false);
 
   const handleClickOpen = () => {
@@ -25,8 +27,8 @@ const DeleteExperiencedInternshipModal = ({
     setOpen(false);
   };
 
-  const submitRequest = (event, company, position) => {
-    handleRemoveExperienced(event, company, position);
+  const submitRequest = (event, internshipId, userId) => {
+    handleRemoveExperienced(event, internshipId, userId);
   };
 
   return (
@@ -39,7 +41,8 @@ const DeleteExperiencedInternshipModal = ({
         }}
         startIcon={<Check />}
         style={{ justifyContent: "center" }}
-        onClick={handleClickOpen}>
+        onClick={handleClickOpen}
+      >
         <Box sx={{ display: "flex", flexDirection: "column" }}>
           <Typography>Internship Taken</Typography>
         </Box>
@@ -47,21 +50,23 @@ const DeleteExperiencedInternshipModal = ({
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Remove from Internship Taken</DialogTitle>
         <DialogContent
-          sx={{ display: "flex", flexDirection: "column", width: "500px" }}>
+          sx={{ display: "flex", flexDirection: "column", width: "500px" }}
+        >
           <Typography sx={{ fontSize: 20 }}>
             Are you sure you want to remove it?
           </Typography>
         </DialogContent>
         <DialogActions>
           <Box
-            component='form'
+            component="form"
             noValidate
-            onSubmit={event => {
-              submitRequest(event, company, position);
+            onSubmit={(event) => {
+              submitRequest(event, internshipId, userId);
               handleClose();
-            }}>
+            }}
+          >
             <Button onClick={handleClose}>Cancel</Button>
-            <Button type='submit'>Submit</Button>
+            <Button type="submit">Submit</Button>
           </Box>
         </DialogActions>
       </Dialog>

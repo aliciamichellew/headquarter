@@ -82,7 +82,7 @@ const registerUser = async (req, res) => {
 
 //login
 const authUser = asyncHandler(async (request, response) => {
-  console.log("request body = ", request.body);
+  // console.log("request body = ", request.body);
   try {
     const { email, password } = request.body;
     const user = await User.findOne({ email });
@@ -101,7 +101,7 @@ const authUser = asyncHandler(async (request, response) => {
       throw new Error("Invalid Email or Password!");
     }
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     response.status(400).send({ message: "Error occured when auth user" });
     return;
   }
@@ -141,7 +141,6 @@ const getUserFromToken = async (req, res) => {
       const user = await findUserById(userId);
       res.status(200).json(user);
       return;
-
     } else {
       handleError(res, buildErrorObject(409, "No token available"));
       return;

@@ -34,7 +34,7 @@ const createInternship = asyncHandler(async (req, res) => {
       return;
     }
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     res
       .status(400)
       .send({ message: "Error occured when creating new internship" });
@@ -150,7 +150,8 @@ const findInternshipSearchQueryMyInternships = async (req, res) => {
 
 const userExperiencedInternship = async (req, res) => {
   try {
-    console.log("masuk api");
+    // console.log("masuk api");
+    console.log("req.query = ", req.query);
     const checkExperienced = req.query;
 
     const profile = await Profile.findOne({ user: checkExperienced.userId });
@@ -162,12 +163,16 @@ const userExperiencedInternship = async (req, res) => {
     let experienced = false;
     const findInternshipExperienced = await Profile.findOne({
       user: checkExperienced.userId,
-      internshipsExperience: { $elemMatch: { id: checkExperienced.id } },
+      internshipsExperience: {
+        $elemMatch: { internshipId: checkExperienced.id },
+      },
     });
 
     if (findInternshipExperienced) {
       experienced = true;
     }
+
+    console.log(experienced);
     res.json(experienced);
   } catch (error) {
     console.log(error);
@@ -195,8 +200,8 @@ const getInternshipTaken = async (req, res) => {
 
 const userFollowInternship = async (req, res) => {
   try {
-    console.log("masuk user follow internship");
-    console.log("req.query = ", req.query);
+    // console.log("masuk user follow internship");
+    // console.log("req.query = ", req.query);
     const checkFollow = req.query;
 
     // console.log("checkFollow = ", checkFollow);
@@ -210,7 +215,7 @@ const userFollowInternship = async (req, res) => {
 
     // console.log("profile = ", profile);
     let followed = false;
-    console.log("checkpoint 1");
+    // console.log("checkpoint 1");
 
     const findInternshipFollowed = await Profile.findOne({
       user: checkFollow.userId,
@@ -220,18 +225,18 @@ const userFollowInternship = async (req, res) => {
         },
       },
     });
-    console.log("checkpoint 2");
+    // console.log("checkpoint 2");
 
-    console.log(findInternshipFollowed);
+    // console.log(findInternshipFollowed);
     if (findInternshipFollowed) {
       followed = true;
     }
 
-    console.log("followed", followed);
+    // console.log("followed", followed);
 
     res.json(followed);
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     res
       .status(400)
       .send({ message: "Error occured when checking user follow internship" });

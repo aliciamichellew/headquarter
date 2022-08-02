@@ -3,11 +3,11 @@ const mongoose = require("mongoose");
 const InternshipSchema = new mongoose.Schema({
   company: {
     type: String,
-    required: true
+    required: true,
   },
   position: {
     type: String,
-    required: true
+    required: true,
   },
   experiencedUser: [
     {
@@ -16,24 +16,20 @@ const InternshipSchema = new mongoose.Schema({
         ref: "users",
         required: true,
       },
-          startDate: {
-            type: Date,
-            required: true,
-          },
-          endDate: {
-            type: Date,
-          },
-          current: {
-            type: Boolean,
-            default: false,
-          },
-        },
-      ],
+      startDate: {
+        type: Date,
+        required: true,
+      },
+      endDate: {
+        type: Date,
+      },
+    },
+  ],
   posts: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: "posts",
-      required: true
+      required: true,
     },
   ],
 });
