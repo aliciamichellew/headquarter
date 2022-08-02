@@ -22,7 +22,7 @@ router.route("/getInternship/").get(findInternshipbyCompanyandPosition);
 router.route("/fetchInternship/:id").get(findInternshipbyId);
 router.route("/myinternship/:userId").get(protect, getMyInternship);
 router.route("/InternshipTaken/:userId").get(protect, getInternshipTaken);
-router.route("/checkinternship/:userId").get(protect, userFollowInternship);
+router.route("/checkinternship").get(protect, userFollowInternship);
 router.route("/experiencedinterns").get(userExperiencedInternship);
 //router.route("/allinternship/:searchQuery").get(findInternshipSearchQuery);
 router

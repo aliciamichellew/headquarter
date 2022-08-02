@@ -436,34 +436,45 @@ const uploadProfilePic = async (req, res) => {
 const followInternship = async (req, res) => {
   try {
     const { _id, userId } = req.body;
-    const response = await Internship.findOne(_id);
+    console.log("follow req.body = ", req.body);
+    console.log(_id);
+    const response = await Internship.findOne({ _id: _id });
+    console.log("follow response = ", response);
     if (!response) {
       res.status(400).send({ message: "Internship not found" });
       return;
     }
     const InternshipData = {
-      company: response.data.company,
-      position: response.data.position,
+      _id: response._id,
+      companyName: response.company,
+      jobTitle: response.position,
     };
+
+    console.log("Internship data: ", InternshipData);
 
     const findInternshipFollowed = await Profile.findOne({
       user: userId,
-      myInternship: {
-        $elemMatch: { companyName: company, jobTitle: position },
+      myInternships: {
+        $elemMatch: { _id: _id },
       },
     });
+
+    console.log("follow checkpoint");
+    console.log("findInternshipFollowed: ", findInternshipFollowed);
 
     if (findInternshipFollowed) {
       res.status(200).send({ message: "Internship followed already" });
       return;
     }
+    console.log("Internship data: ", InternshipData);
     await Profile.updateOne(
       { user: userId },
-      { $push: { myInternship: InternshipData } }
+      { $push: { myInternships: InternshipData } }
     );
     res.status(200).send({ message: "Follow internship success" });
     return;
   } catch (error) {
+    console.log("follow error = ", error);
     res
       .status(400)
       .send({ message: "Error occured when following internship" });
@@ -472,23 +483,35 @@ const followInternship = async (req, res) => {
 
 const unfollowInternship = async (req, res) => {
   try {
+    // console.log("unfollow = ", req.body);
     const { _id, userId } = req.body;
-    const response = await Internship.findOne(company, position);
+    const response = await Internship.findOne({ _id: _id });
     if (!response) {
       res.status(400).send({ message: "Internship not found" });
       return;
     }
+    // console.log("response = ", response);
+
     const InternshipData = {
-      company: response.data.company,
-      position: response.data.position,
+      _id: response._id,
+      companyName: response.company,
+      jobTitle: response.position,
     };
+
+    // console.log("unfollow internship data = ", InternshipData);
 
     const findInternshipFollowed = await Profile.findOne({
       user: userId,
-      myInternship: {
-        $elemMatch: { companyName: company, jobTitle: position },
+      myInternships: {
+        $elemMatch: {
+          _id: InternshipData._id,
+          companyName: InternshipData.companyName,
+          jobTitle: InternshipData.jobTitle,
+        },
       },
     });
+
+    console.log("findInternshipFollowed = ", findInternshipFollowed);
 
     if (!findInternshipFollowed) {
       res.status(200).send({ message: "Internship has not been followed" });
@@ -496,12 +519,12 @@ const unfollowInternship = async (req, res) => {
     }
     await Profile.updateOne(
       { user: userId },
-      { $pull: { myInternship: InternshipData } }
+      { $pull: { myInternships: InternshipData } }
     );
     res.status(200).send({ message: "Unfollow internship success" });
     return;
   } catch (error) {
-    console.log(error);
+    console.log("unfollow error = ", error);
     res
       .status(400)
       .send({ message: "Error occured when unfollowing internship" });

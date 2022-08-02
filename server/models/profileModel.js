@@ -99,6 +99,11 @@ const ProfileSchema = new mongoose.Schema({
   ],
   myInternships: [
     {
+      _id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "internships",
+        required: true,
+      },
       companyName: {
         type: "String",
         required: true,

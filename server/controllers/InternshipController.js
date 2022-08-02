@@ -6,7 +6,6 @@ const Internship = require("../models/InternshipModel");
 
 const createInternship = asyncHandler(async (req, res) => {
   try {
-    console.log("masuk create internship");
     const { company, position } = req.body;
 
     if (!company || !position) {
@@ -25,7 +24,6 @@ const createInternship = asyncHandler(async (req, res) => {
       company,
       position,
     });
-    console.log(internship);
 
     if (internship) {
       res.status(201).json({
@@ -197,30 +195,43 @@ const getInternshipTaken = async (req, res) => {
 
 const userFollowInternship = async (req, res) => {
   try {
+    console.log("masuk user follow internship");
+    console.log("req.query = ", req.query);
     const checkFollow = req.query;
 
+    // console.log("checkFollow = ", checkFollow);
+
     const profile = await Profile.findOne({ user: checkFollow.userId });
+    // console.log(profile);
     if (!profile) {
       res.status(200).send({ message: "User not found!" });
       return;
     }
 
+    // console.log("profile = ", profile);
     let followed = false;
+    console.log("checkpoint 1");
+
     const findInternshipFollowed = await Profile.findOne({
       user: checkFollow.userId,
       myInternships: {
         $elemMatch: {
-          companyName: checkFollow.companyName,
-          jobTitle: checkFollow.jobTitle,
+          _id: checkFollow._id,
         },
       },
     });
+    console.log("checkpoint 2");
 
+    console.log(findInternshipFollowed);
     if (findInternshipFollowed) {
       followed = true;
     }
+
+    console.log("followed", followed);
+
     res.json(followed);
   } catch (error) {
+    console.log(error);
     res
       .status(400)
       .send({ message: "Error occured when checking user follow internship" });

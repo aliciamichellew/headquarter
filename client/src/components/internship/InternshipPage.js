@@ -105,23 +105,23 @@ export default function InternshipPage() {
   }, [internshipId]);
 
   useEffect(() => {
-    const checkFollow = async (userId) => {
-      const config = {
-        headers: {
-          "Content-type": "application/json",
-        },
-        params: {
-          company: company,
-          postion: position,
-          userId: userId,
-        },
-      };
-      const { data } = await axios.get(
-        `/api/internships/checkinternship/${userId}`,
-        { userId },
-        config
-      );
-      setFollow(data);
+    const checkFollow = async () => {
+      try {
+        const config = {
+          headers: {
+            "Content-type": "application/json",
+          },
+          params: {
+            _id: internshipId,
+            userId: userId,
+          },
+        };
+        const { data } = await axios.get(
+          `/api/internships/checkinternship`,
+          config
+        );
+        setFollow(data);
+      } catch (err) {}
     };
     const checkExperienced = async (id, userId) => {
       const config = {
@@ -142,7 +142,7 @@ export default function InternshipPage() {
 
     if (internshipId && userId) {
       checkExperienced(internshipId, userId);
-      checkFollow(userId);
+      checkFollow();
       getPosts();
     }
   }, [internshipId, userId]);
@@ -170,7 +170,7 @@ export default function InternshipPage() {
         method: "put",
         url: "/api/profile/followinternship",
         data: {
-          id: internshipId,
+          _id: internshipId,
           userId: userId,
         },
       });
@@ -180,7 +180,7 @@ export default function InternshipPage() {
         method: "put",
         url: "/api/profile/unfollowinternship",
         data: {
-          id: internshipId,
+          _id: internshipId,
           userId: userId,
         },
       });
