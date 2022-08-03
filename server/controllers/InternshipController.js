@@ -187,12 +187,15 @@ const userExperiencedInternship = async (req, res) => {
 const getInternshipTaken = async (req, res) => {
   try {
     const { userId } = req.params;
+    console.log(userId);
     const profile = await Profile.findOne({ user: userId });
+    console.log(profile);
     if (!profile) {
       res.status(200).send({ message: "User not found!" });
       return;
     }
-    res.json(profile.InternshipTaken);
+    console.log(profile.internshipsExperience);
+    res.json(profile.internshipsExperience);
   } catch (error) {
     res
       .status(400)

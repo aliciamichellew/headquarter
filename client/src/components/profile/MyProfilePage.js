@@ -38,6 +38,7 @@ import EditProfileModal from "./EditProfileModal";
 import ProfileButton from "./ProfileButton";
 import ProfileAvatar from "./ProfileAvatar";
 import { UserContext } from "../../App";
+import InternshipButton from "../internship/internshipButton";
 // import { getUserProfile } from "../../../../server/controllers/profileControllers";
 
 const DrawerHeader = styled("div")(({ theme }) => ({
@@ -140,7 +141,9 @@ export default function MyProfilePage() {
         { userId },
         config
       );
+      console.log("data = ", data);
       setInternships(data);
+      console.log("internships = ", internships);
       setLoading(false);
     } catch (error) {}
   };
@@ -195,6 +198,7 @@ export default function MyProfilePage() {
   useEffect(() => {
     getUserProfile();
     getMyModules();
+    getMyInternships();
     getMyFriends();
   }, []);
 
@@ -519,27 +523,32 @@ export default function MyProfilePage() {
                                   justifyContent: "center",
                                 }}
                               >
-                                <Typography fontSize={40}>
+                                <Typography fontSize={20}>
                                   You have no Internship Experience
                                 </Typography>
                               </Box>
                             )}
                             {internships.map((internships) => (
-                              <Button
-                                size="large"
-                                sx={{
-                                  color: "#000000",
-                                  ":hover": {
-                                    bgcolor: "#FFCE26",
-                                  },
-                                  textAlign: "left",
-                                }}
-                                style={{ justifyContent: "flex-start" }}
-                              >
-                                <Typography>
-                                  {internships.company} {internships.position}
-                                </Typography>
-                              </Button>
+                              <InternshipButton
+                                company={internships.companyName}
+                                position={internships.jobTitle}
+                                internshipId={internships.internshipId}
+                              />
+                              // <Button
+                              //   size="large"
+                              //   sx={{
+                              //     color: "#000000",
+                              //     ":hover": {
+                              //       bgcolor: "#FFCE26",
+                              //     },
+                              //     textAlign: "left",
+                              //   }}
+                              //   style={{ justifyContent: "flex-start" }}
+                              // >
+                              //   <Typography>
+                              //     {internships.company} {internships.position}
+                              //   </Typography>
+                              // </Button>
                             ))}
                           </Box>
                         </Box>

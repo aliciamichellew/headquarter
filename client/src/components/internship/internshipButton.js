@@ -12,6 +12,8 @@ import { useNavigate } from "react-router-dom";
 export default function InternshipButton({ company, position, internshipId }) {
   let navigate = useNavigate();
 
+  console.log("internshipId = ", internshipId);
+
   return (
     <Button
       sx={{

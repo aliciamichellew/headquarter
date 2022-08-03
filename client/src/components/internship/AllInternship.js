@@ -17,7 +17,8 @@ import {
 import React, { useContext, useEffect, useState } from "react";
 import SideDrawer from "../drawer/SideNav";
 import TopDrawer from "../drawer/TopNav";
-import InternshipCard from "./InternshipCard";
+// import InternshipCardHome from "./InternshipCardHome";
+import InternshipCardHome from "./InternshipCardHome";
 import usePagination from "../utils/Pagination";
 import { Add, Search } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
@@ -89,6 +90,7 @@ export default function AllInternship() {
     setLoading(true);
     const res = await axios.get("/api/internships", config);
     setInternshipList(res.data);
+    console.log("internshipList = ", internshipList);
     setLoading(false);
   };
 
@@ -228,7 +230,7 @@ export default function AllInternship() {
                 <Typography fontSize={40}>No Internships Found</Typography>
               </Box>
             )}
-            <InternshipCard internships={_DATA.currentData()} />
+            <InternshipCardHome internships={_DATA.currentData()} />
 
             <Grid
               justifyContent={"center"}
