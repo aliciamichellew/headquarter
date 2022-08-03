@@ -107,15 +107,14 @@ export default function MyInternship() {
 
   let [page, setPage] = useState(1);
   const PER_PAGE = 36;
+  const count = Math.ceil(InternshipList.length / PER_PAGE);
+  const _DATA = usePagination(InternshipList, PER_PAGE);
 
   const [spacing, setSpacing] = React.useState(2);
 
   const handleChange = (event) => {
     setSpacing(Number(event.target.value));
   };
-
-  const count = Math.ceil(InternshipList.length / PER_PAGE);
-  const _DATA = usePagination(InternshipList, PER_PAGE);
 
   const handlePaginationChange = (e, p) => {
     setPage(p);
@@ -217,7 +216,7 @@ export default function MyInternship() {
               display={"flex"}
             >
               <Pagination
-                count={10}
+                count={count}
                 page={page}
                 onChange={handlePaginationChange}
                 showFirstButton
