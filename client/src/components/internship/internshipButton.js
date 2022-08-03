@@ -1,25 +1,18 @@
-import { Button, createTheme, ThemeProvider, Typography, useTheme } from "@mui/material";
+import {
+  Button,
+  createTheme,
+  ThemeProvider,
+  Typography,
+  useTheme,
+} from "@mui/material";
 import { Box } from "@mui/system";
 import react from "react";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-export default function InternshipButton ({company, position, internshipId}){
-    let navigate = useNavigate();
-
-   const customTheme = createTheme({
-    palette: {
-      primary: {
-        main: "#000000",
-        contrastText: "#ffce26"
-      }
-    }
-  });
-
-  const theme = useTheme();
-
+export default function InternshipButton({ company, position, internshipId }) {
+  let navigate = useNavigate();
 
   return (
-    <ThemeProvider theme={customTheme}>
     <Button
       sx={{
         color: "#1E2328",
@@ -39,11 +32,5 @@ export default function InternshipButton ({company, position, internshipId}){
         <Typography>{position}</Typography>
       </Box>
     </Button>
-    </ThemeProvider>
   );
-
-  
-};
-
-
-
+}

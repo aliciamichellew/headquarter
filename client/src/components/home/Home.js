@@ -72,6 +72,7 @@ export default function Home() {
 
         setInternships(data);
         setLoading(false);
+        console.log("internships = ", internships);
       } catch (error) {}
     };
     const getMyFriends = async (userId) => {
@@ -246,8 +247,8 @@ export default function Home() {
                       <Box sx={{ display: "flex", flexDirection: "column" }}>
                         {internships.map((internships) => (
                           <InternshipButton
-                            company={internships.company}
-                            position={internships.position}
+                            company={internships.companyName}
+                            position={internships.jobTitle}
                             internshipId={internships._id}
                           />
                         ))}

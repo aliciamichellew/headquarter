@@ -102,8 +102,10 @@ const findInternshipbyId = asyncHandler(async (req, res) => {
 
 const getMyInternship = async (req, res) => {
   try {
+    console.log("masuk ke get my internship");
     const { userId } = req.params;
     const profile = await Profile.findOne({ user: userId });
+    console.log("profile = ", profile);
     if (!profile) {
       res.status(200).send({ message: "User not found!" });
       return;

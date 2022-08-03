@@ -51,31 +51,35 @@ export default function MyInternship() {
     setOpen(false);
   };
   const userInfo = useContext(UserContext);
-  const userId = userInfo._id;
+  const userId = userInfo.userInfo._id;
   const [InternshipList, setInternshipList] = useState([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchMyInternship = async () => {
-      const config = {
-        headers: {
-          "Content-type": "application/json",
-        },
-      };
-      setLoading(true);
-      const res = await axios.get(
-        `/api/internships/myinternship/${userId}`,
-        { userId },
-        config
-      );
-      setInternshipList(res.data);
-      setLoading(false);
+      try {
+        setLoading(false);
+        const config = {
+          headers: {
+            "Content-type": "application/json",
+          },
+        };
+        const { data } = await axios.get(
+          `/api/internships/myinternship/${userId}`,
+          { userId },
+          config
+        );
+
+        setInternshipList(data);
+        setLoading(false);
+        console.log("internships = ", InternshipList);
+      } catch (error) {}
     };
     fetchMyInternship();
   }, [userId]);
 
   const [searchQuery, setSearchQuery] = useState("");
-  const handleSubmit = async e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const config = {
@@ -94,6 +98,7 @@ export default function MyInternship() {
 
       setInternshipList(data);
       setLoading(false);
+      console.log("InternshipList = ", InternshipList);
     } catch (error) {
       throw error.message;
       setLoading(false);
@@ -105,7 +110,7 @@ export default function MyInternship() {
 
   const [spacing, setSpacing] = React.useState(2);
 
-  const handleChange = event => {
+  const handleChange = (event) => {
     setSpacing(Number(event.target.value));
   };
 
@@ -128,16 +133,17 @@ export default function MyInternship() {
         handleDrawerClose={handleDrawerClose}
         theme={theme}
       />
-      <Box component='main' sx={{ flexGrow: 1, pt: 3 }}>
+      <Box component="main" sx={{ flexGrow: 1, pt: 3 }}>
         <Grid
           container
-          component='main'
+          component="main"
           sx={{
             minHeight: "100vh",
             backgroundColor: "#FFCE26",
             display: "flex",
             alignContent: "flex-start",
-          }}>
+          }}
+        >
           <DrawerHeader />
           <Box
             sx={{
@@ -148,45 +154,50 @@ export default function MyInternship() {
               width: "100%",
               gap: 2,
               overflow: "auto",
-            }}>
+            }}
+          >
             <Typography
               fontFamily={"Berlin Sans FB"}
               fontSize={50}
               sx={{ mx: 0, mt: 0 }}
-              align={"left"}>
+              align={"left"}
+            >
               View My Internships
             </Typography>
 
             <Box
-              component='form'
+              component="form"
               noValidate
               onSubmit={handleSubmit}
-              sx={{ display: "flex", justifyContent: "flex-end" }}>
+              sx={{ display: "flex", justifyContent: "flex-end" }}
+            >
               <Box
                 sx={{
                   display: "flex",
                   alignItems: "center",
                   justifyItems: "center",
                   width: 250,
-                }}>
+                }}
+              >
                 <Search sx={{ color: "action.active", mr: 1, my: 0.5 }} />
                 <TextField
-                  label='Search by company or position'
-                  id='outlined-size-small'
-                  size='small'
+                  label="Search by company or position"
+                  id="outlined-size-small"
+                  size="small"
                   sx={{ width: 200 }}
                   value={searchQuery}
-                  onChange={e => setSearchQuery(e.target.value)}
+                  onChange={(e) => setSearchQuery(e.target.value)}
                 />
               </Box>
 
               <ThemeProvider theme={customTheme}>
-                <Stack spacing={2} direction='row'>
+                <Stack spacing={2} direction="row">
                   <Button
-                    type='submit'
+                    type="submit"
                     fullWidth
-                    variant='contained'
-                    sx={{ width: 150, height: 40 }}>
+                    variant="contained"
+                    sx={{ width: 150, height: 40 }}
+                  >
                     <Typography fontFamily={"Berlin Sans FB"}>
                       Search
                     </Typography>
@@ -203,7 +214,8 @@ export default function MyInternship() {
             <Grid
               justifyContent={"center"}
               alignItems={"center"}
-              display={"flex"}>
+              display={"flex"}
+            >
               <Pagination
                 count={10}
                 page={page}
