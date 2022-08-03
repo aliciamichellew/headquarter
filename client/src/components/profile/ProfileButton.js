@@ -28,7 +28,7 @@ const ProfileButton = ({ firstName, lastName, username }) => {
       setUserId(data);
       setLoading(false);
     } catch (error) {
-      console.log("error = ", error);
+      // console.log("error = ", error);
     }
   };
 

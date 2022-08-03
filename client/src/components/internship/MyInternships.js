@@ -72,7 +72,7 @@ export default function MyInternship() {
 
         setInternshipList(data);
         setLoading(false);
-        console.log("internships = ", InternshipList);
+        // console.log("internships = ", InternshipList);
       } catch (error) {}
     };
     fetchMyInternship();
@@ -98,7 +98,7 @@ export default function MyInternship() {
 
       setInternshipList(data);
       setLoading(false);
-      console.log("InternshipList = ", InternshipList);
+      // console.log("InternshipList = ", InternshipList);
     } catch (error) {
       throw error.message;
       setLoading(false);

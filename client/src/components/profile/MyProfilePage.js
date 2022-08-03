@@ -141,9 +141,9 @@ export default function MyProfilePage() {
         { userId },
         config
       );
-      console.log("data = ", data);
+      // console.log("data = ", data);
       setInternships(data);
-      console.log("internships = ", internships);
+      // console.log("internships = ", internships);
       setLoading(false);
     } catch (error) {}
   };

@@ -10,6 +10,7 @@ const {
   userExperiencedInternship,
   findInternshipbyId,
   findInternshipbyCompanyandPosition,
+  getExperiencedUser,
 } = require("../controllers/InternshipController");
 
 const { protect } = require("../middlewares/authMiddleware");
@@ -28,5 +29,7 @@ router.route("/experiencedinterns").get(userExperiencedInternship);
 router
   .route("/myinternship/search/:userId/:searchQuery")
   .get(findInternshipSearchQueryMyInternships);
+
+router.route("/getexperiencedusers/:internshipId").get(getExperiencedUser);
 
 module.exports = router;

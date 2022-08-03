@@ -113,7 +113,7 @@ export default function ModulePage(module) {
       { moduleCode },
       config
     );
-    console.log("get post module data = ", data);
+    // console.log("get post module data = ", data);
     setPosts(data);
     setLoading(false);
   };

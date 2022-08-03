@@ -535,7 +535,7 @@ const unfollowInternship = async (req, res) => {
 
 const experiencedInternship = async (req, res) => {
   try {
-    console.log("req.body = ", req.body);
+    // console.log("req.body = ", req.body);
     const { internshipId, userId, startDate, endDate } = req.body;
     const response = await Internship.findOne({ _id: internshipId });
     if (!response) {
@@ -543,7 +543,7 @@ const experiencedInternship = async (req, res) => {
       return;
     }
 
-    console.log("response = ", response);
+    // console.log("response = ", response);
     const internshipData = {
       internshipId: internshipId,
       companyName: response.company,
@@ -558,7 +558,7 @@ const experiencedInternship = async (req, res) => {
       endDate: endDate,
     };
 
-    console.log("internship data = ", internshipData);
+    // console.log("internship data = ", internshipData);
 
     const findInternshipExperienced = await Profile.findOne({
       user: userId,

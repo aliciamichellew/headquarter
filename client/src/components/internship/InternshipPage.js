@@ -60,6 +60,7 @@ export default function InternshipPage() {
   const { userInfo } = useContext(UserContext);
   const userId = userInfo ? userInfo._id : null;
   const [experienced, setExperienced] = useState();
+  const [experiencedUserList, setExperiencedUserlist] = useState([]);
 
   const getPosts = async () => {
     setLoading(true);
@@ -77,7 +78,7 @@ export default function InternshipPage() {
       { internshipId },
       config
     );
-    console.log("internship get post data = ", data);
+    // console.log("internship get post data = ", data);
     setPosts(data);
     setLoading(false);
   };
@@ -140,10 +141,27 @@ export default function InternshipPage() {
       setExperienced(data);
     };
 
+    const getExperiencedUser = async () => {
+      setLoading(true);
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+        },
+      };
+      const { data } = await axios.get(
+        `/api/internships/getexperiencedusers/${internshipId}`,
+        { internshipId },
+        config
+      );
+      setExperiencedUserlist(data);
+      setLoading(false);
+    };
+
     if (internshipId && userId) {
       checkExperienced(internshipId, userId);
       checkFollow();
       getPosts();
+      getExperiencedUser();
     }
   }, [internshipId, userId]);
 
@@ -359,7 +377,7 @@ export default function InternshipPage() {
     startDate,
     endDate
   ) => {
-    console.log(userId);
+    // console.log(userId);
     await axios({
       method: "put",
       url: "/api/profile/experiencedinternship",
@@ -485,7 +503,7 @@ export default function InternshipPage() {
                     }
                     sx={{ color: "#FFCE26" }}
                   />
-                  <FormControl
+                  {/* <FormControl
                     sx={{ mx: 2, minWidth: 120, borderColor: "#FFCE26" }}
                   >
                     <InputLabel
@@ -508,11 +526,11 @@ export default function InternshipPage() {
                         },
                       }}
                     >
-                      <MenuItem value="">{/* <em>Latest</em> */}</MenuItem>
+                      <MenuItem value=""><em>Latest</em></MenuItem>
                       <MenuItem value={"latest"}>Latest</MenuItem>
                       <MenuItem value={"mostliked"}>Most Liked</MenuItem>
                     </Select>
-                  </FormControl>
+                  </FormControl> */}
                 </Box>
               </Box>
             </Card>
@@ -578,8 +596,8 @@ export default function InternshipPage() {
                 >
                   {internshipList.slice(0, 10).map((internships) => (
                     <InternshipButton
-                      company={internships.company}
-                      position={internships.position}
+                      company={internships.companyName}
+                      position={internships.jobTitle}
                       internshipId={internships._id}
                     />
                   ))}
@@ -687,7 +705,12 @@ export default function InternshipPage() {
                 <Typography sx={{ fontSize: 30, mb: 3 }}>
                   Experienced Users
                 </Typography>
-                <UserCard users={users} />
+                {experiencedUserList.map((users) => (
+                  <UserCard
+                    users={users.user}
+                    content={`${users.startDate} - ${users.endDate}`}
+                  />
+                ))}
               </Box>
             </Box>
           </Box>

@@ -1,5 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const Profile = require("../models/profileModel");
+const User = require("../models/userModel");
 const { response } = require("express");
 const Internship = require("../models/InternshipModel");
 // const { default: Profile } = require("../../client/src/components/Profile");
@@ -102,10 +103,10 @@ const findInternshipbyId = asyncHandler(async (req, res) => {
 
 const getMyInternship = async (req, res) => {
   try {
-    console.log("masuk ke get my internship");
+    // console.log("masuk ke get my internship");
     const { userId } = req.params;
     const profile = await Profile.findOne({ user: userId });
-    console.log("profile = ", profile);
+    // console.log("profile = ", profile);
     if (!profile) {
       res.status(200).send({ message: "User not found!" });
       return;
@@ -153,7 +154,7 @@ const findInternshipSearchQueryMyInternships = async (req, res) => {
 const userExperiencedInternship = async (req, res) => {
   try {
     // console.log("masuk api");
-    console.log("req.query = ", req.query);
+    // console.log("req.query = ", req.query);
     const checkExperienced = req.query;
 
     const profile = await Profile.findOne({ user: checkExperienced.userId });
@@ -174,10 +175,10 @@ const userExperiencedInternship = async (req, res) => {
       experienced = true;
     }
 
-    console.log(experienced);
+    // console.log(experienced);
     res.json(experienced);
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     res.status(400).send({
       message: "Error occured when checking user experience internship",
     });
@@ -187,14 +188,14 @@ const userExperiencedInternship = async (req, res) => {
 const getInternshipTaken = async (req, res) => {
   try {
     const { userId } = req.params;
-    console.log(userId);
+    // console.log(userId);
     const profile = await Profile.findOne({ user: userId });
-    console.log(profile);
+    // console.log(profile);
     if (!profile) {
       res.status(200).send({ message: "User not found!" });
       return;
     }
-    console.log(profile.internshipsExperience);
+    // console.log(profile.internshipsExperience);
     res.json(profile.internshipsExperience);
   } catch (error) {
     res
@@ -248,6 +249,49 @@ const userFollowInternship = async (req, res) => {
   }
 };
 
+const getExperiencedUser = async (req, res) => {
+  try {
+    console.log("masuk get experienced user");
+    const { internshipId } = req.params;
+    const intern = await Internship.findOne({ _id: internshipId });
+    const users = [];
+
+    console.log("intern = ", intern);
+
+    const experiencedUser = intern.experiencedUser;
+
+    console.log("experiencedUser = ", experiencedUser);
+
+    if (experiencedUser.length !== 0) {
+      for (var item of experiencedUser) {
+        const findUser = await User.findOne({ _id: item.user });
+        console.log("findUser = ", findUser);
+        if (!findUser) {
+          res.status(400).send({ message: "User does not exist" });
+          return;
+        }
+
+        console.log(findUser);
+
+        const data = {
+          user: findUser,
+          startDate: item.startDate,
+          endDate: item.endDate,
+        };
+        users.push(data);
+      }
+    }
+    console.log("users = ", users);
+    res.status(200).json(users);
+    return;
+  } catch (error) {
+    console.log("error = ", error);
+    res
+      .status(400)
+      .send({ message: "Error occured when getting experienced user" });
+  }
+};
+
 module.exports = {
   createInternship,
   fetchInternship,
@@ -259,10 +303,5 @@ module.exports = {
   userExperiencedInternship,
   findInternshipbyId,
   findInternshipbyCompanyandPosition,
-  /*getInternship,
-  findInternshipbyPosition,
-  findInternshipbyPositionandCompany,
-  userFollowInternship,
-  findInternshipSearchQueryMyInternships,
-  getMyInternship */
+  getExperiencedUser,
 };

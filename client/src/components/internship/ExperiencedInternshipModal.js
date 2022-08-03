@@ -53,8 +53,8 @@ const ExperiencedInternshipModal = ({
     return <></>;
   }
 
-  console.log("userId experienced", userInfo.userInfo._id);
-  console.log("userInfo = ", userInfo);
+  // console.log("userId experienced", userInfo.userInfo._id);
+  // console.log("userInfo = ", userInfo);
 
   return (
     <Box sx={{ width: "100%" }}>

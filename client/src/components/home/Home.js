@@ -50,9 +50,9 @@ export default function Home() {
           { userId },
           config
         );
-        console.log("data = ", data);
+        // console.log("data = ", data);
         setModules(data);
-        console.log("module getMyModules = ", modules);
+        // console.log("module getMyModules = ", modules);
         setLoading(false);
       } catch (error) {}
     };
@@ -72,7 +72,7 @@ export default function Home() {
 
         setInternships(data);
         setLoading(false);
-        console.log("internships = ", internships);
+        // console.log("internships = ", internships);
       } catch (error) {}
     };
     const getMyFriends = async (userId) => {
@@ -98,7 +98,7 @@ export default function Home() {
       getMyModules(userInfo._id);
       getMyFriends(userInfo._id);
       getMyInternships(userInfo._id);
-      console.log("modules = ", modules);
+      // console.log("modules = ", modules);
     } else {
       navigate("/");
     }

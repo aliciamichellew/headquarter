@@ -16,12 +16,12 @@ const UserCard = ({ users, content, loading }) => {
   const [name, setName] = useState("");
 
   useEffect(() => {
-    console.log("masuk user card");
-    console.log("users = ", users);
-    console.log("userId = ", userId);
+    // console.log("masuk user card");
+    // console.log("users = ", users);
+    // console.log("userId = ", userId);
     const getUserProfile = async (userId) => {
       try {
-        console.log("masuk get user profile");
+        // console.log("masuk get user profile");
         const config = {
           headers: {
             "Content-type": "application/json",
@@ -32,13 +32,13 @@ const UserCard = ({ users, content, loading }) => {
           { userId },
           config
         );
-        console.log("user card data = ", data);
+        // console.log("user card data = ", data);
         setProfilePic(data.profilePic || "");
         const name = data.firstName + " " + data.lastName;
         setName(name);
       } catch (err) {}
     };
-    console.log(userId);
+    // console.log(userId);
     if (userId) {
       getUserProfile(userId);
     }

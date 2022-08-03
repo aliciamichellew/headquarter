@@ -63,7 +63,7 @@ export default function AllInternship() {
     event.preventDefault();
 
     try {
-      console.log("inside handle add new intern function");
+      // console.log("inside handle add new intern function");
       const config = {
         headers: {
           "Content-type": "application/json",
@@ -76,7 +76,7 @@ export default function AllInternship() {
         { company, position },
         config
       );
-      console.log(data);
+      // console.log(data);
       await fetchInternship();
     } catch (error) {}
   };
@@ -90,7 +90,7 @@ export default function AllInternship() {
     setLoading(true);
     const res = await axios.get("/api/internships", config);
     setInternshipList(res.data);
-    console.log("internshipList = ", internshipList);
+    // console.log("internshipList = ", internshipList);
     setLoading(false);
   };
 
