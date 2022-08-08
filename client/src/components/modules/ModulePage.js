@@ -514,34 +514,6 @@ export default function ModulePage(module) {
                     label={follow ? "Added to My Modules" : "Add to My Modules"}
                     sx={{ color: "#FFCE26" }}
                   />
-                  <FormControl
-                    sx={{ mx: 2, minWidth: 120, borderColor: "#FFCE26" }}
-                  >
-                    <InputLabel
-                      id="demo-simple-select-helper-label"
-                      sx={{ color: "#FFCE26", borderColor: "#FFCE26" }}
-                    >
-                      Sort
-                    </InputLabel>
-                    <Select
-                      labelId="demo-simple-select-helper-label"
-                      id="demo-simple-select-helper"
-                      value={sort}
-                      label="Sort"
-                      onChange={handleChange}
-                      sx={{
-                        border: "1px solid #FFCE26",
-                        color: "#FFCE26",
-                        "& .MuiSvgIcon-root": {
-                          color: "#FFCE26",
-                        },
-                      }}
-                    >
-                      <MenuItem value="">{/* <em>Latest</em> */}</MenuItem>
-                      <MenuItem value={"latest"}>Latest</MenuItem>
-                      <MenuItem value={"mostliked"}>Most Liked</MenuItem>
-                    </Select>
-                  </FormControl>
                 </Box>
               </Box>
             </Card>

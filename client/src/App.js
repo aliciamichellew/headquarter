@@ -20,6 +20,7 @@ import AllInternship from "./components/internship/AllInternship";
 import MyInternship from "./components/internship/MyInternships";
 import InternshipPage from "./components/internship/InternshipPage";
 import ChatPage from "./components/chat/ChatPage";
+import VerifyMail from "./components/auth/VerifyMail";
 
 const theme = createTheme({
   typography: {
@@ -71,6 +72,7 @@ export default function App() {
             element={<InternshipPage />}
           />
           <Route path="/chats" element={<ChatPage />} />
+          <Route path="/verifymail" element={<VerifyMail />} />
         </Routes>
       </UserContext.Provider>
     </ThemeProvider>
