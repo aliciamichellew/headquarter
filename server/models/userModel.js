@@ -28,6 +28,10 @@ const signUpTemplate = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  verified: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 signUpTemplate.pre("save", async function (next) {
