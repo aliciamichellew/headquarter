@@ -298,7 +298,7 @@ export default function SignUpSide() {
                           Sign Up
                         </Typography>
                       </Button>
-                      <Button
+                      {/* <Button
                         type="submit"
                         fullWidth
                         variant="contained"
@@ -312,7 +312,7 @@ export default function SignUpSide() {
                         <Typography fontFamily={"Berlin Sans FB"}>
                           Continue with Google
                         </Typography>
-                      </Button>
+                      </Button> */}
                       <Grid container>
                         <Grid item>
                           <Link

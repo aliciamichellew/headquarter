@@ -146,17 +146,15 @@ const verifyUser = async (req, res) => {
     const user = await User.findOne({ _id: userId });
     // const user = await User.findOne({ email });
     await User.updateOne({ _id: userId }, { verified: true });
-    res
-      .status(200)
-      .json({
-        _id: user._id,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        username: user.username,
-        email: user.email,
-        token: generateToken(user._id),
-        verified: user.verified,
-      });
+    res.status(200).json({
+      _id: user._id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      username: user.username,
+      email: user.email,
+      token: generateToken(user._id),
+      verified: user.verified,
+    });
   } catch (error) {
     console.log(error);
   }
@@ -205,10 +203,41 @@ const getUserFromToken = async (req, res) => {
   }
 };
 
+const sendForgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+    const user = await User.findOne({ email });
+    const token = generateToken(user._id);
+
+    UserMailer.forgotPassword(user, token)
+      .then((info, response) => {
+        console.log("success");
+      })
+      .catch((err) => console.log(err));
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const resetPassword = async (req, res) => {
+  try {
+    const { token } = req.params;
+    const { newPassword } = req.body;
+    const userId = await getUserIdFromToken(tokenEncrypted);
+    const user = await findUserById(userId);
+    await User.updateOne({ _id: userId }, { password: newPassword });
+    res.json("reset password successful");
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 module.exports = {
   registerUser,
   authUser,
   findUsersbyEmail,
   getUserFromToken,
   verifyUser,
+  sendForgotPassword,
+  resetPassword,
 };

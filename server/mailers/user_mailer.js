@@ -39,7 +39,7 @@ exports.verifyRegistration = async (response) => {
 exports.forgotPassword = async (user, token) => {
   return new Promise((resolve, reject) => {
     const file = fs.readFileSync(
-      emailTemplatesDir + "/forgot_password.ejs",
+      emailTemplatesDir + "/forgotPassword.ejs",
       "ascii"
     );
 
@@ -47,7 +47,7 @@ exports.forgotPassword = async (user, token) => {
       process.env.NODE_ENV == "production"
         ? "https://headquarter-orbital.herokuapp.com"
         : "http://localhost:3000";
-    var forgotPasswordUrl = domain + "/reset-password" + "/" + token;
+    var forgotPasswordUrl = domain + "/resetpassword" + "/" + token;
 
     const data = {
       from: "headquarter <headquarter.orbital@gmail.com>",
