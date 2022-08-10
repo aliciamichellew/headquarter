@@ -115,7 +115,7 @@ export default function Home() {
     setOpen(false);
   };
 
-  if (!userInfo) {
+  if (!userInfo || !userInfo.verified) {
     navigate("/");
     return <></>;
   }

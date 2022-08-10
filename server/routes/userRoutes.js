@@ -10,6 +10,6 @@ const router = express.Router();
 router.route("/").post(registerUser);
 router.route("/login").post(authUser);
 router.route("/:email").get(findUsersbyEmail);
-router.route("/verifyuser").put(verifyUser);
+router.route("/verify/:token").get(verifyUser);
 
 module.exports = router;

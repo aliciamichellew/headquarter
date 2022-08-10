@@ -425,7 +425,7 @@ export default function ModulePage(module) {
     _DATA.jump(p);
   };
 
-  if (!userInfo || !userId) {
+  if (!userInfo || !userId || !userInfo.verified) {
     navigate("/");
     return <></>;
   }

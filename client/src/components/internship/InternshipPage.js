@@ -408,7 +408,7 @@ export default function InternshipPage() {
     _DATA.jump(p);
   };
 
-  if (!userInfo) {
+  if (!userInfo || !userInfo.verified) {
     navigate("/");
     return <></>;
   }

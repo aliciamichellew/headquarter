@@ -260,7 +260,7 @@ export default function ProfilePage() {
     setValue(newValue);
   };
 
-  if (!userInfo) {
+  if (!userInfo || !userInfo.verified) {
     navigate("/");
     return <></>;
   }

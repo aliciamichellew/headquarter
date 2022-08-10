@@ -283,7 +283,7 @@ export default function MyProfilePage() {
     } catch (error) {}
   };
 
-  if (!userInfo) {
+  if (!userInfo || !userInfo.verified) {
     navigate("/");
     return <></>;
   }

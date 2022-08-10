@@ -21,6 +21,7 @@ import MyInternship from "./components/internship/MyInternships";
 import InternshipPage from "./components/internship/InternshipPage";
 import ChatPage from "./components/chat/ChatPage";
 import VerifyMail from "./components/auth/VerifyMail";
+import Verify from "./components/auth/Verify";
 
 const theme = createTheme({
   typography: {
@@ -73,6 +74,7 @@ export default function App() {
           />
           <Route path="/chats" element={<ChatPage />} />
           <Route path="/verifymail" element={<VerifyMail />} />
+          <Route path="/verify/:token" element={<Verify />} />
         </Routes>
       </UserContext.Provider>
     </ThemeProvider>

@@ -4,6 +4,7 @@ const Profile = require("../models/profileModel");
 const generateToken = require("../utils/generateToken");
 const { buildErrorObject } = require("../middlewares/errorMiddleware");
 const UserMailer = require("../mailers/user_mailer");
+const { getUserIdFromToken } = require("../middlewares/authMiddleware");
 
 const findUserById = async (userId) => {
   return new Promise((resolve, reject) => {
@@ -58,7 +59,17 @@ const registerUser = async (req, res) => {
     if (user && profile) {
       const token = generateToken(user._id);
       console.log("user = ", user);
-      UserMailer.verifyRegistration(user)
+      const verificationData = {
+        firstName: user.firstName,
+        lastName: user.lastName,
+        username: user.username,
+        email: user.email,
+        password: user.password,
+        verified: user.verified,
+        _id: user._id,
+        token: token,
+      };
+      UserMailer.verifyRegistration(verificationData)
         .then((info, response) => {
           console.log("user controller response = ", response);
         })
@@ -71,6 +82,7 @@ const registerUser = async (req, res) => {
         email: user.email,
         password: user.password,
         token: generateToken(user._id),
+        verified: user.verified,
       });
 
       return;
@@ -128,11 +140,26 @@ const authUser = asyncHandler(async (request, response) => {
 
 const verifyUser = async (req, res) => {
   try {
-    const { email } = request.body;
-    const user = await User.findOne({ email });
-    await User.updateOne({ email: email }, { verified: true });
-    res.status(200).json("verified updated");
-  } catch (error) {}
+    console.log("kepanggil");
+    const { token } = req.params;
+    let userId = await getUserIdFromToken(token);
+    const user = await User.findOne({ _id: userId });
+    // const user = await User.findOne({ email });
+    await User.updateOne({ _id: userId }, { verified: true });
+    res
+      .status(200)
+      .json({
+        _id: user._id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        username: user.username,
+        email: user.email,
+        token: generateToken(user._id),
+        verified: user.verified,
+      });
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 const findUsersbyEmail = async (request, response) => {

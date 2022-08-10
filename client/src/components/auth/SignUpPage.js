@@ -85,7 +85,7 @@ export default function SignUpSide() {
         setAuthToken(data.token);
         // addUserToLocalStorage(data);
         // localStorage.setItem("userInfo", JSON.stringify(data));
-        navigate("/home");
+        navigate("/verifymail");
         // console.log("masuk")
       } catch (error) {
         setIsSignUpFail(true);
