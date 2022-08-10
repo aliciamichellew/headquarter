@@ -253,7 +253,7 @@ export default function LoginSide() {
                           Log In
                         </Typography>
                       </Button>
-                      <Button
+                      {/* <Button
                         type="submit"
                         fullWidth
                         variant="contained"
@@ -267,10 +267,19 @@ export default function LoginSide() {
                         <Typography fontFamily={"Berlin Sans FB"}>
                           Continue with Google
                         </Typography>
-                      </Button>
-                      <Grid container>
+                      </Button> */}
+                      <Grid
+                        container
+                        direction="column"
+                        justifyContent="center"
+                        alignItems="center"
+                      >
                         <Grid item xs>
-                          <Link href="#" variant="body2">
+                          <Link
+                            component={RouterLink}
+                            to="/forgotpassword"
+                            variant="body2"
+                          >
                             <Typography fontFamily={"Berlin Sans FB"}>
                               Forgot password?
                             </Typography>

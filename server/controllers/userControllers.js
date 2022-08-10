@@ -132,7 +132,7 @@ const authUser = asyncHandler(async (request, response) => {
       throw new Error("Invalid Email or Password!");
     }
   } catch (error) {
-    // console.log(error);
+    console.log(error);
     response.status(400).send({ message: "Error occured when auth user" });
     return;
   }
@@ -223,9 +223,9 @@ const resetPassword = async (req, res) => {
   try {
     const { token } = req.params;
     const { newPassword } = req.body;
-    const userId = await getUserIdFromToken(tokenEncrypted);
-    const user = await findUserById(userId);
-    await User.updateOne({ _id: userId }, { password: newPassword });
+    const userId = await getUserIdFromToken(token);
+    const user = await User.findOne({ _id: userId });
+    await User.findOneAndUpdate({ _id: userId }, { password: newPassword });
     res.json("reset password successful");
   } catch (error) {
     console.log(error);

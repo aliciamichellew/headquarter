@@ -23,6 +23,7 @@ import ChatPage from "./components/chat/ChatPage";
 import VerifyMail from "./components/auth/VerifyMail";
 import Verify from "./components/auth/Verify";
 import ForgotPassword from "./components/auth/ForgotPassword";
+import ResetPassword from "./components/auth/ResetPassword";
 
 const theme = createTheme({
   typography: {
@@ -77,6 +78,7 @@ export default function App() {
           <Route path="/verifymail" element={<VerifyMail />} />
           <Route path="/verify/:token" element={<Verify />} />
           <Route path="/forgotpassword" element={<ForgotPassword />} />
+          <Route path="/resetpassword/:token" element={<ResetPassword />} />
         </Routes>
       </UserContext.Provider>
     </ThemeProvider>
