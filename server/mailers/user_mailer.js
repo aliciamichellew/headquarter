@@ -19,7 +19,7 @@ exports.verifyRegistration = async (response) => {
     const domain =
       process.env.NODE_ENV == "production"
         ? "https://headquarter-orbital.herokuapp.com"
-        : "http://localhost:3000";
+        : "http://localhost:5000";
     var verificationUrl = domain + "/verify" + "/" + response.token;
 
     const data = {
@@ -46,7 +46,7 @@ exports.forgotPassword = async (user, token) => {
     const domain =
       process.env.NODE_ENV == "production"
         ? "https://headquarter-orbital.herokuapp.com"
-        : "http://localhost:3000";
+        : "http://localhost:5000";
     var forgotPasswordUrl = domain + "/resetpassword" + "/" + token;
 
     const data = {

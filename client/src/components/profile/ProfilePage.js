@@ -382,7 +382,7 @@ export default function ProfilePage() {
                     label={follow ? "Followed" : "Follow"}
                     sx={{ color: "#FFCE26" }}
                   />
-                  <Button
+                  {/* <Button
                     fullWidth
                     variant="contained"
                     sx={{
@@ -397,7 +397,7 @@ export default function ProfilePage() {
                   >
                     <Chat sx={{ mr: 1 }} />
                     Chat
-                  </Button>
+                  </Button> */}
                 </Box>
                 <Box sx={{ display: "flex", flexDirection: "row", mt: 4 }}>
                   {website && (

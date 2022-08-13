@@ -87,7 +87,7 @@ const PostCard = ({
     checkDownvote();
   }, []);
 
-  const handleChangeUpvote = async e => {
+  const handleChangeUpvote = async (e) => {
     if (!upvote) {
       const { res } = await axios({
         method: "put",
@@ -110,7 +110,7 @@ const PostCard = ({
     }
   };
 
-  const handleChangeDownvote = async e => {
+  const handleChangeDownvote = async (e) => {
     if (!downvote) {
       const { res } = await axios({
         method: "put",
@@ -150,7 +150,8 @@ const PostCard = ({
                 justifyContent: "space-between",
                 flexDirection: "row",
                 mb: 2,
-              }}>
+              }}
+            >
               <UserCard
                 users={
                   posts.content.isAnonymous
@@ -159,7 +160,7 @@ const PostCard = ({
                 }
                 content={posts.content.date}
               />
-              <BookmarkBorderOutlined />
+              {/* <BookmarkBorderOutlined /> */}
             </Box>
             <Box sx={{ display: "flex", flexDirection: "column" }}>
               <Typography fontSize={25} sx={{ mb: 1 }}>
@@ -168,7 +169,7 @@ const PostCard = ({
               <Typography sx={{ mb: 1 }}>{posts.content.text}</Typography>
             </Box>
             {showComment &&
-              posts.comments.map(comment => (
+              posts.comments.map((comment) => (
                 <CommentCard
                   postId={posts.content._id}
                   comment={comment}
@@ -219,7 +220,8 @@ const PostCard = ({
                     onClick={() => {
                       navigate(`/commentpage/${posts.content._id}`);
                     }}
-                    startIcon={<CommentOutlined />}>
+                    startIcon={<CommentOutlined />}
+                  >
                     <Box sx={{ display: "flex", flexDirection: "column" }}>
                       <Typography>Comment</Typography>
                     </Box>

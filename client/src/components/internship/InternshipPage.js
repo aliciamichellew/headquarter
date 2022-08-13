@@ -498,8 +498,8 @@ export default function InternshipPage() {
                     }
                     label={
                       follow
-                        ? "Added to My Internships"
-                        : "Add to My Internships"
+                        ? "ADDED TO MY INTERNSHIPS"
+                        : "ADD TO MY INTERNSHIPS"
                     }
                     sx={{ color: "#FFCE26" }}
                   />

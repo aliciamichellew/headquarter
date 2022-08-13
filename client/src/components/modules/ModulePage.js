@@ -511,7 +511,7 @@ export default function ModulePage(module) {
                         onChange={handleChangeFollow}
                       />
                     }
-                    label={follow ? "Added to My Modules" : "Add to My Modules"}
+                    label={follow ? "ADDED TO MY MODULES" : "ADD TO MY MODULES"}
                     sx={{ color: "#FFCE26" }}
                   />
                 </Box>
