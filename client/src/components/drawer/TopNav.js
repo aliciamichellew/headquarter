@@ -241,13 +241,13 @@ export default function TopDrawer({ open, handleDrawerOpen, isHomePage }) {
                   >
                     <Work sx={{ mr: 1 }} /> My Internships
                   </MenuItem>
-                  <MenuItem
+                  {/* <MenuItem
                     onClick={() => {
                       navigate("/chats");
                     }}
                   >
                     <Chat sx={{ mr: 1 }} /> Chats
-                  </MenuItem>
+                  </MenuItem> */}
                   <Divider />
                   <MenuItem
                     onClick={() => {
